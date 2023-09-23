@@ -40,7 +40,7 @@ npm install
 npm start
 ```
 
-Installs all dependancies and runs the app in development mode.
+Installs all dependencies and runs the app in development mode.
 Open http://localhost:3000 to view it in the browser.
 
 ## Developer team
