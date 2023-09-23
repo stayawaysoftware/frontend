@@ -20,7 +20,7 @@ class LobbyConfigForm extends Component {
             <Stack spacing={2} direction="row">
                 <TextField
                 id="standard-basic"
-                label="Nombre"
+                label="Nombre sala"
                 variant="standard"
                 value={this.state.name}
                 onChange={(e) => this.setState({ name: e.target.value })}
@@ -33,7 +33,12 @@ class LobbyConfigForm extends Component {
                 />
             </Stack>
             <br/>
-            <Button variant="contained"> Crear partida </Button>
+            <Button 
+                variant="contained" 
+                disabled={this.state.name === ''}
+            > 
+                Crear sala 
+            </Button>
             
 
         </form>
