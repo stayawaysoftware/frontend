@@ -1,49 +1,42 @@
 //form for lobby configuration
-//for the current sprint it should only ask name, min and max players
+//for the current sprint it should only ask name
 
 import React, { Component } from 'react';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 
-class LobbyConfigForm extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-        name: '',
-        };
-    }
-    
-    render() {
-        return (
-        <form>
-            <Stack spacing={2} direction="row">
+function LobbyConfigForm() {
+    const [name, setName] = React.useState('');
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const data = { name};
+        console.log(data);
+    };
+
+    return (
+        <form onSubmit={handleSubmit}>
+            <Stack spacing={2}>
                 <TextField
-                id="standard-basic"
-                label="Nombre sala"
-                variant="standard"
-                value={this.state.name}
-                onChange={(e) => this.setState({ name: e.target.value })}
-                />
-                <TextField
-                //password
-                id="standard-basic"
-                label="Contraseña (no funcional)"
-                variant="standard"
+                    id="outlined-basic"
+                    label="Nombre de sala"
+                    variant="outlined"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                 />
             </Stack>
             <br/>
             <Button 
-                variant="contained" 
-                disabled={this.state.name === ''}
-            > 
-                Crear sala 
+                variant="contained"
+                type="submit"
+                disabled={!name}
+            >
+                Crear Partida
             </Button>
             
-
         </form>
-        );
-    }
+    );
 }
 
 export default LobbyConfigForm;
