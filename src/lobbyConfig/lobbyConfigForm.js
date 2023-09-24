@@ -13,6 +13,8 @@ function LobbyConfigForm() {
         event.preventDefault();
         const data = { name};
         console.log(data);
+        // for the time being, we will just log the data
+        // when we have the API designed, we shall call it here
     };
 
     return (
