@@ -30,6 +30,8 @@ export default function CreateRoomDialog({ open, onClose }) {
       <Dialog 
         open={open} 
         onClose={onClose}
+        fullWidth
+        maxWidth="lg"
       >
         <DialogTitle>Create Room</DialogTitle>
           <DialogContent>
@@ -38,7 +40,7 @@ export default function CreateRoomDialog({ open, onClose }) {
                   <TextField
                     id="outlined-basic"
                     label="Room name"
-                    variant="outlined"
+                    variant="filled"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
