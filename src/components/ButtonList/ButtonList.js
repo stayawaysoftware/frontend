@@ -21,14 +21,6 @@ export default function GameList() {
     setCreateRoomDialogOpen(false);
   };
 
-  const handleCreateRoom = (roomName) => {
-    // Aquí puedes manejar la creación de la sala con el nombre recibido.
-    // Por ejemplo, puedes realizar una solicitud al servidor para crear la sala.
-    console.log('Creating room with name:', roomName);
-    // Luego, cierra el diálogo:
-    handleCloseCreateRoomDialog();
-  };
-
   return (
     <Grid container spacing={2}>
       <Grid item xs={8} md={10}>

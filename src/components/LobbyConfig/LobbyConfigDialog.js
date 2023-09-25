@@ -16,6 +16,10 @@ export default function CreateRoomDialog({ open, onClose }) {
       event.preventDefault();
       const data = { name};
       console.log(data);
+      //close the dialog
+      onClose();
+      //in the future we will send the data to the server
+      //and the server will create the room
     };
   
     return (
@@ -39,10 +43,10 @@ export default function CreateRoomDialog({ open, onClose }) {
           </DialogContent>
         <DialogActions>
           <Button onClick={onClose} color="primary">
-            Cancelar
+            Cancel
           </Button>
-          <Button onClick={handleCreateRoom} color="primary" variant="contained">
-            Crear Sala
+          <Button onClick={handleCreateRoom} disabled={name === ""} color="primary" variant="contained">
+            Create room
           </Button>
         </DialogActions>
       </Dialog>
