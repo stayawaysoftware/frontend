@@ -8,6 +8,10 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 
+function ValidForm (name) {
+  return name.length > 3;
+}
+
 export default function CreateRoomDialog({ open, onClose }) {
   const [roomName, setRoomName] = React.useState('');
 
@@ -45,7 +49,7 @@ export default function CreateRoomDialog({ open, onClose }) {
           <Button onClick={onClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleCreateRoom} disabled={name === ""} color="primary" variant="contained">
+          <Button onClick={handleCreateRoom} disabled={!ValidForm(name)} color="primary" variant="contained">
             Create room
           </Button>
         </DialogActions>
