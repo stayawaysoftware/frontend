@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./views/Home/Home";
 import Register from "./views/Register/Register";
 import PageNotFound from "./views/PageNotFound/PageNotFound";
+import Room from "./views/Room/Room";
 
 const routes = createBrowserRouter([
   {
@@ -17,6 +18,11 @@ const routes = createBrowserRouter([
     name: "Register",
     path: "/register",
     element: <Register />,
+  },
+  {
+    name: "Room",
+    path: "/room",
+    element: <Room />,
   },
 ]);
 
