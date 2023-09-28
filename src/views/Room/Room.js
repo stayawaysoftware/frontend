@@ -16,13 +16,18 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
+function GetRoomName() {
+  //until the api is defined it will return a simple name
+  return "Room's name";
+}
+
 const Room = () => {
   return (
     <Grid container spacing={2}>
       {/* Primer elemento (más corto) */}
       <Grid item xs={8}>
         <Paper square={false} style={{ height: '100px', textAlign: 'center', padding: '16px' }}>
-          <h1>Lobby's name</h1>
+          <h1>{GetRoomName()}</h1>
         </Paper>
       </Grid>
 
