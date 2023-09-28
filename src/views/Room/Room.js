@@ -8,6 +8,7 @@ import Stack from "@mui/material/Stack";
 
 import { TextField } from "@mui/material";
 import List from "@mui/material/List";
+import PeopleIcon from '@mui/icons-material/People';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -27,6 +28,11 @@ function GetPlayers() {
   //generate a generic list of players
   const players = ["Player1", "The Cosa", "amongu", "xX_gamer_Xx", "Player5"];
   return players;
+}
+
+function GetMaxPlayers() {
+  //until the api is defined it will return a simple number
+  return 12;
 }
 
 const Room = () => {
@@ -50,19 +56,26 @@ const Room = () => {
 
       {/* Tercer elemento */}
       <Grid item xs={8}>
-        <Paper square={false} style={{ height: '200px', textAlign: 'center', padding: '16px' }}>
+        <Paper square={false} style={{ height: '400px', textAlign: 'center', padding: '16px' }}>
           chat
         </Paper>
       </Grid>
 
-      {/* Cuarto elemento, es una lista de jugadores */}
+      {/* Cuarto elemento, cant de jugadores n/N y una lista de jugadores con emoji de people*/}
       <Grid item xs={4}>
-        <Paper square={false} style={{ height: '200px', textAlign: 'center', padding: '16px' }}>
-          <List>
-            {GetPlayers().map((player, index) => (
-              <Item key={index}>{player}</Item>
-            ))}
-          </List>
+        <Paper square={false} style={{ height: '400px', textAlign: 'center', padding: '16px' }}>
+          <Stack>
+            <Stack direction="row">
+              {/* cant de jugadores */}
+              <PeopleIcon style={{ fontSize: 20, marginRight: '8px'}}/>
+              <strong> Players {GetPlayers().length}/{GetMaxPlayers()}</strong>
+            </Stack>
+            <List>
+              {GetPlayers().map((player, index) => (
+                <Item key={index}>{player}</Item>
+              ))}
+            </List>
+          </Stack>
         </Paper>
       </Grid>
     </Grid>
