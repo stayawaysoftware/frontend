@@ -1,6 +1,7 @@
 import "./App.css";
-import React from "react";
+import React, { useContext } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { UserContext } from "./UserContext";
 
 import Home from "./views/Home/Home";
 import Register from "./views/Register/Register";
@@ -13,17 +14,14 @@ const routes = createBrowserRouter([
     element: <Home />,
     errorElement: <PageNotFound />,
   },
-  {
-    name: "Register",
-    path: "/register",
-    element: <Register />,
-  },
 ]);
 
 function App() {
+  const { user } = useContext(UserContext);
+
   return (
     <div className="App">
-      <RouterProvider router={routes} />
+      {!!user ? <RouterProvider router={routes} /> : <Register />}
     </div>
   );
 }
