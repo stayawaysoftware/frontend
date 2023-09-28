@@ -4,6 +4,7 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
 
 import { TextField } from "@mui/material";
 
@@ -17,46 +18,40 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const Room = () => {
   return (
-    <div>
-      <h1>Room</h1>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Box sx={{flexGrow: 1}}>
-            <Grid container spacing={2}>
-              <Grid item xs ={8} md = {2}>
-                <Item>
-                  Room name
-                </Item>
-              </Grid>
-              <Grid item xs={4} md={2}> 
-                <Item>
-                  <Button variant="contained" color="success">Join</Button>
-                </Item>
-              </Grid>
-              <Grid item xs={8} md={2}> 
-                <Item>
-                  <TextField id="outlined-basic" label="Outlined" variant="outlined" />
-                </Item>
-              </Grid>
-              <Grid item xs={4} md={2}> 
-                <Item>
-                  <Paper elevation={0}/>
-                </Item>
-              </Grid>
-            </Grid>
-          </Box>
+    <Grid container spacing={2}>
+      {/* Primer elemento (más corto) */}
+      <Grid item xs={8}>
+        <Paper square={false} style={{ height: '100px', textAlign: 'center', padding: '16px' }}>
+          <h1>Lobby's name</h1>
+        </Paper>
+      </Grid>
 
-          
+      {/* Segundo elemento (más corto), boton de iniciar partida, centrado en el paper */} 
+      <Grid item xs={4}>
+        <Paper square={false} style={{ height: '100px', textAlign: 'center', padding: '16px' }}>
+          <Button variant="contained" color="success" size="large">
+            <h2>Start game</h2>
+          </Button>    
+        </Paper>
+      </Grid>
 
-        </div>
-      </div>
-    )
+      {/* Tercer elemento */}
+      <Grid item xs={8}>
+        <Paper square={false} style={{ height: '200px', textAlign: 'center', padding: '16px' }}>
+          chat
+        </Paper>
+      </Grid>
+
+      {/* Cuarto elemento */}
+      <Grid item xs={4}>
+        <Paper square={false} style={{ height: '200px', textAlign: 'center', padding: '16px' }}>
+          <Stack spacing={2}>
+            players in game
+          </Stack>
+        </Paper>
+      </Grid>
+    </Grid>
+  );
 };
 
 export default Room;
-
