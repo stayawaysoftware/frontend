@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 
 import { TextField } from "@mui/material";
+import List from "@mui/material/List";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -19,6 +20,13 @@ const Item = styled(Paper)(({ theme }) => ({
 function GetRoomName() {
   //until the api is defined it will return a simple name
   return "Room's name";
+}
+
+function GetPlayers() {
+  //function that returns the list of players in the room
+  //generate a generic list of players
+  const players = ["Player1", "The Cosa", "amongu", "xX_gamer_Xx", "Player5"];
+  return players;
 }
 
 const Room = () => {
@@ -47,12 +55,14 @@ const Room = () => {
         </Paper>
       </Grid>
 
-      {/* Cuarto elemento */}
+      {/* Cuarto elemento, es una lista de jugadores */}
       <Grid item xs={4}>
         <Paper square={false} style={{ height: '200px', textAlign: 'center', padding: '16px' }}>
-          <Stack spacing={2}>
-            players in game
-          </Stack>
+          <List>
+            {GetPlayers().map((player, index) => (
+              <Item key={index}>{player}</Item>
+            ))}
+          </List>
         </Paper>
       </Grid>
     </Grid>
