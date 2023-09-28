@@ -1,6 +1,7 @@
 import "./App.css";
-import React from "react";
+import React, { useContext } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { UserContext } from "./UserContext";
 
 import Home from "./views/Home/Home";
 import Register from "./views/Register/Register";
@@ -21,15 +22,17 @@ const routes = createBrowserRouter([
   },
   {
     name: "Room",
-    path: "/room/:roomId",
+    path: "/room:roomId",
     element: <Room />,
   },
 ]);
 
 function App() {
+  const { user } = useContext(UserContext);
+
   return (
     <div className="App">
-      <RouterProvider router={routes} />
+      {!!user ? <RouterProvider router={routes} /> : <Register />}
     </div>
   );
 }
