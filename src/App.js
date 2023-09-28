@@ -21,7 +21,7 @@ const routes = createBrowserRouter([
   },
   {
     name: "Room",
-    path: "/room",
+    path: "/room/:roomId",
     element: <Room />,
   },
 ]);

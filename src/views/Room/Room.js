@@ -10,6 +10,10 @@ import { TextField } from "@mui/material";
 import List from "@mui/material/List";
 import PeopleIcon from '@mui/icons-material/People';
 
+import { useParams } from "react-router-dom";
+
+
+
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
@@ -19,8 +23,8 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 function GetRoomName() {
-  //until the api is defined it will return a simple name
-  return "Room's name";
+  //until the api is defined it will return a simple name with the roomId
+  return "Room " + useParams().roomId;
 }
 
 function GetPlayers() {
@@ -36,6 +40,8 @@ function GetMaxPlayers() {
 }
 
 const Room = () => {
+  const { roomId } = useParams();
+
   return (
     <Grid container spacing={2}>
       {/* Primer elemento (más corto) */}
