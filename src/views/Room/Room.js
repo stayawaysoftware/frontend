@@ -30,7 +30,7 @@ function GetRoomName() {
 function GetPlayers() {
   //function that returns the list of players in the room
   //generate a generic list of players
-  const players = ["Player1", "The Cosa", "amongu", "xX_gamer_Xx", "Player5"];
+  const players = ["Player1", "The Cosa", "amongu", "xX_gamer_Xx", "Player5", "Player6", "Player7", "Player8", "Player9", "Player10", "Player11", "Player12"];
   return players;
 }
 
@@ -62,14 +62,14 @@ const Room = () => {
 
       {/* Tercer elemento */}
       <Grid item xs={8}>
-        <Paper square={false} style={{ height: '400px', textAlign: 'center', padding: '16px' }}>
+        <Paper square={false} style={{ height: '450px', textAlign: 'center', padding: '16px' }}>
           chat
         </Paper>
       </Grid>
 
       {/* Cuarto elemento, cant de jugadores n/N y una lista de jugadores con emoji de people*/}
       <Grid item xs={4}>
-        <Paper square={false} style={{ height: '400px', textAlign: 'center', padding: '16px' }}>
+        <Paper square={false} style={{ height: '450px', textAlign: 'center', padding: '16px' }}>
           <Stack>
             <Stack direction="row">
               {/* cant de jugadores */}
