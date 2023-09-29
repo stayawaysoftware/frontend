@@ -1,23 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import React, { useContext } from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { UserContext } from "./UserContext";
+
+import Home from "./views/Home/Home";
+import Register from "./views/Register/Register";
+import PageNotFound from "./views/PageNotFound/PageNotFound";
+import Room from "./views/Room/Room";
+import Game from "./views/Game/Game";
+
+const routes = createBrowserRouter([
+  {
+    name: "Home",
+    path: "/",
+    element: <Home />,
+    errorElement: <PageNotFound />,
+  },
+  {
+    name: "Room",
+    path: "/room/:roomId",
+    element: <Room />,
+  },
+  {
+    name: "Game",
+    path: "/game",
+    element: <Game />,
+  },
+]);
 
 function App() {
+  const { user } = useContext(UserContext);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {!!user ? <RouterProvider router={routes} /> : <Register />}
     </div>
   );
 }
