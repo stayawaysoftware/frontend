@@ -16,11 +16,6 @@ const routes = createBrowserRouter([
     errorElement: <PageNotFound />,
   },
   {
-    name: "Register",
-    path: "/register",
-    element: <Register />,
-  },
-  {
     name: "Room",
     path: "/room:roomId",
     element: <Room />,
