@@ -17,7 +17,7 @@ const routes = createBrowserRouter([
   },
   {
     name: "Room",
-    path: "/room:roomId",
+    path: "/room/:roomId",
     element: <Room />,
   },
 ]);
