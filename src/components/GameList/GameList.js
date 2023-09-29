@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import List from "@mui/material/List";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
@@ -10,7 +10,6 @@ import { ListItemButton } from "@mui/material";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import Collapse from "@mui/material/Collapse";
-
 import ExpandableItem from "./ExpandableItem";
 import axios from "axios";
 
@@ -28,14 +27,14 @@ const Demo = styled("div")(({ theme }) => ({
 }));
 
 export default function GameList() {
-  const [items, setItem] = React.useState(getItems(14));
+  const [gameData, setGameData] = React.useState(getItems(14));
 
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} md={10}>
         <Demo>
           <List>
-            {items.map((item, index) => (
+            {gameData.map((gameData, index) => (
               <ExpandableItem
                 render={(xprops) => (
                   <>
@@ -44,10 +43,10 @@ export default function GameList() {
                         onClick={() => xprops.setOpen(!xprops.open)}
                       >
                         <ListItemAvatar>
-                          <Avatar>{item.initials}</Avatar>
+                          <Avatar>{gameData.initials}</Avatar>
                         </ListItemAvatar>
                         <ListItemText
-                          primary={item.primary}
+                          primary={gameData.primary}
                           //secondary={secondary ? "Secondary text" : null}
                         />
                         {xprops.open ? <ExpandLess /> : <ExpandMore />}
@@ -67,10 +66,10 @@ export default function GameList() {
                             }}
                             ml={9}
                           >
-                            {item.actual_players}
+                            {gameData.actual_players}
                           </Typography>
                           <Typography component="div">
-                            {item.capacity}
+                            {gameData.capacity}
                           </Typography>
                         </div>
                       </Collapse>
