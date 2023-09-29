@@ -7,6 +7,7 @@ import Home from "./views/Home/Home";
 import Register from "./views/Register/Register";
 import PageNotFound from "./views/PageNotFound/PageNotFound";
 import Room from "./views/Room/Room";
+import Game from "./views/Game/Game";
 
 const routes = createBrowserRouter([
   {
@@ -19,6 +20,11 @@ const routes = createBrowserRouter([
     name: "Room",
     path: "/room/:roomId",
     element: <Room />,
+  },
+  {
+    name: "Game",
+    path: "/game",
+    element: <Game />,
   },
 ]);
 
