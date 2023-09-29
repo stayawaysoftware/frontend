@@ -13,30 +13,26 @@ import Collapse from "@mui/material/Collapse";
 import ExpandableItem from "./ExpandableItem";
 import axios from "axios";
 
-const getItems = (count) =>
-  Array.from({ length: count }, (v, k) => k).map((k) => ({
-    id: `item-${k}`,
-    initials: `P${k}`,
-    primary: `Partida ${k}`,
-    actual_players: `Jugadores: ${k}`,
-    capacity: `Capacidad: ${k}`,
-  }));
-
 const Demo = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
 }));
+
+function GetInitials(name) {
+  //function to get first two letters from name
+  var twoFirstLetters = name.substring(0, 2);
+  return twoFirstLetters;
+}
 
 export default function GameList() {
   const [gameData, setGameData] = useState([]);
 
   useEffect(() => {
-    // URL de la API que deseas consultar
+    // should be changed to the API URL constant
     const apiUrl = 'http://0.0.0.0:8000/rooms';
 
-    // Hacer la solicitud GET utilizando Axios
     axios.get(apiUrl)
       .then(response => {
-        setGameData(response.data); // Actualizar el estado con los datos de la API
+        setGameData(response.data);
       })
       .catch(error => {
         console.error('Error al hacer la solicitud GET:', error);
@@ -57,10 +53,10 @@ export default function GameList() {
                         onClick={() => xprops.setOpen(!xprops.open)}
                       >
                         <ListItemAvatar>
-                          <Avatar>{gameData.initials}</Avatar>
+                          <Avatar>{GetInitials(gameData.name)}</Avatar>
                         </ListItemAvatar>
                         <ListItemText
-                          primary={gameData.primary}
+                          primary={gameData.name}
                           //secondary={secondary ? "Secondary text" : null}
                         />
                         {xprops.open ? <ExpandLess /> : <ExpandMore />}
@@ -80,10 +76,10 @@ export default function GameList() {
                             }}
                             ml={9}
                           >
-                            {gameData.actual_players}
+                            {gameData.min_users}
                           </Typography>
                           <Typography component="div">
-                            {gameData.capacity}
+                            {gameData.max_users}
                           </Typography>
                         </div>
                       </Collapse>
