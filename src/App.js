@@ -6,6 +6,7 @@ import { UserContext } from "./UserContext";
 import Home from "./views/Home/Home";
 import Register from "./views/Register/Register";
 import PageNotFound from "./views/PageNotFound/PageNotFound";
+import Room from "./views/Room/Room";
 
 const routes = createBrowserRouter([
   {
@@ -13,6 +14,11 @@ const routes = createBrowserRouter([
     path: "/",
     element: <Home />,
     errorElement: <PageNotFound />,
+  },
+  {
+    name: "Room",
+    path: "/room/:roomId",
+    element: <Room />,
   },
 ]);
 
