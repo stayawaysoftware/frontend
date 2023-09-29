@@ -27,7 +27,21 @@ const Demo = styled("div")(({ theme }) => ({
 }));
 
 export default function GameList() {
-  const [gameData, setGameData] = React.useState(getItems(14));
+  const [gameData, setGameData] = useState([]);
+
+  useEffect(() => {
+    // URL de la API que deseas consultar
+    const apiUrl = 'http://0.0.0.0:8000/rooms';
+
+    // Hacer la solicitud GET utilizando Axios
+    axios.get(apiUrl)
+      .then(response => {
+        setGameData(response.data); // Actualizar el estado con los datos de la API
+      })
+      .catch(error => {
+        console.error('Error al hacer la solicitud GET:', error);
+      });
+  }, []);
 
   return (
     <Grid container spacing={2}>
