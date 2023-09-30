@@ -28,7 +28,7 @@ const centerStyle = {
 export default function LogIn() {
   const [username, setUserNameLocal] = useState(undefined);
 
-  const { setUserName } = useContext(UserContext);
+  const { setUserName, setUserId } = useContext(UserContext);
 
   const usernameHandler = (e) => {
     setUserNameLocal(e.target.value);
@@ -48,11 +48,10 @@ export default function LogIn() {
       .post(urlFinal)
       .then((response) => {
         console.log("Solicitud POST exitosa", response.data);
-        // Puedes realizar otras acciones después de la solicitud exitosa
+        setUserId(response.data.id);
       })
       .catch((error) => {
         console.error("Error en la solicitud POST", error);
-        // Puedes manejar el error de alguna manera
       });
   };
 
