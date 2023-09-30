@@ -13,6 +13,7 @@ import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import CasinoIcon from "@mui/icons-material/Casino";
 import Button from "@mui/material/Button";
+import axios from "axios";
 
 const defaultTheme = createTheme();
 
@@ -36,6 +37,22 @@ export default function LogIn() {
   const loginHandler = async (e) => {
     e.preventDefault();
     setUser(username);
+
+    const url = "http://localhost:8000/users";
+
+    //build de url with the params
+    const params = "?username=" + username; 
+    const urlFinal = url + params;
+  
+    axios.post(urlFinal)
+    .then((response) => {
+      console.log('Solicitud POST exitosa', response.data);
+      // Puedes realizar otras acciones después de la solicitud exitosa
+    })
+    .catch((error) => {
+      console.error('Error en la solicitud POST', error);
+      // Puedes manejar el error de alguna manera
+    });
   };
 
   return (
