@@ -1,6 +1,6 @@
 // import * as React from "react";
 import React, { useState, useContext } from "react";
-import { JoinRoomContext } from "../../contexts/JoinRoomContext";
+import { UserContext } from "../../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import List from "@mui/material/List";
 import Grid from "@mui/material/Grid";
@@ -13,7 +13,7 @@ import CreateRoomDialog from "../LobbyConfig/LobbyConfigDialog";
 
 export default function ButtonList({ joinRoom }) {
   const [isCreateRoomDialogOpen, setCreateRoomDialogOpen] = useState(false);
-  const { roomid } = useContext(JoinRoomContext);
+  const { roomid } = useContext(UserContext);
   const navigate = useNavigate();
 
   const handleCreateRoomClick = () => {

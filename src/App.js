@@ -29,11 +29,11 @@ const routes = createBrowserRouter([
 ]);
 
 function App() {
-  const { user } = useContext(UserContext);
+  const { username } = useContext(UserContext);
 
   return (
     <div className="App">
-      {!!user ? <RouterProvider router={routes} /> : <Register />}
+      {!!username ? <RouterProvider router={routes} /> : <Register />}
     </div>
   );
 }

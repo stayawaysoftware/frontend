@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { JoinRoomContext } from "../../contexts/JoinRoomContext";
+import { UserContext } from "../../contexts/UserContext";
 import { styled } from "@mui/material/styles";
 import List from "@mui/material/List";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
@@ -27,7 +27,7 @@ function GetInitials(name) {
 export default function GameList() {
   const [gameData, setGameData] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
-  const { setRoomId } = useContext(JoinRoomContext);
+  const { setRoomId } = useContext(UserContext);
 
   useEffect(() => {
     // should be changed to the API URL constant
