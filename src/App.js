@@ -1,7 +1,7 @@
 import "./App.css";
 import React, { useContext } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { UserContext } from "./UserContext";
+import { UserContext } from "./contexts/UserContext";
 
 import Home from "./views/Home/Home";
 import Register from "./views/Register/Register";

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import * as React from "react";
 import { styled } from "@mui/material/styles";
 import List from "@mui/material/List";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
@@ -24,20 +24,7 @@ function GetInitials(name) {
 }
 
 export default function GameList() {
-  const [gameData, setGameData] = useState([]);
-
-  useEffect(() => {
-    // should be changed to the API URL constant
-    const apiUrl = 'http://0.0.0.0:8000/rooms';
-
-    axios.get(apiUrl)
-      .then(response => {
-        setGameData(response.data);
-      })
-      .catch(error => {
-        console.error('Error al hacer la solicitud GET:', error);
-      });
-  }, []);
+  const [items, setItem] = React.useState(getItems(14));
 
   return (
     <Grid container spacing={2}>
@@ -50,7 +37,12 @@ export default function GameList() {
                   <>
                     <div>
                       <ListItemButton
-                        onClick={() => xprops.setOpen(!xprops.open)}
+                        selected={selectedItem === gameData.id}
+                        onClick={() => {
+                          xprops.setOpen(!xprops.open);
+                          setSelectedItem(gameData.id);
+                          setRoomId(gameData.id);
+                        }}
                       >
                         <ListItemAvatar>
                           <Avatar>{GetInitials(gameData.name)}</Avatar>
