@@ -76,10 +76,12 @@ export default function GameList() {
                             }}
                             ml={9}
                           >
-                            {gameData.min_users}
+                            Min users {gameData.min_users}
                           </Typography>
                           <Typography component="div">
-                            {gameData.max_users}
+                            Max users {gameData.max_users}
+                            {/*THE ROOM DATA SHOULD BE n/N where n is current 
+                            players and N is max players*/}
                           </Typography>
                         </div>
                       </Collapse>

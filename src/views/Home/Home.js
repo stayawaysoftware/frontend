@@ -8,7 +8,7 @@ import Grid from "@mui/material/Grid";
 const Home = () => {
   return (
     <div>
-      <h1>Listado de Partidas</h1>
+      <h1>Room List</h1>
       <div
         style={{
           display: "flex",
