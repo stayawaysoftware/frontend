@@ -1,4 +1,5 @@
-import * as React from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { JoinRoomContext } from "../../contexts/JoinRoomContext";
 import { styled } from "@mui/material/styles";
 import List from "@mui/material/List";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
@@ -24,7 +25,23 @@ function GetInitials(name) {
 }
 
 export default function GameList() {
-  const [items, setItem] = React.useState(getItems(14));
+  const [gameData, setGameData] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const { setRoomId } = useContext(JoinRoomContext);
+
+  useEffect(() => {
+    // should be changed to the API URL constant
+    const apiUrl = "http://localhost:8000/rooms";
+
+    axios
+      .get(apiUrl)
+      .then((response) => {
+        setGameData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error al hacer la solicitud GET:", error);
+      });
+  }, []);
 
   return (
     <Grid container spacing={2}>
@@ -33,6 +50,7 @@ export default function GameList() {
           <List>
             {gameData.map((gameData, index) => (
               <ExpandableItem
+                key={gameData.id}
                 render={(xprops) => (
                   <>
                     <div>
