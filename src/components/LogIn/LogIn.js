@@ -26,33 +26,34 @@ const centerStyle = {
 };
 
 export default function LogIn() {
-  const [username, setUsername] = useState(undefined);
+  const [username, setUserNameLocal] = useState(undefined);
 
-  const { setUser } = useContext(UserContext);
+  const { setUserName } = useContext(UserContext);
 
   const usernameHandler = (e) => {
-    setUsername(e.target.value);
+    setUserNameLocal(e.target.value);
   };
 
   const loginHandler = async (e) => {
     e.preventDefault();
-    setUser(username);
+    setUserName(username);
 
     const url = "http://localhost:8000/users";
 
     //build de url with the params
-    const params = "?username=" + username; 
+    const params = "?username=" + username;
     const urlFinal = url + params;
-  
-    axios.post(urlFinal)
-    .then((response) => {
-      console.log('Solicitud POST exitosa', response.data);
-      // Puedes realizar otras acciones después de la solicitud exitosa
-    })
-    .catch((error) => {
-      console.error('Error en la solicitud POST', error);
-      // Puedes manejar el error de alguna manera
-    });
+
+    axios
+      .post(urlFinal)
+      .then((response) => {
+        console.log("Solicitud POST exitosa", response.data);
+        // Puedes realizar otras acciones después de la solicitud exitosa
+      })
+      .catch((error) => {
+        console.error("Error en la solicitud POST", error);
+        // Puedes manejar el error de alguna manera
+      });
   };
 
   return (
