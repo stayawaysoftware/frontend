@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { UserContext } from "./contexts/UserContext";
 
@@ -29,7 +29,23 @@ const routes = createBrowserRouter([
 ]);
 
 function App() {
-  const { username } = useContext(UserContext);
+  const { username, userid } = useContext(UserContext);
+
+  useEffect(() => {
+    window.addEventListener("beforeunload", alertUser);
+    return () => {
+      window.removeEventListener("beforeunload", alertUser);
+    };
+  });
+
+  const alertUser = (event) => {
+    event.preventDefault();
+    //con axios no funciona, no se porque xdnt
+    fetch(`http://localhost:8000/users/${userid}`, {
+      method: "DELETE",
+    });
+    event.returnValue = "";
+  };
 
   return (
     <div className="App">
