@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import List from "@mui/material/List";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
@@ -10,32 +10,41 @@ import { ListItemButton } from "@mui/material";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import Collapse from "@mui/material/Collapse";
-
 import ExpandableItem from "./ExpandableItem";
 import axios from "axios";
-
-const getItems = (count) =>
-  Array.from({ length: count }, (v, k) => k).map((k) => ({
-    id: `item-${k}`,
-    initials: `P${k}`,
-    primary: `Partida ${k}`,
-    actual_players: `Jugadores: ${k}`,
-    capacity: `Capacidad: ${k}`,
-  }));
 
 const Demo = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
 }));
 
+function GetInitials(name) {
+  //function to get first two letters from name
+  var twoFirstLetters = name.substring(0, 2);
+  return twoFirstLetters;
+}
+
 export default function GameList() {
-  const [items, setItem] = React.useState(getItems(14));
+  const [gameData, setGameData] = useState([]);
+
+  useEffect(() => {
+    // should be changed to the API URL constant
+    const apiUrl = 'http://0.0.0.0:8000/rooms';
+
+    axios.get(apiUrl)
+      .then(response => {
+        setGameData(response.data);
+      })
+      .catch(error => {
+        console.error('Error al hacer la solicitud GET:', error);
+      });
+  }, []);
 
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} md={10}>
         <Demo>
           <List>
-            {items.map((item, index) => (
+            {gameData.map((gameData, index) => (
               <ExpandableItem
                 render={(xprops) => (
                   <>
@@ -44,10 +53,10 @@ export default function GameList() {
                         onClick={() => xprops.setOpen(!xprops.open)}
                       >
                         <ListItemAvatar>
-                          <Avatar>{item.initials}</Avatar>
+                          <Avatar>{GetInitials(gameData.name)}</Avatar>
                         </ListItemAvatar>
                         <ListItemText
-                          primary={item.primary}
+                          primary={gameData.name}
                           //secondary={secondary ? "Secondary text" : null}
                         />
                         {xprops.open ? <ExpandLess /> : <ExpandMore />}
@@ -67,10 +76,12 @@ export default function GameList() {
                             }}
                             ml={9}
                           >
-                            {item.actual_players}
+                            Min users {gameData.min_users}
                           </Typography>
                           <Typography component="div">
-                            {item.capacity}
+                            Max users {gameData.max_users}
+                            {/*THE ROOM DATA SHOULD BE n/N where n is current 
+                            players and N is max players*/}
                           </Typography>
                         </div>
                       </Collapse>
