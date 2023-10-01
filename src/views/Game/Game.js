@@ -1,5 +1,6 @@
 import Hand from "../../components/GameComps/Hand";
 import UserAvatar from "../../components/UserAvatar/UserAvatar";
+import Buttons from "../../components/GameComps/GameButtons";
 import "./Game.css";
 
 import React, { useEffect, useState } from "react";
@@ -90,9 +91,12 @@ const Game = () => {
     <div>
       <div
         style={{
-          display: "column",
+          display: "flex",
+          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
+          minHeight: "100vh",
+          position: "relative",
         }}
       >
         <div className="circle">
@@ -108,6 +112,15 @@ const Game = () => {
               <Hand />
             </Grid>
           </Grid>
+          <div
+            style={{
+              position: "relative",
+              left: "50%",
+              transform: "translate(16%, 0%)",
+            }}
+          >
+            <Buttons />
+          </div>
         </Box>
       </div>
     </div>
