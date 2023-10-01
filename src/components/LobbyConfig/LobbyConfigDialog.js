@@ -53,7 +53,7 @@ export default function CreateRoomDialog({ open, onClose }) {
         open={open} 
         onClose={onClose}
         fullWidth
-        maxWidth="lg"
+        maxWidth="sm"
       >
         <DialogTitle>Create Room</DialogTitle>
           <DialogContent>
