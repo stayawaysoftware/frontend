@@ -22,22 +22,6 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-function GetRoomName() {
-  //until the api is defined it will return a simple name with the roomId
-  return "Room " + useParams().roomId;
-}
-
-function GetPlayers() {
-  //function that returns the list of players in the room
-  //generate a generic list of players
-  const players = ["Player1", "The Cosa", "amongu", "xX_gamer_Xx", "Player5", "Player6", "Player7", "Player8", "Player9", "Player10", "Player11", "Player12"];
-  return players;
-}
-
-function GetMaxPlayers() {
-  //until the api is defined it will return a simple number
-  return 12;
-}
 
 const Room = () => {
   const { roomId } = useParams();
@@ -45,29 +29,36 @@ const Room = () => {
   //get room data from the server
   const [roomData, setRoomData] = useState(null);
   const [roomName, setRoomName] = useState(null);
-  const [players, setPlayers] = useState(null);
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     //get room data from the server
-    axios.get(`http://0.0.0.0:8000/rooms/${roomId}/users`)
-      .then((response) => {
-        setRoomData(response.data);
-        setRoomName(response.data.name);
-        setPlayers(response.data.users);
-      });
-  }
-  , []);
+    const getRoomData = async () => {
+      const response = await axios.get(`http://localhost:8000/rooms/${roomId}`)
+      setRoomData(response.data);
+      setRoomName(response.data.name);
+      setUsers(response.data.usernames);
+      console.log("users es", users);
+    };
+    getRoomData();
+
+    const interval = setInterval(getRoomData, 2000);
+
+    return () => clearInterval(interval);
+   }, [roomId]);
   
+  
+
   return (
     <Grid container spacing={2}>
-      {/* Primer elemento (más corto) */}
+      {/* First element, Room Name */}
       <Grid item xs={8}>
         <Paper square={false} style={{ height: '100px', textAlign: 'center', padding: '16px' }}>
-          <h1>{GetRoomName()}</h1>
+          <h1>{roomName}</h1>
         </Paper>
       </Grid>
 
-      {/* Segundo elemento (más corto), boton de iniciar partida, centrado en el paper */} 
+      {/* Second element, boton de iniciar partida, centrado en el paper */} 
       <Grid item xs={4}>
         <Paper square={false} style={{ height: '100px', textAlign: 'center', padding: '16px' }}>
           <Button variant="contained" color="success" size="large">
@@ -90,11 +81,11 @@ const Room = () => {
             <Stack direction="row">
               {/* cant de jugadores */}
               <PeopleIcon style={{ fontSize: 20, marginRight: '8px'}}/>
-              <strong> Players {GetPlayers().length}/{GetMaxPlayers()}</strong>
+              <strong> Players {users.length}/{12}</strong>
             </Stack>
             <List>
-              {GetPlayers().map((player, index) => (
-                <Item key={index}>{player}</Item>
+              {users.map((users, index) => (
+                <Item key={index}>{users}</Item>
               ))}
             </List>
           </Stack>
