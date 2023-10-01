@@ -14,6 +14,7 @@ import Collapse from "@mui/material/Collapse";
 import ExpandableItem from "./ExpandableItem";
 import axios from "axios";
 import PeopleIcon from '@mui/icons-material/People';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
 
 const Demo = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -91,10 +92,18 @@ export default function GameList() {
                             {gameData.usernames.length}/12
                           </Typography>
                           <Typography component="div">
-                            {/* Max players {gameData.max_users} */}
-                            {/*THE ROOM DATA SHOULD BE n/N where n is current 
-                            players and N is max players*/}
+                            {/* {ternary for checking if the game in in_game} */}
+                            {gameData.in_game ? (
+                             <div>In game</div>
+                            ) : (
+                              <div>Waiting for players</div>
+                            )}
+                  
+                           
                           </Typography>
+                          {/* <Typography component="div">
+                            <LockOpenIcon style={{ fontSize: 18, marginRight: '8px'}}/>                         
+                          </Typography> */}
                         </div>
                       </Collapse>
                     </div>
