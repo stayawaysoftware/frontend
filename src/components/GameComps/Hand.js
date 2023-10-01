@@ -18,7 +18,7 @@ const Hand = () => {
     width: "10%",
     height: "auto",
     position: "relative",
-    top: "210px",
+    top: "170px",
     userSelect: "none",
     cursor: "pointer",
     border: "none",
