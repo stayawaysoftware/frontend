@@ -9,6 +9,7 @@ import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 
 import axios from "axios";
+import { UserContext } from "../../contexts/UserContext";
 
 function ValidForm (name) {
   return name.length > 3;
@@ -17,14 +18,16 @@ function ValidForm (name) {
 export default function CreateRoomDialog({ open, onClose }) {
   const [name, setName] = useState('');
   
+  const { username, userid} = React.useContext(UserContext); 
+
   const handleCreateRoom = async (event) => {
-    event.preventDefault();
+    event.preventDefault();  
 
     //base url, should be changed to the API URL constant
     const url = "http://localhost:8000/rooms";
 
     //build de url with the params
-    const params = "?name=" + name + "&host_id=" + 1; 
+    const params = "?name=" + name + "&host_id=" + userid; 
     const urlFinal = url + params;
 
     axios.post(urlFinal)
