@@ -13,6 +13,7 @@ import ExpandMore from "@mui/icons-material/ExpandMore";
 import Collapse from "@mui/material/Collapse";
 import ExpandableItem from "./ExpandableItem";
 import axios from "axios";
+import PeopleIcon from '@mui/icons-material/People';
 
 const Demo = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -86,10 +87,11 @@ export default function GameList() {
                             }}
                             ml={9}
                           >
-                            Min users {gameData.min_users}
+                            <PeopleIcon style={{ fontSize: 20, marginRight: '8px'}}/>
+                            {gameData.usernames.length}/12
                           </Typography>
                           <Typography component="div">
-                            Max users {gameData.max_users}
+                            {/* Max players {gameData.max_users} */}
                             {/*THE ROOM DATA SHOULD BE n/N where n is current 
                             players and N is max players*/}
                           </Typography>
