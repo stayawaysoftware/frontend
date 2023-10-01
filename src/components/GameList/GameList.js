@@ -35,14 +35,21 @@ export default function GameList() {
     // should be changed to the API URL constant
     const apiUrl = "http://localhost:8000/rooms";
 
-    axios
-      .get(apiUrl)
-      .then((response) => {
-        setGameData(response.data);
-      })
-      .catch((error) => {
-        console.error("Error al hacer la solicitud GET:", error);
-      });
+    const getRoomList = async () => {
+      axios
+        .get(apiUrl)
+        .then((response) => {
+          setGameData(response.data);
+        })
+        .catch((error) => {
+          console.error("Error al hacer la solicitud GET:", error);
+        });
+      };
+    getRoomList();
+
+    const interval = setInterval(getRoomList, 2000);
+
+    return () => clearInterval(interval);
   }, []);
 
   return (
