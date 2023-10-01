@@ -15,7 +15,7 @@ const Buttons = () => {
             <Button
               variant="contained"
               style={{
-                width: "160px",
+                width: "15%",
               }}
             >
               Play Card
@@ -25,7 +25,7 @@ const Buttons = () => {
             <Button
               variant="contained"
               style={{
-                width: "160px",
+                width: "15%",
               }}
               //onClick={}
             >
@@ -36,7 +36,7 @@ const Buttons = () => {
             <Button
               variant="contained"
               style={{
-                width: "160px",
+                width: "15%",
               }}
               //onClick={}
             >

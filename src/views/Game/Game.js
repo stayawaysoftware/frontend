@@ -97,6 +97,7 @@ const Game = () => {
           justifyContent: "center",
           minHeight: "100vh",
           position: "relative",
+          overflow: "hidden",
         }}
       >
         <div className="circle">
@@ -107,8 +108,8 @@ const Game = () => {
           </div>
         </div>
         <Box>
-          <Grid container spacing={20}>
-            <Grid item xs={6} md={30}>
+          <Grid container spacing={10}>
+            <Grid item xs={6} md={20}>
               <Hand />
             </Grid>
           </Grid>
