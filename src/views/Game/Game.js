@@ -1,5 +1,6 @@
 import Hand from "../../components/GameComps/Hand";
 import UserAvatar from "../../components/UserAvatar/UserAvatar";
+import Buttons from "../../components/GameComps/GameButtons";
 import "./Game.css";
 
 import React, { useEffect, useState } from "react";
@@ -108,6 +109,16 @@ const Game = () => {
               <Hand />
             </Grid>
           </Grid>
+          <div
+            style={{
+              position: "relative",
+              bottom: 0,
+              left: "900px",
+              margin: "16px", // Adjust margin as needed
+            }}
+          >
+            <Buttons />
+          </div>
         </Box>
       </div>
     </div>
