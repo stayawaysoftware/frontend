@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
@@ -12,7 +12,7 @@ import PeopleIcon from '@mui/icons-material/People';
 
 import { useParams } from "react-router-dom";
 
-
+import axios from "axios";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -42,6 +42,22 @@ function GetMaxPlayers() {
 const Room = () => {
   const { roomId } = useParams();
 
+  //get room data from the server
+  const [roomData, setRoomData] = useState(null);
+  const [roomName, setRoomName] = useState(null);
+  const [players, setPlayers] = useState(null);
+
+  useEffect(() => {
+    //get room data from the server
+    axios.get(`http://0.0.0.0:8000/rooms/${roomId}/users`)
+      .then((response) => {
+        setRoomData(response.data);
+        setRoomName(response.data.name);
+        setPlayers(response.data.users);
+      });
+  }
+  , []);
+  
   return (
     <Grid container spacing={2}>
       {/* Primer elemento (más corto) */}

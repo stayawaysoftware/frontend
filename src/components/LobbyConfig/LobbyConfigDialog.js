@@ -1,37 +1,59 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
+
+import axios from "axios";
+import { UserContext } from "../../contexts/UserContext";
+import { useNavigate } from "react-router-dom";
 
 function ValidForm (name) {
   return name.length > 3;
 }
 
 export default function CreateRoomDialog({ open, onClose }) {
-  const [roomName, setRoomName] = React.useState('');
+  const [name, setName] = useState('');
+  const navigate = useNavigate();
+  
+  const {userid} = React.useContext(UserContext); 
 
-  const [name, setName] = React.useState('');
-    const handleCreateRoom = (event) => {
-      event.preventDefault();
-      const data = { name};
-      console.log(data);
-      //close the dialog
-      onClose();
-      //in the future we will send the data to the server
-      //and the server will create the room
-    };
+
+  const handleCreateRoom = async (event) => {
+    event.preventDefault();  
+    var roomid = null; //initialize the roomid variable
+
+    //base url, should be changed to the API URL constant
+    const url = "http://localhost:8000/rooms";
+
+    //build de url with the params
+    const params = "?name=" + name + "&host_id=" + userid; 
+    const urlFinal = url + params;
+
+    await axios.post(urlFinal)
+    .then((response) => {
+      console.log('Solicitud POST exitosa', response.data);
+      roomid = response.data.id; //get the roomid from the response
+    })
+    .catch((error) => {
+      console.error('Error en la solicitud POST', error);
+    });
+
+    console.log(roomid);
+    navigate("/room/" + roomid);
+    onClose();
+  };
+    
   
     return (
       <Dialog 
         open={open} 
         onClose={onClose}
         fullWidth
-        maxWidth="lg"
+        maxWidth="sm"
       >
         <DialogTitle>Create Room</DialogTitle>
           <DialogContent>
