@@ -40,7 +40,7 @@ const Buttons = () => {
               }}
               //onClick={}
             >
-              Stole Card
+              Draw Card
             </Button>
           </ListItem>
         </List>

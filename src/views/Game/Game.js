@@ -91,9 +91,12 @@ const Game = () => {
     <div>
       <div
         style={{
-          display: "column",
+          display: "flex",
+          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
+          minHeight: "100vh",
+          position: "relative",
         }}
       >
         <div className="circle">
@@ -112,9 +115,8 @@ const Game = () => {
           <div
             style={{
               position: "relative",
-              bottom: 0,
-              left: "900px",
-              margin: "16px", // Adjust margin as needed
+              left: "50%",
+              transform: "translate(16%, 0%)",
             }}
           >
             <Buttons />
