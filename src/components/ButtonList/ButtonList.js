@@ -10,11 +10,13 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import AddIcon from "@mui/icons-material/Add";
 import LoginIcon from "@mui/icons-material/Login";
 import CreateRoomDialog from "../LobbyConfig/LobbyConfigDialog";
+import axios from "axios";
 
 export default function ButtonList({ joinRoom }) {
   const [isCreateRoomDialogOpen, setCreateRoomDialogOpen] = useState(false);
   const { roomid } = useContext(UserContext);
   const navigate = useNavigate();
+  const {userid} = React.useContext(UserContext);    
 
   const handleCreateRoomClick = () => {
     setCreateRoomDialogOpen(true);
@@ -24,8 +26,21 @@ export default function ButtonList({ joinRoom }) {
     setCreateRoomDialogOpen(false);
   };
 
-  const handleJoinRoom = () => {
+  const handleJoinRoom = async () => {
     navigate("/room/" + roomid);
+    
+    const url = "http://localhost:8000/rooms" + "/" + roomid + "/join";
+    const params = "?user_id=" + userid;
+    const urlFinal = url + params;
+
+    await axios.post(urlFinal)
+    .then((response) => {
+      console.log('Solicitud POST exitosa', response.data);
+    })
+    .catch((error) => {
+      console.error('Error en la solicitud POST', error);
+    });
+
   };
 
   return (
