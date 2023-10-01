@@ -1,0 +1,27 @@
+.circle {
+  background: orange;
+  width: 650px;
+  height: 450px;
+  border-radius: 50%;
+  margin: 40px auto 40px;
+  position: relative;
+  top: 180px;
+}
+
+.circle-hold {
+  position: absolute;
+  left: 90px; /* calculate circle width / 2 - .square width / 2 */
+  top: 115px; /* calculate circle height / 2 - .square height / 2 */
+  /* transform: translate(-40%, -50%); */
+}
+
+.square {
+  position: absolute;
+  -webkit-transition: all 2s linear;
+  -moz-transition: all 2s linear;
+  transition: transform 2s linear;
+  width: 470px;
+  height: 320px;
+  /* border-radius: 50%; */
+  left: 0;
+}
