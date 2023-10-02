@@ -2,6 +2,7 @@ import Hand from "../../components/GameComps/Hand";
 import Buttons from "../../components/GameComps/GameButtons";
 import image from "../Background/xd.svg";
 import GameTable from "../../components/GameTable/GameTable";
+import Deck from "../../components/GameComps/Deck";
 
 import React from "react";
 import { useParams } from "react-router-dom";
@@ -30,7 +31,23 @@ const Game = () => {
       >
         <GameTable />
         <Box>
-          <Grid container spacing={10}>
+          <Grid container spacing={2}>
+            <Grid item xs={6} md={20}>
+              <Deck />
+            </Grid>
+          </Grid>
+          <div
+            style={{
+              position: "relative",
+              left: "10%",
+              transform: "translate(16%, 0%)",
+              marginBottom: "-70%",
+            }}
+          >
+          </div>
+        </Box>
+        <Box> 
+          <Grid container spacing={2}>
             <Grid item xs={6} md={20}>
               <Hand />
             </Grid>
@@ -40,6 +57,7 @@ const Game = () => {
               position: "relative",
               left: "50%",
               transform: "translate(16%, 0%)",
+              marginTop: 0,
             }}
           >
             <Buttons />
