@@ -53,7 +53,7 @@ const Room = () => {
 
   const startGame = async () => {
     try {
-      const response = await axios.post(
+      const response = await axios.put(
         `http://localhost:8000/rooms/${roomId}/start?host_id=${userid}`
       );
       console.log(response);
