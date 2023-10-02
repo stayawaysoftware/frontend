@@ -2,6 +2,7 @@ import Hand from "../../components/GameComps/Hand";
 import UserAvatar from "../../components/UserAvatar/UserAvatar";
 import Buttons from "../../components/GameComps/GameButtons";
 import "./Game.css";
+import image from "../Background/xd.svg";    
 
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
@@ -98,6 +99,10 @@ const Game = () => {
           minHeight: "100vh",
           position: "relative",
           overflow: "hidden",
+          backgroundImage: `url(${image})`,
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
+          backgroundSize: "cover",
         }}
       >
         <div className="circle">
