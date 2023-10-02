@@ -5,6 +5,7 @@ import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
+import image from '../Background/Hex.svg';
 
 import { TextField } from "@mui/material";
 import List from "@mui/material/List";
@@ -15,7 +16,6 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 
 const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: 'center',
@@ -50,48 +50,62 @@ const Room = () => {
   
 
   return (
-    <Grid container spacing={2}>
-      {/* First element, Room Name */}
-      <Grid item xs={8}>
-        <Paper square={false} style={{ height: '100px', textAlign: 'center', padding: '16px' }}>
-          <h1>{roomName}</h1>
-        </Paper>
-      </Grid>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundImage: `url(${image})`,
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+        backgroundSize: "cover",
+        height: "100vh",
+        width: "100vw",
+      }}
+    >
+      <Grid container spacing={2}>
+        {/* First element, Room Name */}
+        <Grid item xs={8}>
+          <Paper square={false} style={{ height: '100px', textAlign: 'center', padding: '16px' }}>
+            <h1>{roomName}</h1>
+          </Paper>
+        </Grid>
 
-      {/* Second element, boton de iniciar partida, centrado en el paper */} 
-      <Grid item xs={4}>
-        <Paper square={false} style={{ height: '100px', textAlign: 'center', padding: '16px' }}>
-          <Button variant="contained" color="success" size="large">
-            <h2>Start game</h2>
-          </Button>    
-        </Paper>
-      </Grid>
+        {/* Second element, boton de iniciar partida, centrado en el paper */} 
+        <Grid item xs={4}>
+          <Paper square={false} style={{ height: '100px', textAlign: 'center', padding: '16px' }}>
+            <Button variant="contained" color="success" size="large">
+              <h2>Start game</h2>
+            </Button>    
+          </Paper>
+        </Grid>
 
-      {/* Tercer elemento */}
-      <Grid item xs={8}>
-        <Paper square={false} style={{ height: '450px', textAlign: 'center', padding: '16px' }}>
-          chat
-        </Paper>
-      </Grid>
+        {/* Tercer elemento */}
+        <Grid item xs={8}>
+          <Paper square={false} style={{ height: '450px', textAlign: 'center', padding: '16px' }}>
+            chat
+          </Paper>
+        </Grid>
 
-      {/* Cuarto elemento, cant de jugadores n/N y una lista de jugadores con emoji de people*/}
-      <Grid item xs={4}>
-        <Paper square={false} style={{ height: '450px', textAlign: 'center', padding: '16px' }}>
-          <Stack>
-            <Stack direction="row">
-              {/* cant de jugadores */}
-              <PeopleIcon style={{ fontSize: 20, marginRight: '8px'}}/>
-              <strong> Players {users.length}/{12}</strong>
+        {/* Cuarto elemento, cant de jugadores n/N y una lista de jugadores con emoji de people*/}
+        <Grid item xs={4}>
+          <Paper square={false} style={{ height: '450px', textAlign: 'center', padding: '16px' }}>
+            <Stack>
+              <Stack direction="row">
+                {/* cant de jugadores */}
+                <PeopleIcon style={{ fontSize: 20, marginRight: '8px'}}/>
+                <strong> Players {users.length}/{12}</strong>
+              </Stack>
+              <List>
+                {users.map((users, index) => (
+                  <Item key={index}>{users}</Item>
+                ))}
+              </List>
             </Stack>
-            <List>
-              {users.map((users, index) => (
-                <Item key={index}>{users}</Item>
-              ))}
-            </List>
-          </Stack>
-        </Paper>
+          </Paper>
+        </Grid>
       </Grid>
-    </Grid>
+    </div>
   );
 };
 
