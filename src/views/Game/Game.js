@@ -67,7 +67,7 @@ const Game = () => {
               marginTop: 0,
             }}
           >
-            <Buttons current_player={2}/>
+            <Buttons current_player={5}/>
           </div>
         </Box>
       </div>

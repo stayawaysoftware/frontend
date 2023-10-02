@@ -1,9 +1,9 @@
-import React from "react";
-
-import { useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { UserContext } from "../../contexts/UserContext";
 
 const Hand = (props) => {
   const [selectedCard, setSelectedCard] = useState(null);
+  const { clickedCard, setClickedCard } = useContext(UserContext);
 
   const containerStyle = {
     display: "flex",
@@ -28,8 +28,10 @@ const Hand = (props) => {
   const handleCardClick = (cardId) => {
     if (selectedCard === cardId) {
       setSelectedCard(null);
+      setClickedCard(null);
     } else {
       setSelectedCard(cardId);
+      setClickedCard(cardId);
     }
   };
 
