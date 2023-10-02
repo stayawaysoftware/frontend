@@ -13,12 +13,23 @@ const cardAssets = {
   201 : green,
   202 : red,
   203 : yellow,
+  default : deck
 };
 
 export function IdToAsset(id) {
   const assetName = cardAssets[id];
-  if (assetName === undefined) {
-    return deck;
-  }
   return assetName;
+}
+
+const cardTargets = {
+  3 : true,
+  default : false
+}
+
+export function CardHasTarget(id) {
+  //this function checks if a card has a target
+  //for the moment, only the flamethrower has a target
+  // console.log("la id es", id);
+  return cardTargets[id];
+  
 }
