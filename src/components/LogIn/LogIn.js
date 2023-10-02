@@ -63,25 +63,6 @@ export default function LogIn() {
           <CssBaseline />
           <Box
             sx={{
-              marginTop: 1,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-              <SmartToyIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              Stay Away!
-            </Typography>
-          </Box>
-        </Container>
-
-        <Container component="main" maxWidth="xs">
-          <CssBaseline />
-          <Box
-            sx={{
               marginTop: 6,
               display: "flex",
               flexDirection: "column",

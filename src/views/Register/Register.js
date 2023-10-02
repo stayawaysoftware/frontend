@@ -3,6 +3,7 @@ import LogIn from "../../components/LogIn/LogIn";
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import image from '../Background/fotito.svg';
 
 const Register = () => {
   return (
@@ -12,6 +13,12 @@ const Register = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          backgroundImage: `url(${image})`,
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
+          backgroundSize: "cover",
+          height: "100vh",
+          width: "100vw",
         }}
       >
         <Box sx={{ flexGrow: 1, maxWidth: 800 }}>

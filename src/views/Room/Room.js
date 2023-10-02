@@ -4,6 +4,9 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
+import image from '../Background/Hex.svg';
+
+import { TextField } from "@mui/material";
 import List from "@mui/material/List";
 import PeopleIcon from "@mui/icons-material/People";
 
@@ -64,16 +67,29 @@ const Room = () => {
   };
 
   return (
-    <Grid container spacing={2}>
-      {/* First element, Room Name */}
-      <Grid item xs={8}>
-        <Paper
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundImage: `url(${image})`,
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+        backgroundSize: "cover",
+        height: "100vh",
+        width: "100vw",
+      }}
+    >
+      <Grid container spacing={2}>
+        {/* First element, Room Name */}
+        <Grid item xs={8}>
+          <Paper
           square={false}
           style={{ height: "100px", textAlign: "center", padding: "16px" }}
         >
-          <h1>{roomName}</h1>
-        </Paper>
-      </Grid>
+            <h1>{roomName}</h1>
+          </Paper>
+        </Grid>
 
       {/* Second element, boton de iniciar partida, centrado en el paper */}
       <Grid item xs={4}>
@@ -99,40 +115,41 @@ const Room = () => {
         </Paper>
       </Grid>
 
-      {/* Tercer elemento */}
-      <Grid item xs={8}>
-        <Paper
+        {/* Tercer elemento */}
+        <Grid item xs={8}>
+          <Paper
           square={false}
           style={{ height: "450px", textAlign: "center", padding: "16px" }}
         >
-          chat
-        </Paper>
-      </Grid>
+            chat
+          </Paper>
+        </Grid>
 
-      {/* Cuarto elemento, cant de jugadores n/N y una lista de jugadores con emoji de people*/}
-      <Grid item xs={4}>
-        <Paper
+        {/* Cuarto elemento, cant de jugadores n/N y una lista de jugadores con emoji de people*/}
+        <Grid item xs={4}>
+          <Paper
           square={false}
           style={{ height: "450px", textAlign: "center", padding: "16px" }}
         >
-          <Stack>
-            <Stack direction="row">
-              {/* cant de jugadores */}
-              <PeopleIcon style={{ fontSize: 20, marginRight: "8px" }} />
-              <strong>
+            <Stack>
+              <Stack direction="row">
+                {/* cant de jugadores */}
+                <PeopleIcon style={{ fontSize: 20, marginRight: "8px" }} />
+                <strong>
                 {" "}
                 Players {users.length}/{12}
               </strong>
+              </Stack>
+              <List>
+                {users.map((users, index) => (
+                  <Item key={index}>{users}</Item>
+                ))}
+              </List>
             </Stack>
-            <List>
-              {users.map((users, index) => (
-                <Item key={index}>{users}</Item>
-              ))}
-            </List>
-          </Stack>
-        </Paper>
+          </Paper>
+        </Grid>
       </Grid>
-    </Grid>
+    </div>
   );
 };
 
