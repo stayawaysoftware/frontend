@@ -23,6 +23,21 @@ const descPile = [];
 const Game = () => {
   const { gameId } = useParams();
 
+  let players_example = [
+    { id: 1, name: "Player 1", death: false },
+    { id: 2, name: "Player 2", death: false },
+    { id: 3, name: "Player 3", death: true },
+    { id: 4, name: "Player 4", death: false },
+    { id: 5, name: "Player 5", death: false },
+    { id: 6, name: "Player 6", death: false },
+    { id: 7, name: "Player 7", death: false },
+    { id: 8, name: "Player 8", death: true },
+    { id: 9, name: "Player 9", death: false },
+    { id: 10, name: "Player 10", death: false },
+    { id: 11, name: "Player 11", death: false },
+    { id: 12, name: "Player 12", death: false },
+  ];
+
   return (
     <div>
       <div
@@ -40,7 +55,7 @@ const Game = () => {
           backgroundSize: "cover",
         }}
       >
-        <GameTable />
+        <GameTable players_example={players_example} />
         <Box>
           <Grid container spacing={2}>
             <Grid item xs={6} md={20}>
@@ -54,8 +69,7 @@ const Game = () => {
               transform: "translate(16%, 0%)",
               marginBottom: "-70%",
             }}
-          >
-          </div>
+          ></div>
         </Box>
         <Box>
           <Grid container spacing={2}>
@@ -87,7 +101,7 @@ const Game = () => {
               marginTop: 0,
             }}
           >
-            <Buttons current_player={5}/>
+            <Buttons current_player={5} />
           </div>
         </Box>
       </div>
@@ -95,4 +109,4 @@ const Game = () => {
   );
 };
 
-  export default Game;
+export default Game;
