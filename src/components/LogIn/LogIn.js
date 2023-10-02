@@ -36,22 +36,23 @@ export default function LogIn() {
 
   const loginHandler = async (e) => {
     e.preventDefault();
-    setUserName(username);
-
     const url = "http://localhost:8000/users";
-
     //build de url with the params
     const params = "?username=" + username;
     const urlFinal = url + params;
 
-    axios
+    await axios
       .post(urlFinal)
       .then((response) => {
         console.log("Solicitud POST exitosa", response.data);
         setUserId(response.data.id);
+        setUserName(username);
       })
       .catch((error) => {
         console.error("Error en la solicitud POST", error);
+        if (error.response.status === 500) {
+          alert(error.response.data.detail);
+        }
       });
   };
 
