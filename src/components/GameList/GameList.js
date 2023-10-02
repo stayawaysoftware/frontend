@@ -55,7 +55,7 @@ export default function GameList() {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} md={10}>
-        <Demo>
+        <Demo sx={{bgcolor: "rgba(255,255,255,0.8)"}} style={{borderRadius: "10px"}}>
           <List>
             {gameData.length === 0 ? ( //ternary for checking if there are rooms
               <div>Create a room and start playing!</div>
