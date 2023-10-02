@@ -1,8 +1,8 @@
 import React from "react";
-import card1 from "../GameComps/Cards/0B.png";
-import card2 from "../GameComps/Cards/0G.png";
-import card3 from "../GameComps/Cards/0R.png";
-import card4 from "../GameComps/Cards/0Y.png";
+import card1 from "../GameComps/Images/0B.png";
+import card2 from "../GameComps/Images/0G.png";
+import card3 from "../GameComps/Images/0R.png";
+import card4 from "../GameComps/Images/0Y.png";
 import { useState } from "react";
 
 const Hand = () => {
