@@ -53,7 +53,7 @@ const Room = () => {
 
   const startGame = async () => {
     try {
-      const response = await axios.post(
+      const response = await axios.put(
         `http://localhost:8000/rooms/${roomId}/start?host_id=${userid}`
       );
       console.log(response);
@@ -85,9 +85,9 @@ const Room = () => {
         <Grid item xs={8}>
           <Paper
           square={false}
-          style={{ height: "100px", textAlign: "center", padding: "16px" }}
+          style={{ height: "100px", textAlign: "center", padding: "16px", background: "rgba(255,255,255,0.7)" }}
         >
-            <h1>{roomName}</h1>
+            <h1 style={{color: "rgba(30,40,30,1)"}}>{roomName}</h1>
           </Paper>
         </Grid>
 
@@ -95,12 +95,11 @@ const Room = () => {
       <Grid item xs={4}>
         <Paper
           square={false}
-          style={{ height: "100px", textAlign: "center", padding: "16px" }}
+          style={{ height: "100px"  , textAlign: "center", padding: "16px", background: "rgba(255,255,255,0.0)" }}
         >
           {!!roomData ? (
             <Button
               variant="contained"
-              color="success"
               size="large"
               disabled={
                 userid !== roomData.host_id ||
@@ -119,9 +118,9 @@ const Room = () => {
         <Grid item xs={8}>
           <Paper
           square={false}
-          style={{ height: "450px", textAlign: "center", padding: "16px" }}
+          style={{ height: "450px", textAlign: "center", padding: "16px", background: "rgba(255,255,255,0.7)" }}
         >
-            chat
+            Chat
           </Paper>
         </Grid>
 
@@ -129,7 +128,7 @@ const Room = () => {
         <Grid item xs={4}>
           <Paper
           square={false}
-          style={{ height: "450px", textAlign: "center", padding: "16px" }}
+          style={{ height: "450px", textAlign: "center", padding: "16px", background: "rgba(255,255,255,0.7)" }}
         >
             <Stack>
               <Stack direction="row">

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { UserContext } from "../../contexts/UserContext";
+import { IdToAsset } from "../../utils/CardHandler";
 
 const Hand = (props) => {
   const [selectedCard, setSelectedCard] = useState(null);
@@ -38,17 +39,17 @@ const Hand = (props) => {
   return (
     <div>
       <div style={containerStyle}>
-        {props.cardList.map((card, index) => (
+        {props.cardList.map((cardId, index) => (
           <img
             key={index}
-            src={card}
+            src={IdToAsset(cardId)}
             alt={`card${index + 1}`}
             style={{
               ...baseCardStyle,
               ...(selectedCard === `card${index + 1}` ? highlightedCardStyle : {}),
               right: `${10 + index * 30}px`, 
             }}
-            onClick={() => handleCardClick(`${card}`)}
+            onClick={() => handleCardClick(`${cardId}`)}
           />
         ))}
       </div>
