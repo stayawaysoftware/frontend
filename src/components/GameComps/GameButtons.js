@@ -14,10 +14,13 @@ function PlayEnabled(current_player, userid, clickedCard) {
 }
 
 const Buttons = ({current_player}) => {
-  const { userid, clickedCard } = useContext(UserContext);
+  const { userid, clickedCard, setClickedCard } = useContext(UserContext);
 
   const handlePlayCard = () => {
     console.log("Play Card", clickedCard);
+
+    setClickedCard(null);
+    //here there should be the request to play the card
   }
 
   return (

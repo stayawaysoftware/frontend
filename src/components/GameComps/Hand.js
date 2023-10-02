@@ -48,7 +48,7 @@ const Hand = (props) => {
               ...(selectedCard === `card${index + 1}` ? highlightedCardStyle : {}),
               right: `${10 + index * 30}px`, 
             }}
-            onClick={() => handleCardClick(`card${index + 1}`)}
+            onClick={() => handleCardClick(`${card}`)}
           />
         ))}
       </div>
