@@ -22,7 +22,7 @@ const Deck= () => {
             userSelect: "none",
             cursor: "pointer",
             border: "none",
-            right: "30%",
+            right: "20%",
             bottom: "170px",
           }}
         />

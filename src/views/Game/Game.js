@@ -3,13 +3,22 @@ import Buttons from "../../components/GameComps/GameButtons";
 import image from "../Background/xd.svg";
 import GameTable from "../../components/GameTable/GameTable";
 import Deck from "../../components/GameComps/Deck";
+import DescPile from "../../components/GameComps/DescPile";
 
 import React from "react";
 import { useParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 
-const cardList = [200, 201, 202, 203, 3];
+import card1 from "../../assets/cards/0B.png";
+import card2 from "../../assets/cards/0G.png";
+import card3 from "../../assets/cards/0R.png";
+import card4 from "../../assets/cards/0Y.png";
+
+const cardList = [card1, card2, card3, card4, card1];
+const lastCard = card1;
+const descPile = [];
+
 
 const Game = () => {
   const { gameId } = useParams();
@@ -63,6 +72,22 @@ const Game = () => {
           ></div>
         </Box>
         <Box>
+          <Grid container spacing={2}>
+            <Grid item xs={6} md={20}>
+              <DescPile lastCard={lastCard} descPile={descPile} />
+            </Grid>
+          </Grid>
+          <div
+            style={{
+              position: "relative",
+              left: "10%",
+              transform: "translate(16%, 0%)",
+              marginBottom: "-70%",
+            }}
+          >
+          </div>
+        </Box>
+        <Box>  
           <Grid container spacing={2}>
             <Grid item xs={6} md={20}>
               <Hand cardList={cardList} />
