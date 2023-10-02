@@ -1,11 +1,8 @@
 import React, { useState, useContext } from "react";
 import { UserContext } from "../../contexts/UserContext";
 
-import Avatar from "@mui/material/Avatar";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
-import SmartToyIcon from "@mui/icons-material/SmartToy";
-import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
