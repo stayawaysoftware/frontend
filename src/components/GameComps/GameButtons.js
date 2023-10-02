@@ -26,12 +26,23 @@ const Buttons = ({current_player}) => {
   const handlePlayCard = () => {
     console.log(clickedCard);
 
-    console.log("card has target?", CardHasTarget(clickedCard));
+    // console.log("card has target?", CardHasTarget(clickedCard));
 
     setClickedCard(null);
     //here there should be the request to play the card
   }
 
+  const handlePlayLeft = () => {
+    console.log("play left", clickedCard);
+
+    setClickedCard(null);
+  }
+
+  const handlePlayRight = () => {
+    console.log("play right", clickedCard);
+
+    setClickedCard(null);
+  }
   return (
     <Grid container spacing={2}>
       <Grid item xs={8} md={10}>
@@ -44,7 +55,7 @@ const Buttons = ({current_player}) => {
                   width: "15%",
                 }}
                 disabled={!TargetsEnable(current_player, userid, clickedCard)}
-                //onClick={}
+                onClick={handlePlayLeft}
               >
                 Play Left
               </Button>
@@ -54,7 +65,7 @@ const Buttons = ({current_player}) => {
                   width: "18%",
                 }}
                 disabled={!TargetsEnable(current_player, userid, clickedCard)}
-                //onClick={}
+                onClick={handlePlayRight}
               >
                 Play right
               </Button>

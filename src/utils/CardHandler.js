@@ -13,17 +13,18 @@ const cardAssets = {
   201 : green,
   202 : red,
   203 : yellow,
-  default : deck
 };
 
 export function IdToAsset(id) {
   const assetName = cardAssets[id];
+  if (!assetName) {
+    return deck;
+  }
   return assetName;
 }
 
 const cardTargets = {
   3 : true,
-  default : false
 }
 
 export function CardHasTarget(id) {
