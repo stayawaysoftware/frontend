@@ -57,6 +57,10 @@ export default function GameList() {
       <Grid item xs={12} md={10}>
         <Demo>
           <List>
+          {gameData.length === 0 ? ( //ternary for checking if there are rooms
+            <div>Create a room and start playing!</div>
+          ) : (
+            <div> {/*this div is for the ternary to work*/}
             {gameData.map((gameData, index) => (
               <ExpandableItem
                 key={gameData.id}
@@ -118,6 +122,8 @@ export default function GameList() {
                 )}
               />
             ))}
+            </div>
+            )}
           </List>
         </Demo>
       </Grid>
