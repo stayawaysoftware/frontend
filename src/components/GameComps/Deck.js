@@ -1,5 +1,5 @@
 import React from "react";
-import mazo from "../GameComps/Images/mazo.png";
+import mazo from "../../assets/mazo.png";
 
 const Deck= () => {
 
