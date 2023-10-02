@@ -43,7 +43,7 @@ const Hand = (props) => {
           <img
             key={index}
             src={IdToAsset(cardId)}
-            alt={`card${index + 1}`}
+            alt={`${cardId + 1}`}
             style={{
               ...baseCardStyle,
               ...(selectedCard === `card${index + 1}` ? highlightedCardStyle : {}),
