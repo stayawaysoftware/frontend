@@ -1,4 +1,5 @@
 import React from "react";
+import { IdToAsset } from "../../utils/CardHandler";
 
 const DescPile = (props) => {
   const descPileWithLastCard = [...props.descPile, props.lastCard];
@@ -12,11 +13,11 @@ const DescPile = (props) => {
   return (
     <div>
       <div style={containerStyle}>
-        {descPileWithLastCard.map((card, index) => (
+        {descPileWithLastCard.map((cardId, index) => (
           <img
             key={index}
-            src={card}
-            alt={`card${index + 1}`}
+            src={IdToAsset(cardId)}
+            alt={`${cardId + 1}`}
             style={{
               width: "25%",
               height: "auto",
