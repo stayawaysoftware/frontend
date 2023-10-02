@@ -4,17 +4,12 @@ import image from "../Background/xd.svg";
 import GameTable from "../../components/GameTable/GameTable";
 import Deck from "../../components/GameComps/Deck";
 
-import card1 from "../../assets/cards/0B.png";
-import card2 from "../../assets/cards/0G.png";
-import card3 from "../../assets/cards/0R.png";
-import card4 from "../../assets/cards/0Y.png";
-
 import React from "react";
 import { useParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 
-const cardList = [card1, card2, card3, card4, card1];
+const cardList = [200, 201, 202, 203, 3];
 
 const Game = () => {
   const { gameId } = useParams();
