@@ -16,14 +16,14 @@ const Deck= () => {
           src={mazo}
           alt="mazo"
           style={{
-            width: "35%",
+            width: "25%",
             height: "auto",
             position: "relative",
             userSelect: "none",
             cursor: "pointer",
             border: "none",
             right: "30%",
-            bottom: "190px",
+            bottom: "170px",
           }}
         />
       </div>

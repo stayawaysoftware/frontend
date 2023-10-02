@@ -1,11 +1,8 @@
 import React from "react";
-import card1 from "../GameComps/Images/0B.png";
-import card2 from "../GameComps/Images/0G.png";
-import card3 from "../GameComps/Images/0R.png";
-import card4 from "../GameComps/Images/0Y.png";
+
 import { useState } from "react";
 
-const Hand = () => {
+const Hand = (props) => {
   const [selectedCard, setSelectedCard] = useState(null);
 
   const containerStyle = {
@@ -39,46 +36,19 @@ const Hand = () => {
   return (
     <div>
       <div style={containerStyle}>
-        <img
-          src={card1}
-          alt="card1"
-          style={{
-            ...baseCardStyle,
-            ...(selectedCard === "card1" ? highlightedCardStyle : {}),
-            left: "10px",
-          }}
-          onClick={() => handleCardClick("card1")}
-        />
-        <img
-          src={card2}
-          alt="card2"
-          style={{
-            ...baseCardStyle,
-            ...(selectedCard === "card2" ? highlightedCardStyle : {}),
-            right: "20px",
-          }}
-          onClick={() => handleCardClick("card2")}
-        />
-        <img
-          src={card3}
-          alt="card3"
-          style={{
-            ...baseCardStyle,
-            ...(selectedCard === "card3" ? highlightedCardStyle : {}),
-            right: "50px",
-          }}
-          onClick={() => handleCardClick("card3")}
-        />
-        <img
-          src={card4}
-          alt="card4"
-          style={{
-            ...baseCardStyle,
-            ...(selectedCard === "card4" ? highlightedCardStyle : {}),
-            right: "80px",
-          }}
-          onClick={() => handleCardClick("card4")}
-        />
+        {props.cardList.map((card, index) => (
+          <img
+            key={index}
+            src={card}
+            alt={`card${index + 1}`}
+            style={{
+              ...baseCardStyle,
+              ...(selectedCard === `card${index + 1}` ? highlightedCardStyle : {}),
+              right: `${10 + index * 30}px`, 
+            }}
+            onClick={() => handleCardClick(`card${index + 1}`)}
+          />
+        ))}
       </div>
     </div>
   );
