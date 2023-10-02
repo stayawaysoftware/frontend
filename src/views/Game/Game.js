@@ -5,10 +5,12 @@ import "./Game.css";
 import image from "../Background/xd.svg";    
 
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 
 const Game = () => {
+  const { gameId } = useParams();
   const [players, setPLayers] = useState([]);
 
   let players_example = [
@@ -108,7 +110,7 @@ const Game = () => {
         <div className="circle">
           <div className="circle-hold">
             {players.map(function (value, index) {
-              return <UserAvatar css={value} name={value.name} />;
+              return <UserAvatar css={value} name={value.name} key={index} />;
             })}
           </div>
         </div>
