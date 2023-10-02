@@ -3,9 +3,11 @@ import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
 import { Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { pink } from "@mui/material/colors";
+import { green, pink } from "@mui/material/colors";
+import "./UserAvatar.css";
+import crown from "../../assets/crown.png";
 
-export default function UserAvatar({ name, css, death }) {
+export default function UserAvatar({ name, css, death, turn }) {
   return (
     <Stack
       direction="column"
@@ -53,7 +55,16 @@ export default function UserAvatar({ name, css, death }) {
             justifyContent: "center",
           }}
         >
-          <Avatar src="/broken-image.jpg" sx={{ width: 50, height: 50 }} />
+          {turn && (
+            <div className="turn">
+              <img src={crown} alt="crown" className="img" />
+            </div>
+          )}
+
+          <Avatar
+            src="/broken-image.jpg"
+            sx={{ width: 50, height: 50, bgcolor: green[400] }}
+          />
           <Typography variant="h7" component="div" gutterBottom>
             {name}
           </Typography>

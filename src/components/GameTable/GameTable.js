@@ -75,6 +75,7 @@ const GameTable = () => {
         rotateReverse: rotateReverse,
         name: orderedPlayers[i].name,
         death: orderedPlayers[i].death,
+        turn: orderedPlayers[i].id === 4, // si es el turno del usuario
       });
     }
     setPLayers(items);
@@ -117,6 +118,7 @@ const GameTable = () => {
                 name={value.name}
                 key={index}
                 death={value.death}
+                turn={value.turn}
               />
             );
           })}
