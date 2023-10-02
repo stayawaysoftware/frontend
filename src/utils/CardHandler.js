@@ -4,7 +4,7 @@ import blue from "../assets/cards/0B.png";
 import green from "../assets/cards/0G.png";
 import red from "../assets/cards/0R.png";
 import yellow from "../assets/cards/0Y.png";
-import flamethrower from "../assets/cards/lanzallamas.jpg";
+import flamethrower from "../assets/cards/lanzallamas.png";
 import deck from "../assets/mazo.png";
 
 const cardAssets = {

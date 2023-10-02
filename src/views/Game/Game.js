@@ -10,6 +10,8 @@ import { useParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 
+import { UserContext } from "../../contexts/UserContext";
+import { useContext } from "react";
 
 const cardList = [200, 201, 202, 3, 202];
 const lastCard = 3;
@@ -18,6 +20,7 @@ const descPile = [];
 
 const Game = () => {
   const { gameId } = useParams();
+  const { userid } = useContext(UserContext);
 
   let players_example = [
     { id: 1, name: "Player 1", death: false },
@@ -97,7 +100,7 @@ const Game = () => {
               marginTop: 0,
             }}
           >
-            <Buttons current_player={1} />
+            <Buttons current_player={userid} />
           </div>
         </Box>
       </div>
