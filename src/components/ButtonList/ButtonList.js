@@ -33,7 +33,7 @@ export default function ButtonList({ joinRoom }) {
     const params = "?user_id=" + userid;
     const urlFinal = url + params;
 
-    await axios.post(urlFinal)
+    await axios.put(urlFinal)
     .then((response) => {
       console.log('Solicitud POST exitosa', response.data);
     })
