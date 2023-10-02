@@ -7,12 +7,18 @@ import ListItem from "@mui/material/ListItem";
 
 import { UserContext } from "../../contexts/UserContext";
 
-function PlayEnabled(current_player, userid) {
-  return current_player === userid;
+function PlayEnabled(current_player, userid, clickedCard) {
+  const isTurn = current_player === userid;
+  const isCardClicked = clickedCard !== null;
+  return isTurn && isCardClicked;
 }
 
 const Buttons = ({current_player}) => {
-  const { userid } = useContext(UserContext);
+  const { userid, clickedCard } = useContext(UserContext);
+
+  const handlePlayCard = () => {
+    console.log("Play Card", clickedCard);
+  }
 
   return (
     <Grid container spacing={2}>
@@ -24,7 +30,8 @@ const Buttons = ({current_player}) => {
               style={{
                 width: "15%",
               }}
-              disabled={!PlayEnabled(current_player, userid)}
+              disabled={!PlayEnabled(current_player, userid, clickedCard)}
+              onClick={handlePlayCard}
             >
               Play Card
             </Button>
