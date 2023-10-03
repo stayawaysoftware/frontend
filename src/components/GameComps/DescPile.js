@@ -2,7 +2,7 @@ import React from "react";
 import { IdToAsset } from "../../utils/CardHandler";
 
 const DescPile = (props) => {
-  const descPileWithLastCard = [...props.descPile, props.lastCard];
+
 
   const containerStyle = {
     display: "flex",
@@ -13,11 +13,9 @@ const DescPile = (props) => {
   return (
     <div>
       <div style={containerStyle}>
-        {descPileWithLastCard.map((cardId, index) => (
           <img
-            key={index}
-            src={IdToAsset(cardId)}
-            alt={`${cardId + 1}`}
+            src={IdToAsset(props.lastCard)}
+            alt="descarte"
             style={{
               width: "25%",
               height: "auto",
@@ -27,7 +25,6 @@ const DescPile = (props) => {
               bottom: "170px",
             }}
           />
-        ))}
       </div>
     </div>
   );

@@ -14,8 +14,7 @@ import { UserContext } from "../../contexts/UserContext";
 import axios from "axios";
 
 const cardList = [200, 201, 202, 3, 202];
-const lastCard = 3;
-const descPile = [];
+const lastCard = 200;
 
 
 const Game = () => {
@@ -93,7 +92,7 @@ const Game = () => {
         <Box>
           <Grid container spacing={2}>
             <Grid item xs={6} md={20}>
-              <DescPile lastCard={lastCard} descPile={descPile} />
+              <DescPile lastCard={lastCard} />
             </Grid>
           </Grid>
           <div
