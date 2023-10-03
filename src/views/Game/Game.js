@@ -9,6 +9,8 @@ import React, { useEffect, useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import Alert from "@mui/material/Alert";
+import CheckIcon from "@mui/icons-material/Check";
 
 import { UserContext } from "../../contexts/UserContext";
 import axios from "axios";
@@ -106,6 +108,20 @@ const Game = () => {
           backgroundSize: "cover",
         }}
       >
+        {userid === postitionToId(currentTurn) ? (
+          <Alert
+            severity="success"
+            style={{
+              position: "absolute",
+              top: "5%",
+              left: "2%",
+            }}
+          >
+            Your Turn!
+          </Alert>
+          ) : (
+          <h1> </h1>
+        )}
         {loading ? (
           // Mostrar el mensaje de carga si loading es true
           <p>Loading...</p>
