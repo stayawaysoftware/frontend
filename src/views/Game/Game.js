@@ -50,11 +50,22 @@ const Game = () => {
     }
     getGameData();
 
-    const interval = setInterval(getGameData, 2000);
+    const interval = setInterval(getGameData, 20000);
 
     return () => clearInterval(interval);
 
   }, [gameId]);
+
+  const postitionToId = (position) => {
+    let id = null;
+    gamePlayers.forEach(player => {
+      if (player.round_position === position) {
+        id = player.id;
+      }
+    });
+    return id;
+  }
+
 
   return (
     <div>
@@ -73,7 +84,7 @@ const Game = () => {
           backgroundSize: "cover",
         }}
       >
-        <GameTable players_example={gamePlayers} currentTurn={currentTurn} />
+        <GameTable players_example={players_example} currentTurn={currentTurn} />
         <Box>
           <Grid container spacing={2}>
             <Grid item xs={6} md={20}>
@@ -119,7 +130,7 @@ const Game = () => {
               marginTop: 0,
             }}
           >
-            <Buttons current_player={userid} />
+            <Buttons current_player={postitionToId(currentTurn)} />
           </div>
         </Box>
       </div>
