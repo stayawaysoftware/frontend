@@ -4,11 +4,14 @@ import image from "../Background/xd.svg";
 import GameTable from "../../components/GameTable/GameTable";
 import Deck from "../../components/GameComps/Deck";
 import DescPile from "../../components/GameComps/DescPile";
+import FinishedAlert from "../../components/FinishedAlert/FinishedAlert";
 
 import React, { useEffect, useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import Alert from "@mui/material/Alert";
+import Button from "@mui/material/Button";
 
 import { UserContext } from "../../contexts/UserContext";
 import axios from "axios";
@@ -26,6 +29,7 @@ const Game = () => {
   const [currentTurn, setCurrentTurn] = useState(null);
   const [playerHand, setPlayerHand] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [finished, setFinished] = useState(true);
 
   useEffect(() => {
     const getGameData = async () => {
@@ -38,6 +42,7 @@ const Game = () => {
         setGamePlayers(data.players);
         setCurrentTurn(data.current_turn);
         setLoading(false);
+        // setFinished(data.finished);
       } catch (error) {
         // Manejar errores de la solicitud
         console.error("Error al obtener los datos del juego:", error);
@@ -87,8 +92,8 @@ const Game = () => {
     idTypeHand.sort();
     console.log("idtypehand es", idTypeHand);
     return idTypeHand;
-  }
-  
+  };
+
   return (
     <div>
       <div
@@ -163,6 +168,24 @@ const Game = () => {
                 <Buttons current_player={postitionToId(currentTurn)} />
               </div>
             </Box>
+            {finished && (
+              <Grid
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  position: "absolute",
+                  top: "5%",
+                  left: "2%",
+                }}
+              >
+                <FinishedAlert
+                  gamePlayersName={gamePlayers[0].name}
+                  gameId={gameId}
+                />
+              </Grid>
+            )}
           </>
         )}
       </div>
