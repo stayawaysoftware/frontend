@@ -26,8 +26,11 @@ export function IdToAsset(id) {
   else if (id > 4 && id < 10) {
     return  blue;
   }
-  else if (id > 10 && id < 20) {
+  else if (id > 10 && id < 16) {
     return green;
+  }
+  else if (id > 16 && id < 22) {
+    return yellow;
   }
   else {
     return red;
