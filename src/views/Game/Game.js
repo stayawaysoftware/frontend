@@ -165,7 +165,7 @@ const Game = () => {
           backgroundSize: "cover",
         }}
       >
-        {userid === postitionToId(currentTurn) ? (
+        {userid === positionToId(currentTurn) ? (
           <Alert
             severity="success"
             style={{

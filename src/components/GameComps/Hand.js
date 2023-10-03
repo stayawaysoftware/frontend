@@ -71,7 +71,7 @@ const Hand = (props) => {
               ...(hoveredCard === `card${index + 1}` ? hoverCardStyle : {}), // Apply hover style if card is hovered
               right: `${10 + index * 30}px`,
             }}
-            onClick={() => handleCardClick(`card${index + 1}`)}
+            onClick={() => handleCardClick(`${cardId}`)}
             onMouseEnter={() => handleCardHover(`card${index + 1}`)} // Handle mouse enter
             onMouseLeave={handleCardLeave} // Handle mouse leave
           />
