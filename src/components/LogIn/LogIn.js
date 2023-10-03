@@ -87,7 +87,10 @@ export default function LogIn() {
             </Paper>
             <Button
               type="submit"
+              //color verde
+              color="success"
               onClick={loginHandler}
+              disabled={username === undefined}
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}

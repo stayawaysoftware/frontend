@@ -56,6 +56,7 @@ const Buttons = ({current_player}) => {
                 }}
                 disabled={!TargetsEnable(current_player, userid, clickedCard)}
                 onClick={handlePlayLeft}
+                color="success"
               >
                 Play Left
               </Button>
@@ -66,6 +67,7 @@ const Buttons = ({current_player}) => {
                 }}
                 disabled={!TargetsEnable(current_player, userid, clickedCard)}
                 onClick={handlePlayRight}
+                color="success"
               >
                 Play right
               </Button>
@@ -79,6 +81,7 @@ const Buttons = ({current_player}) => {
               }}
               disabled={!PlayEnabled(current_player, userid, clickedCard)}
               onClick={handlePlayCard}
+              color="success"
             >
               Play Card
             </Button>
@@ -90,6 +93,7 @@ const Buttons = ({current_player}) => {
                 width: "15%",
               }}
               disabled={true}
+              color="success"
               //onClick={}
             >
                Exchange Card

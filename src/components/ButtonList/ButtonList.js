@@ -54,6 +54,7 @@ export default function ButtonList({ joinRoom }) {
               style={{
                 width: "180px",
               }}
+              color="success"
             >
               Refresh
             </Button>
@@ -65,6 +66,7 @@ export default function ButtonList({ joinRoom }) {
               style={{
                 width: "180px",
               }}
+              color="success"
               onClick={handleCreateRoomClick}
             >
               Create Room
@@ -73,11 +75,12 @@ export default function ButtonList({ joinRoom }) {
           <ListItem>
             <Button
               variant="contained"
-              disabled={roomid === null}
+              disabled={roomid === null }
               startIcon={<LoginIcon />}
-              style={{
+              style={{ 
                 width: "180px",
               }}
+              color="success"
               onClick={handleJoinRoom}
             >
               Join Room
