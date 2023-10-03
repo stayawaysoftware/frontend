@@ -4,7 +4,7 @@ import { UserContext } from "../../contexts/UserContext";
 
 import React, { useEffect, useState, useContext } from "react";
 
-const GameTable = ({ players_example }) => {
+const GameTable = ({ players_example, currentTurn }) => {
   const { userid } = useContext(UserContext);
   const [players, setPLayers] = useState([]);
 
@@ -16,6 +16,10 @@ const GameTable = ({ players_example }) => {
     let slice;
 
     switch (num) {
+      case 3:
+        slice = (200 * type) / num;
+        start = 203;
+        break;
       case 4:
         slice = (185 * type) / num;
         start = 200;
@@ -59,7 +63,7 @@ const GameTable = ({ players_example }) => {
         rotateReverse: rotateReverse,
         name: players[i].name,
         death: players[i].death,
-        turn: players[i].id === 4, // si es el turno del usuario
+        turn: players[i].position === currentTurn, // si es el turno del usuario
       });
     }
     setPLayers(items);
@@ -69,7 +73,10 @@ const GameTable = ({ players_example }) => {
     const sortPlayers = () => {
       let sorted_players = [];
       let i;
-      for (i = 1; i < players_example.length; i++) {
+      players_example.sort((a, b) => {
+        return a.position - b.position;
+      });
+      for (i = 0; i < players_example.length; i++) {
         if (players_example[i].id === userid) {
           // sorted_players.push(players_example[i]);
           break;
