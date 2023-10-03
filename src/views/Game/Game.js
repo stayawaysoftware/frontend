@@ -13,7 +13,6 @@ import Grid from "@mui/material/Grid";
 import { UserContext } from "../../contexts/UserContext";
 import axios from "axios";
 
-const cardList = [200, 201, 202, 3, 202];
 const lastCard = 200;
 
 const Game = () => {
@@ -26,6 +25,9 @@ const Game = () => {
   const [currentTurn, setCurrentTurn] = useState(null);
   const [playerHand, setPlayerHand] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [forceRenderAlive, setForceRenderAlive] = useState(0);
+  const [forceRender, setForceRender] = useState(0);
+
 
   useEffect(() => {
     const getGameData = async () => {
@@ -48,10 +50,30 @@ const Game = () => {
     console.log("game data es", gameData);
     console.log("turno es", currentTurn);
 
-    const interval = setInterval(getGameData, 10000);
+    const interval = setInterval(getGameData, 1000);
 
     return () => clearInterval(interval);
   }, [gameId]);
+
+  const handleForceRenderAlive = () => {
+    setForceRenderAlive(calcAlivePlayers());
+  };
+
+  const handleForceRender = () => {
+    setForceRender(currentTurn);
+  };
+
+  const calcAlivePlayers = () => {
+    let alivePlayers = 0;
+    gameData.players.forEach((player) => {
+      if (player.alive) {
+        alivePlayers++;
+      }
+    }
+    );
+    return alivePlayers;
+  };
+
 
   const gameDataToTableData = (gameData) => {
     let tableData = [];
@@ -80,21 +102,33 @@ const Game = () => {
 
   const getLeftId = (position) => {
     const n = gamePlayers.length;
-    // Si la posición es 1, entonces la posición izquierda es 4
-    if (position === 1) {
-      return positionToId(n); // En lugar de (position - 1) % n, usamos n
-    } else {
-      return positionToId(position - 1);
+    //must return the next valid id, considering if the player is alive or not
+    while (1) {
+      const leftPos = (position === 1) ? n : position - 1;
+      const leftId = positionToId(leftPos);
+      //check if leftid is alive
+      if (gameData.players.find((player) => player.id === leftId).alive) {
+        return leftId;
+      } else {
+        position = leftPos;
+      }      
     }
+  
   }
 
   const getRightId = (position) => {
     const n = gamePlayers.length;
-    // Si la posición es 4, entonces la posición derecha es 1
-    if (position === n) {
-      return positionToId(1); // En lugar de (position + 1) % n, usamos 1
-    } else {
-      return positionToId((position + 1) % n);
+    // Si la posición es n, entonces la posición derecha es 1
+    // Si no, la posición derecha es la posición actual + 1
+    while (1) {
+      const rightPos = (position === n) ? 1 : position + 1;
+      const rightId = positionToId(rightPos);
+      //check if rightid is alive
+      if (gameData.players.find((player) => player.id === rightId).alive) {
+        return rightId;
+      } else {
+        position = rightPos;
+      }
     }
   }
 
@@ -138,6 +172,8 @@ const Game = () => {
             <GameTable
               players_example={gameDataToTableData(gameData)}
               currentTurn={currentTurn}
+              forceRender={forceRender}
+              forceRenderAlive={forceRenderAlive}
             />
             <Box>
               <Grid container spacing={2}>

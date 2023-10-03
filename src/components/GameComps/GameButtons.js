@@ -29,25 +29,25 @@ const Buttons = ({current_player, gameId, left_id, right_id}) => {
 
   const handlePlayCard = async () => {
     const response = await axios.put(
-      `http://localhost:8000/game/${gameId}/play_card?card_idtype=${clickedCard}&current_player_id=${userid}`
+      `http://localhost:8000/game/${gameId}/play_turn?card_idtype=${clickedCard}&current_player_id=${userid}`
     );
-    console.log(response);
+
     setClickedCard(null);
   };
 
   const handlePlayLeft = async () => {
     const response = await axios.put(
-      `http://localhost:8000/game/${gameId}/play_card?card_idtype=${clickedCard}&current_player_id=${userid}&target_player_id=${left_id}`
+      `http://localhost:8000/game/${gameId}/play_turn?card_idtype=${clickedCard}&current_player_id=${userid}&target_player_id=${left_id}`
     );
-    console.log(response);
+
     setClickedCard(null);
   }
 
   const handlePlayRight= async () => {
     const response = await axios.put(
-      `http://localhost:8000/game/${gameId}/play_card?card_idtype=${clickedCard}&current_player_id=${userid}&target_player_id=${right_id}`
+      `http://localhost:8000/game/${gameId}/play_turn?card_idtype=${clickedCard}&current_player_id=${userid}&target_player_id=${right_id}`
     );
-    console.log(response);
+
     setClickedCard(null);
   }
   return (
