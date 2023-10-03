@@ -16,11 +16,22 @@ const cardAssets = {
 };
 
 export function IdToAsset(id) {
-  const assetName = cardAssets[id];
-  if (!assetName) {
-    return deck;
+  // const assetName = cardAssets[id];
+    // if (!assetName) {
+  //   return deck;
+  // }
+  if (id === 3) {
+    return flamethrower;
   }
-  return assetName;
+  else if (id > 4 && id < 10) {
+    return  blue;
+  }
+  else if (id > 10 && id < 20) {
+    return green;
+  }
+  else {
+    return red;
+  }
 }
 
 const cardTargets = {

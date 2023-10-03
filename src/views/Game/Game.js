@@ -24,6 +24,7 @@ const Game = () => {
   const [gameData, setGameData] = useState(null);
   const [gamePlayers, setGamePlayers] = useState([]);
   const [currentTurn, setCurrentTurn] = useState(null);
+  const [playerHand, setPlayerHand] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -65,7 +66,7 @@ const Game = () => {
   };
 
   const postitionToId = (position) => {
-    console.log("game players es", gamePlayers);
+    // console.log("game players es", gamePlayers);
     let id = null;
     gamePlayers.forEach((player) => {
       if (player.round_position === position) {
@@ -75,6 +76,19 @@ const Game = () => {
     return id;
   };
 
+  const idToHandOfIdType = (id) => {
+    let hand = [];
+    hand = gameData.players.find((player) => player.id === id).hand;
+    //hand to idtype hand
+    let idTypeHand = [];
+    hand.forEach((card) => {
+      idTypeHand.push(card.idtype);
+    });
+    idTypeHand.sort();
+    console.log("idtypehand es", idTypeHand);
+    return idTypeHand;
+  }
+  
   return (
     <div>
       <div
@@ -135,7 +149,7 @@ const Game = () => {
             <Box>
               <Grid container spacing={2}>
                 <Grid item xs={6} md={20}>
-                  <Hand cardList={cardList} />
+                  <Hand cardList={idToHandOfIdType(userid)} />
                 </Grid>
               </Grid>
               <div
