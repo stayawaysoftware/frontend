@@ -1,87 +1,85 @@
-import React from "react";
-import card1 from "../GameComps/Cards/0B.png";
-import card2 from "../GameComps/Cards/0G.png";
-import card3 from "../GameComps/Cards/0R.png";
-import card4 from "../GameComps/Cards/0Y.png";
-import { useState } from 'react';
+import React, { useEffect, useState, useContext } from "react";
+import { UserContext } from "../../contexts/UserContext";
+import { IdToAsset } from "../../utils/CardHandler";
 
-const Hand = () => {
-    const [selectedCard, setSelectedCard] = useState(null);
+const Hand = (props) => {
+  const [selectedCard, setSelectedCard] = useState(null);
+  const [hoveredCard, setHoveredCard] = useState(null);
+  const { clickedCard, setClickedCard } = useContext(UserContext);
 
-    const containerStyle = {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    };
+  const baseCardStyle = {
+    width: "10%",
+    height: "auto",
+    position: "relative",
+    top: "170px",
+    userSelect: "none",
+    cursor: "pointer",
+    border: "none",
+    transition: "width 0.2s, height 0.2s", // Add transition for smooth animation
+  };
 
-    const baseCardStyle = {
-        width: '10%',
-        height: 'auto',
-        position: 'relative',
-        top: '450px',
-        userSelect: 'none', 
-        cursor: 'pointer', 
-        border: 'none', 
-    };
+  const highlightedCardStyle = {
+    border: "1px groove",
+  };
 
-    const highlightedCardStyle = {
-        border: '1px groove', 
-    };
+  const hoverCardStyle = {
+    border: "1px groove",
+  };
 
-    const handleCardClick = (cardId) => {
-        if (selectedCard === cardId) {
-            setSelectedCard(null);
-        } else {
-            setSelectedCard(cardId);
-        }
-    };
+  const enlargedCardStyle = {
+    width: "11%", // Adjust the width to enlarge the card
+    height: "auto", // Maintain the aspect ratio
+  };
 
-    return (
-        <div>
-            <div style={containerStyle}>
-                <img
-                    src={card1}
-                    alt="card1"
-                    style={{
-                        ...baseCardStyle,
-                        ...(selectedCard === 'card1' ? highlightedCardStyle : {}), 
-                        left: '10px', 
-                    }}
-                    onClick={() => handleCardClick('card1')} 
-                />
-                <img
-                    src={card2}
-                    alt="card2"
-                    style={{
-                        ...baseCardStyle,
-                        ...(selectedCard === 'card2' ? highlightedCardStyle : {}), 
-                        right: '20px', 
-                    }}
-                    onClick={() => handleCardClick('card2')} 
-                />
-                <img
-                    src={card3}
-                    alt="card3"
-                    style={{
-                        ...baseCardStyle,
-                        ...(selectedCard === 'card3' ? highlightedCardStyle : {}), 
-                        right: '50px', 
-                    }}
-                    onClick={() => handleCardClick('card3')} 
-                />
-                <img
-                    src={card4}
-                    alt="card4"
-                    style={{
-                        ...baseCardStyle,
-                        ...(selectedCard === 'card4' ? highlightedCardStyle : {}), 
-                        right: '80px', 
-                    }}
-                    onClick={() => handleCardClick('card4')}
-                />
-            </div>
-        </div>
-    );
+  const handleCardClick = (cardId) => {
+    if (selectedCard === cardId) {
+      setSelectedCard(null);
+      setClickedCard(null);
+    } else {
+      setSelectedCard(cardId);
+      setClickedCard(cardId);
+    }
+  };
+
+  const handleCardHover = (cardId) => {
+    setHoveredCard(cardId);
+  };
+
+  const handleCardLeave = () => {
+    setHoveredCard(null);
+  };
+
+  return (
+    <div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {props.cardList.map((cardId, index) => (
+          <img
+            key={index}
+            src={IdToAsset(cardId)}
+            alt={`${cardId + 1}`}
+            style={{
+              ...baseCardStyle,
+              ...(selectedCard === `card${index + 1}`
+                ? { ...highlightedCardStyle, ...enlargedCardStyle } // Enlarge selected card
+                : {}),
+              ...(hoveredCard === `card${index + 1}` ? hoverCardStyle : {}), // Apply hover style if card is hovered
+              right: `${10 + index * 30}px`,
+            }}
+            onClick={() => handleCardClick(`${cardId}`)}
+            onMouseEnter={() => handleCardHover(`card${index + 1}`)} // Handle mouse enter
+            onMouseLeave={handleCardLeave} // Handle mouse leave
+          />
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export default Hand;
+

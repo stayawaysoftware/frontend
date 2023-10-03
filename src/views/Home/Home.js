@@ -1,5 +1,6 @@
 import GameList from "../../components/GameList/GameList";
 import ButtonList from "../../components/ButtonList/ButtonList";
+import image from '../Background/Hex2324.svg';
 
 import * as React from "react";
 import Box from "@mui/material/Box";
@@ -7,8 +8,18 @@ import Grid from "@mui/material/Grid";
 
 const Home = () => {
   return (
-    <div>
-      <h1>Listado de Partidas</h1>
+    <div
+      style={{
+        backgroundImage: `url(${image})`,
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+        backgroundSize: "cover",
+        height: "100vh",
+        width: "100vw",
+        overflow: "hidden",
+      }}
+    >
+      <h1 style={{color: "rgba(255,255,255,1)"}}>Room List</h1>
       <div
         style={{
           display: "flex",

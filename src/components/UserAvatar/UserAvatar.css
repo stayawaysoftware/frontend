@@ -1,0 +1,9 @@
+.pfp {
+  box-shadow: 0 0 10px 0 rgba(34, 34, 34, 1);
+}
+
+img {
+  background: transparent;
+  background-color: transparent;
+  width: 30px;
+}

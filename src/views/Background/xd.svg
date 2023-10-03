@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <style>.a,.b{stroke-miterlimit:10;}.a{fill:url(#a);stroke:url(#b);}.b{fill:none;stroke:#8eed20;stroke-width:4px;}.c{fill:#8eed20;}</style>
+    <radialGradient id="a" cx="957" cy="544.5" r="798.56" gradientUnits="userSpaceOnUse" spreadMethod="pad">
+      <stop offset="0" stop-color="#8cc63f"/>
+      <stop offset="0.35" stop-color="#5d7f30"/>
+      <stop offset="0.65" stop-color="#394924"/>
+      <stop offset="0.88" stop-color="#22271d"/>
+      <stop offset="1" stop-color="#1a1a1a"/>
+    </radialGradient>
+    <pattern x="0" y="0" width="25" height="25" patternUnits="userSpaceOnUse" viewBox="0 0 100 100" id="pattern-0">
+      <rect x="0" y="0" width="50" height="100" style="fill: black;"/>
+    </pattern>
+    <pattern id="pattern-0-0" patternTransform="matrix(1, 0, 0, 1, 944.5, 532)" xlink:href="#pattern-0"/>
+  </defs>
+  <title>free-awesome-greenBG</title>
+  <rect class="a" x="-24" y="-15" width="1962" height="1119" style="paint-order: stroke; stroke: url('#pattern-0-0');"/>
+</svg>

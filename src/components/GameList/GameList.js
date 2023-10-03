@@ -1,4 +1,5 @@
-import * as React from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { UserContext } from "../../contexts/UserContext";
 import { styled } from "@mui/material/styles";
 import List from "@mui/material/List";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
@@ -10,74 +11,125 @@ import { ListItemButton } from "@mui/material";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import Collapse from "@mui/material/Collapse";
-
 import ExpandableItem from "./ExpandableItem";
-
-const getItems = (count) =>
-  Array.from({ length: count }, (v, k) => k).map((k) => ({
-    id: `item-${k}`,
-    initials: `P${k}`,
-    primary: `Partida ${k}`,
-    actual_players: `Jugadores: ${k}`,
-    capacity: `Capacidad: ${k}`,
-  }));
+import axios from "axios";
+import PeopleIcon from "@mui/icons-material/People";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
 
 const Demo = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
 }));
 
+function GetInitials(name) {
+  //function to get first two letters from name
+  var twoFirstLetters = name.substring(0, 2);
+  return twoFirstLetters;
+}
+
 export default function GameList() {
-  const [items, setItem] = React.useState(getItems(14));
+  const [gameData, setGameData] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const { setRoomId } = useContext(UserContext);
+
+  useEffect(() => {
+    // should be changed to the API URL constant
+    const apiUrl = "http://localhost:8000/rooms";
+
+    const getRoomList = async () => {
+      axios
+        .get(apiUrl)
+        .then((response) => {
+          setGameData(response.data);
+        })
+        .catch((error) => {
+          console.error("Error al hacer la solicitud GET:", error);
+        });
+    };
+    getRoomList();
+
+    const interval = setInterval(getRoomList, 2000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} md={10}>
-        <Demo>
+        <Demo sx={{bgcolor: "rgba(255,255,255,0.8)"}} style={{borderRadius: "10px"}}>
           <List>
-            {items.map((item, index) => (
-              <ExpandableItem
-                render={(xprops) => (
-                  <>
-                    <div>
-                      <ListItemButton
-                        onClick={() => xprops.setOpen(!xprops.open)}
-                      >
-                        <ListItemAvatar>
-                          <Avatar>{item.initials}</Avatar>
-                        </ListItemAvatar>
-                        <ListItemText
-                          primary={item.primary}
-                          //secondary={secondary ? "Secondary text" : null}
-                        />
-                        {xprops.open ? <ExpandLess /> : <ExpandMore />}
-                      </ListItemButton>
-                      <Collapse in={xprops.open} timeout="auto" unmountOnExit>
-                        <div
-                          style={{
-                            display: "flex",
-                            width: "100%",
-                          }}
-                        >
-                          <Typography
-                            component="div"
-                            style={{
-                              display: "flex",
-                              width: "30%",
+            {gameData.length === 0 ? ( //ternary for checking if there are rooms
+              <div>Create a room and start playing!</div>
+            ) : (
+              <div>
+                {" "}
+                {/*this div is for the ternary to work*/}
+                {gameData.map((gameData, index) => (
+                  <ExpandableItem
+                    key={gameData.id}
+                    render={(xprops) => (
+                      <>
+                        <div>
+                          <ListItemButton
+                            selected={selectedItem === gameData.id}
+                            onClick={() => {
+                              xprops.setOpen(!xprops.open);
+                              setSelectedItem(gameData.id);
+                              setRoomId(gameData.id);
                             }}
-                            ml={9}
                           >
-                            {item.actual_players}
-                          </Typography>
-                          <Typography component="div">
-                            {item.capacity}
-                          </Typography>
+                            <ListItemAvatar>
+                              <Avatar>{GetInitials(gameData.name)}</Avatar>
+                            </ListItemAvatar>
+                            <ListItemText
+                              primary={gameData.name}
+                              //secondary={secondary ? "Secondary text" : null}
+                            />
+                            {xprops.open ? <ExpandLess /> : <ExpandMore />}
+                          </ListItemButton>
+                          <Collapse
+                            in={xprops.open}
+                            timeout="auto"
+                            unmountOnExit
+                          >
+                            <div
+                              style={{
+                                display: "flex",
+                                width: "100%",
+                              }}
+                            >
+                              <Typography
+                                component="div"
+                                style={{
+                                  display: "flex",
+                                  width: "30%",
+                                }}
+                                ml={9}
+                              >
+                                <PeopleIcon
+                                  style={{ fontSize: 20, marginRight: "8px" }}
+                                />
+                                {gameData.usernames.length}/12
+                              </Typography>
+                              <Typography component="div">
+                                {/* {ternary for checking if the game in in_game} */}
+                                {gameData.in_game ? (
+                                  <div>In game</div>
+                                ) : (
+                                  <div>Waiting for players</div>
+                                )}
+                              </Typography>
+                              {/* <Typography component="div">
+                            <LockOpenIcon style={{ fontSize: 18, marginRight: '8px'}}/>                         
+                          </Typography> */}
+                            </div>
+                          </Collapse>
                         </div>
-                      </Collapse>
-                    </div>
-                  </>
-                )}
-              />
-            ))}
+                      </>
+                    )}
+                  />
+                ))}
+              </div>
+            )}
           </List>
         </Demo>
       </Grid>

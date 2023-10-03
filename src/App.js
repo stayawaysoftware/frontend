@@ -1,7 +1,7 @@
 import "./App.css";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { UserContext } from "./UserContext";
+import { UserContext } from "./contexts/UserContext";
 
 import Home from "./views/Home/Home";
 import Register from "./views/Register/Register";
@@ -23,17 +23,33 @@ const routes = createBrowserRouter([
   },
   {
     name: "Game",
-    path: "/game",
+    path: "/game/:gameId",
     element: <Game />,
   },
 ]);
 
 function App() {
-  const { user } = useContext(UserContext);
+  const { username, userid } = useContext(UserContext);
+
+  useEffect(() => {
+    window.addEventListener("beforeunload", alertUser);
+    return () => {
+      window.removeEventListener("beforeunload", alertUser);
+    };
+  });
+
+  const alertUser = (event) => {
+    event.preventDefault();
+    //con axios no funciona, no se porque xdnt
+    fetch(`http://localhost:8000/users/${userid}`, {
+      method: "DELETE",
+    });
+    event.returnValue = "";
+  };
 
   return (
     <div className="App">
-      {!!user ? <RouterProvider router={routes} /> : <Register />}
+      {!!username ? <RouterProvider router={routes} /> : <Register />}
     </div>
   );
 }
