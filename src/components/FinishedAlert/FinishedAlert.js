@@ -2,13 +2,20 @@ import React from "react";
 import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const FinishedAlert = ({ gamePlayersName, gameId }) => {
   const navigate = useNavigate();
   const navigateToRoom = () => {
-    // DELETE /game/:gameId
-    navigate(`/room/${gameId}`);
+    try {
+      const response = axios.delete(`http://localhost:8000/game/${gameId}`);
+      console.log(response);
+      navigate(`/room/${gameId}`);
+    } catch (error) {
+      console.error("Error al eliminar el juego:", error);
+    }
   };
+
   return (
     <>
       <Alert
