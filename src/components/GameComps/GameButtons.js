@@ -8,6 +8,7 @@ import ListItem from "@mui/material/ListItem";
 import { UserContext } from "../../contexts/UserContext";
 import { CardHasTarget  } from "../../utils/CardHandler";
 import { Stack } from "@mui/material";
+import axios from "axios";
 
 function PlayEnabled(current_player, userid, clickedCard) {
   const isTurn = current_player === userid;
@@ -20,26 +21,32 @@ function TargetsEnable(current_player, userid, clickedCard) {
   return isTurn && CardHasTarget(clickedCard);
 }
 
-const Buttons = ({current_player}) => {
+
+
+const Buttons = ({current_player, gameId, left_id, right_id}) => {
   const { userid, clickedCard, setClickedCard } = useContext(UserContext);
 
-  const handlePlayCard = () => {
-    console.log(clickedCard);
 
-    // console.log("card has target?", CardHasTarget(clickedCard));
-
-    setClickedCard(null);
-    //here there should be the request to play the card
-  }
-
-  const handlePlayLeft = () => {
-    console.log("play left", clickedCard);
+  const handlePlayCard = async () => {
+    const response = await axios.put(
+      `http://localhost:8000/game/${gameId}/play_turn?card_idtype=${clickedCard}&current_player_id=${userid}`
+    );
 
     setClickedCard(null);
+  };
+
+  const handlePlayLeft = async () => {
+    const response = await axios.put(
+      `http://localhost:8000/game/${gameId}/play_turn?card_idtype=${clickedCard}&current_player_id=${userid}&target_player_id=${left_id}`
+    );
+
+    setClickedCard(null);
   }
 
-  const handlePlayRight = () => {
-    console.log("play right", clickedCard);
+  const handlePlayRight= async () => {
+    const response = await axios.put(
+      `http://localhost:8000/game/${gameId}/play_turn?card_idtype=${clickedCard}&current_player_id=${userid}&target_player_id=${right_id}`
+    );
 
     setClickedCard(null);
   }

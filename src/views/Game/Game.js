@@ -11,12 +11,15 @@ import { useParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Alert from "@mui/material/Alert";
+
 import Button from "@mui/material/Button";
+
+import CheckIcon from "@mui/icons-material/Check";
+
 
 import { UserContext } from "../../contexts/UserContext";
 import axios from "axios";
 
-const cardList = [200, 201, 202, 3, 202];
 const lastCard = 200;
 
 const Game = () => {
@@ -29,7 +32,11 @@ const Game = () => {
   const [currentTurn, setCurrentTurn] = useState(null);
   const [playerHand, setPlayerHand] = useState([]);
   const [loading, setLoading] = useState(true);
+
   const [finished, setFinished] = useState(true);
+
+  const [forceRenderAlive, setForceRenderAlive] = useState(0);
+  const [forceRender, setForceRender] = useState(0);
 
   useEffect(() => {
     const getGameData = async () => {
@@ -41,6 +48,7 @@ const Game = () => {
         setGameData(data);
         setGamePlayers(data.players);
         setCurrentTurn(data.current_turn);
+        // setPlayerHand(data.players.find((player) => player.id === userid).hand);
         setLoading(false);
         // setFinished(data.finished);
       } catch (error) {
@@ -52,10 +60,30 @@ const Game = () => {
     console.log("game data es", gameData);
     console.log("turno es", currentTurn);
 
-    const interval = setInterval(getGameData, 20000);
+    const interval = setInterval(getGameData, 1000);
 
     return () => clearInterval(interval);
   }, [gameId]);
+
+  const handleForceRenderAlive = () => {
+    setForceRenderAlive(calcAlivePlayers());
+  };
+
+  const handleForceRender = () => {
+    setForceRender(currentTurn);
+  };
+
+  const calcAlivePlayers = () => {
+    let alivePlayers = 0;
+    gameData.players.forEach((player) => {
+      if (player.alive) {
+        alivePlayers++;
+      }
+    }
+    );
+    return alivePlayers;
+  };
+
 
   const gameDataToTableData = (gameData) => {
     let tableData = [];
@@ -67,10 +95,11 @@ const Game = () => {
         position: player.round_position,
       });
     });
+    console.log("table data es", tableData); 
     return tableData;
   };
 
-  const postitionToId = (position) => {
+  const positionToId = (position) => {
     // console.log("game players es", gamePlayers);
     let id = null;
     gamePlayers.forEach((player) => {
@@ -80,6 +109,39 @@ const Game = () => {
     });
     return id;
   };
+
+  const getLeftId = (position) => {
+    const n = gamePlayers.length;
+    //must return the next valid id, considering if the player is alive or not
+    while (1) {
+      const leftPos = (position === 1) ? n : position - 1;
+      const leftId = positionToId(leftPos);
+      //check if leftid is alive
+      if (gameData.players.find((player) => player.id === leftId).alive) {
+        return leftId;
+      } else {
+        position = leftPos;
+      }      
+    }
+  
+  }
+
+  const getRightId = (position) => {
+    const n = gamePlayers.length;
+    // Si la posición es n, entonces la posición derecha es 1
+    // Si no, la posición derecha es la posición actual + 1
+    while (1) {
+      const rightPos = (position === n) ? 1 : position + 1;
+      const rightId = positionToId(rightPos);
+      //check if rightid is alive
+      if (gameData.players.find((player) => player.id === rightId).alive) {
+        return rightId;
+      } else {
+        position = rightPos;
+      }
+    }
+  }
+
 
   const idToHandOfIdType = (id) => {
     let hand = [];
@@ -111,6 +173,20 @@ const Game = () => {
           backgroundSize: "cover",
         }}
       >
+        {userid === positionToId(currentTurn) ? (
+          <Alert
+            severity="success"
+            style={{
+              position: "absolute",
+              top: "5%",
+              left: "2%",
+            }}
+          >
+            Your Turn!
+          </Alert>
+          ) : (
+          <h1> </h1>
+        )}
         {loading ? (
           // Mostrar el mensaje de carga si loading es true
           <p>Loading...</p>
@@ -120,6 +196,8 @@ const Game = () => {
             <GameTable
               players_example={gameDataToTableData(gameData)}
               currentTurn={currentTurn}
+              forceRender={forceRender}
+              forceRenderAlive={forceRenderAlive}
             />
             <Box>
               <Grid container spacing={2}>
@@ -165,7 +243,12 @@ const Game = () => {
                   marginTop: 0,
                 }}
               >
-                <Buttons current_player={postitionToId(currentTurn)} />
+                <Buttons 
+                  current_player={positionToId(currentTurn)} 
+                  gameId={gameId}
+                  left_id = {getLeftId(currentTurn)}
+                  right_id = {getRightId(currentTurn)}  
+                />
               </div>
             </Box>
             {finished && (

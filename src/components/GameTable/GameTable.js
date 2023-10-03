@@ -4,7 +4,7 @@ import { UserContext } from "../../contexts/UserContext";
 
 import React, { useEffect, useState, useContext } from "react";
 
-const GameTable = ({ players_example, currentTurn }) => {
+const GameTable = ({ players_example, currentTurn, forceRender, forceRenderAlive }) => {
   const { userid } = useContext(UserContext);
   const [players, setPLayers] = useState([]);
 
@@ -93,7 +93,7 @@ const GameTable = ({ players_example, currentTurn }) => {
       buildCircle(sorted_players);
     };
     sortPlayers();
-  }, []);
+  }, [forceRender, players_example, currentTurn, forceRenderAlive]);
 
   return (
     <div className="circle">
