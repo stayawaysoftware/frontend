@@ -8,7 +8,7 @@ const FinishedAlert = ({ gamePlayersName, gameId }) => {
   const navigate = useNavigate();
   const navigateToRoom = () => {
     try {
-      const response = axios.delete(`http://localhost:8000/game/${gameId}`);
+      const response = axios.delete(`http://localhost:8000/game/${gameId}/end_game`);
       console.log(response);
       navigate(`/room/${gameId}`);
     } catch (error) {

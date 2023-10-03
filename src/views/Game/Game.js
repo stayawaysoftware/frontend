@@ -33,7 +33,8 @@ const Game = () => {
   const [playerHand, setPlayerHand] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const [finished, setFinished] = useState(true);
+  const [finished, setFinished] = useState(false);
+  const [winnerName, setWinnerName] = useState(null);
 
   const [forceRenderAlive, setForceRenderAlive] = useState(0);
   const [forceRender, setForceRender] = useState(0);
@@ -57,13 +58,22 @@ const Game = () => {
       }
     };
     getGameData();
-    console.log("game data es", gameData);
-    console.log("turno es", currentTurn);
+    
+    if (gameData !== null) {
+      checkFinished();
+    }
 
     const interval = setInterval(getGameData, 1000);
 
     return () => clearInterval(interval);
-  }, [gameId]);
+  }, [gameId, finished]);
+
+  const checkFinished = () => {
+    if (calcAlivePlayers() === 1) {
+      setFinished(true);
+      setWinnerName(gamePlayers.find((player) => player.alive).name);
+    }
+  };
 
   const handleForceRenderAlive = () => {
     setForceRenderAlive(calcAlivePlayers());
@@ -264,7 +274,7 @@ const Game = () => {
                 }}
               >
                 <FinishedAlert
-                  gamePlayersName={gamePlayers[0].name}
+                  gamePlayersName={winnerName}
                   gameId={gameId}
                 />
               </Grid>
