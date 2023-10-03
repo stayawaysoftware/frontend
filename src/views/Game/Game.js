@@ -37,6 +37,7 @@ const Game = () => {
         setGameData(data);
         setGamePlayers(data.players);
         setCurrentTurn(data.current_turn);
+        // setPlayerHand(data.players.find((player) => player.id === userid).hand);
         setLoading(false);
       } catch (error) {
         // Manejar errores de la solicitud
@@ -47,7 +48,7 @@ const Game = () => {
     console.log("game data es", gameData);
     console.log("turno es", currentTurn);
 
-    const interval = setInterval(getGameData, 20000);
+    const interval = setInterval(getGameData, 10000);
 
     return () => clearInterval(interval);
   }, [gameId]);
@@ -62,10 +63,11 @@ const Game = () => {
         position: player.round_position,
       });
     });
+    console.log("table data es", tableData); 
     return tableData;
   };
 
-  const postitionToId = (position) => {
+  const positionToId = (position) => {
     // console.log("game players es", gamePlayers);
     let id = null;
     gamePlayers.forEach((player) => {
@@ -75,6 +77,27 @@ const Game = () => {
     });
     return id;
   };
+
+  const getLeftId = (position) => {
+    const n = gamePlayers.length;
+    // Si la posición es 1, entonces la posición izquierda es 4
+    if (position === 1) {
+      return positionToId(n); // En lugar de (position - 1) % n, usamos n
+    } else {
+      return positionToId(position - 1);
+    }
+  }
+
+  const getRightId = (position) => {
+    const n = gamePlayers.length;
+    // Si la posición es 4, entonces la posición derecha es 1
+    if (position === n) {
+      return positionToId(1); // En lugar de (position + 1) % n, usamos 1
+    } else {
+      return positionToId((position + 1) % n);
+    }
+  }
+
 
   const idToHandOfIdType = (id) => {
     let hand = [];
@@ -160,7 +183,12 @@ const Game = () => {
                   marginTop: 0,
                 }}
               >
-                <Buttons current_player={postitionToId(currentTurn)} />
+                <Buttons 
+                  current_player={positionToId(currentTurn)} 
+                  gameId={gameId}
+                  left_id = {getLeftId(currentTurn)}
+                  right_id = {getRightId(currentTurn)}  
+                />
               </div>
             </Box>
           </>
