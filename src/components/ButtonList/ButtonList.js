@@ -56,7 +56,7 @@ export default function ButtonList({ joinRoom }) {
               }}
               color="success"
             >
-              Refresh
+              Actualizar
             </Button>
           </ListItem>
           <ListItem>
@@ -69,7 +69,7 @@ export default function ButtonList({ joinRoom }) {
               color="success"
               onClick={handleCreateRoomClick}
             >
-              Create Room
+              Crear Sala
             </Button>
           </ListItem>
           <ListItem>
@@ -83,7 +83,7 @@ export default function ButtonList({ joinRoom }) {
               color="success"
               onClick={handleJoinRoom}
             >
-              Join Room
+              Unirse
             </Button>
           </ListItem>
         </List>

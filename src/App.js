@@ -2,12 +2,15 @@ import "./App.css";
 import React, { useContext, useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { UserContext } from "./contexts/UserContext";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import Home from "./views/Home/Home";
 import Register from "./views/Register/Register";
 import PageNotFound from "./views/PageNotFound/PageNotFound";
 import Room from "./views/Room/Room";
 import Game from "./views/Game/Game";
+
+const defaultTheme = createTheme();
 
 const routes = createBrowserRouter([
   {
@@ -48,9 +51,11 @@ function App() {
   };
 
   return (
-    <div className="App">
-      {!!username ? <RouterProvider router={routes} /> : <Register />}
-    </div>
+    <ThemeProvider theme={defaultTheme}>
+      <div className="App">
+        {!!username ? <RouterProvider router={routes} /> : <Register />}
+      </div>
+    </ThemeProvider>
   );
 }
 

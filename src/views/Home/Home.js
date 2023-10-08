@@ -19,7 +19,7 @@ const Home = () => {
         overflow: "hidden",
       }}
     >
-      <h1 style={{color: "rgba(255,255,255,1)"}}>Room List</h1>
+      <h1 style={{color: "rgba(255,255,255,1)"}}>Lista de salas</h1>
       <div
         style={{
           display: "flex",

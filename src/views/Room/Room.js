@@ -100,7 +100,8 @@ const Room = () => {
           {!!roomData ? (
             <Button
               variant="contained"
-              size="large"
+              size="small"
+              color="success"
               disabled={
                 userid !== roomData.host_id ||
                 users.length < 4 ||
@@ -108,7 +109,7 @@ const Room = () => {
               }
               onClick={startGame}
             >
-              <h2>Start game</h2>
+              <h2>Empezar partida</h2>
             </Button>
           ) : null}
         </Paper>
@@ -136,7 +137,7 @@ const Room = () => {
                 <PeopleIcon style={{ fontSize: 20, marginRight: "8px" }} />
                 <strong>
                 {" "}
-                Players {users.length}/{12}
+                Jugadores {users.length}/{12}
               </strong>
               </Stack>
               <List>

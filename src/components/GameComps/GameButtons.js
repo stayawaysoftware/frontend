@@ -59,24 +59,24 @@ const Buttons = ({current_player, gameId, left_id, right_id}) => {
               <Button
                 variant="contained"
                 style={{
-                  width: "15%",
+                  width: "22%",
                 }}
                 disabled={!TargetsEnable(current_player, userid, clickedCard)}
                 onClick={handlePlayLeft}
                 color="success"
               >
-                Play Left
+                Jugador izquierda
               </Button>
               <Button
                 variant="contained"
                 style={{
-                  width: "18%",
+                  width: "22%",
                 }}
                 disabled={!TargetsEnable(current_player, userid, clickedCard)}
                 onClick={handlePlayRight}
                 color="success"
               >
-                Play right
+                Jugador derecha
               </Button>
             </Stack>
           </ListItem>
@@ -84,26 +84,26 @@ const Buttons = ({current_player, gameId, left_id, right_id}) => {
             <Button
               variant="contained"
               style={{
-                width: "15%",
+                width: "19%",
               }}
               disabled={!PlayEnabled(current_player, userid, clickedCard)}
               onClick={handlePlayCard}
               color="success"
             >
-              Play Card
+              Jugar Carta
             </Button>
           </ListItem>
           <ListItem>
             <Button
               variant="contained"
               style={{
-                width: "15%",
+                width: "19%",
               }}
               disabled={true}
               color="success"
               //onClick={}
             >
-               Exchange Card
+               Intercambiar carta
             </Button>
           </ListItem>
         </List>

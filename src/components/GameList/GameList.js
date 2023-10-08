@@ -113,9 +113,9 @@ export default function GameList() {
                               <Typography component="div">
                                 {/* {ternary for checking if the game in in_game} */}
                                 {gameData.in_game ? (
-                                  <div>In game</div>
+                                  <div>En juego</div>
                                 ) : (
-                                  <div>Waiting for players</div>
+                                  <div>Esperando a los jugadores</div>
                                 )}
                               </Typography>
                               {/* <Typography component="div">
