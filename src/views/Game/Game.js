@@ -182,7 +182,7 @@ const Game = () => {
               left: "2%",
             }}
           >
-            Your Turn!
+            Es tu turno!
           </Alert>
           ) : (
           <h1> </h1>

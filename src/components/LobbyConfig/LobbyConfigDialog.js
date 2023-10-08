@@ -55,14 +55,15 @@ export default function CreateRoomDialog({ open, onClose }) {
         fullWidth
         maxWidth="sm"
       >
-        <DialogTitle>Create Room</DialogTitle>
+        <DialogTitle>Crear Sala</DialogTitle>
           <DialogContent>
             <form onSubmit={handleCreateRoom}>
               <Stack spacing={2}>
                   <TextField
                     id="outlined-basic"
-                    label="Room name"
+                    label="Nombre de la sala"
                     variant="filled"
+                    color="success"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
@@ -70,11 +71,11 @@ export default function CreateRoomDialog({ open, onClose }) {
             </form>
           </DialogContent>
         <DialogActions>
-          <Button onClick={onClose} color="primary">
-            Cancel
+          <Button onClick={onClose} color="success">
+            Cancelar
           </Button>
-          <Button onClick={handleCreateRoom} disabled={!ValidForm(name)} color="primary" variant="contained">
-            Create room
+          <Button onClick={handleCreateRoom} disabled={!ValidForm(name)} color="success" variant="contained">
+            Crear Sala
           </Button>
         </DialogActions>
       </Dialog>
