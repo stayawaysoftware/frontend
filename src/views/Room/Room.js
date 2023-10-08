@@ -39,7 +39,7 @@ const Room = () => {
       setRoomData(response.data);
       setRoomName(response.data.name);
       setUsers(response.data.usernames);
-      console.log("users es", response.data);
+      // console.log("users es", response.data);
       if (response.data.in_game) {
         navigate(`/game/${roomId}`);
       }
@@ -56,12 +56,12 @@ const Room = () => {
       const response = await axios.put(
         `http://localhost:8000/rooms/${roomId}/start?host_id=${userid}`
       );
-      console.log(response);
+      // console.log(response);
       navigate(`/game/${roomId}`);
     } catch (error) {
-      if (error.response.status === 500) {
-        alert(error.response.data.message);
-      }
+      // if (error.response.status === 500) {
+      //   alert(error.response.data.message);
+      // }
       console.log(error);
     }
   };
