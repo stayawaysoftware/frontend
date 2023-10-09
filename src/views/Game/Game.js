@@ -8,14 +8,12 @@ import FinishedAlert from "../../components/FinishedAlert/FinishedAlert";
 
 import React, { useEffect, useContext, useState } from "react";
 import { useParams } from "react-router-dom";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import Alert from "@mui/material/Alert";
+
+import { Box, Grid, Alert, Chip } from "@mui/material";
 
 import Button from "@mui/material/Button";
 
 import CheckIcon from "@mui/icons-material/Check";
-
 
 import { UserContext } from "../../contexts/UserContext";
 import axios from "axios";
@@ -79,11 +77,9 @@ const Game = () => {
       if (player.alive) {
         alivePlayers++;
       }
-    }
-    );
+    });
     return alivePlayers;
   };
-
 
   const gameDataToTableData = (gameData) => {
     let tableData = [];
@@ -95,7 +91,7 @@ const Game = () => {
         position: player.round_position,
       });
     });
-    console.log("table data es", tableData); 
+    console.log("table data es", tableData);
     return tableData;
   };
 
@@ -114,24 +110,23 @@ const Game = () => {
     const n = gamePlayers.length;
     //must return the next valid id, considering if the player is alive or not
     while (1) {
-      const leftPos = (position === 1) ? n : position - 1;
+      const leftPos = position === 1 ? n : position - 1;
       const leftId = positionToId(leftPos);
       //check if leftid is alive
       if (gameData.players.find((player) => player.id === leftId).alive) {
         return leftId;
       } else {
         position = leftPos;
-      }      
+      }
     }
-  
-  }
+  };
 
   const getRightId = (position) => {
     const n = gamePlayers.length;
     // Si la posición es n, entonces la posición derecha es 1
     // Si no, la posición derecha es la posición actual + 1
     while (1) {
-      const rightPos = (position === n) ? 1 : position + 1;
+      const rightPos = position === n ? 1 : position + 1;
       const rightId = positionToId(rightPos);
       //check if rightid is alive
       if (gameData.players.find((player) => player.id === rightId).alive) {
@@ -140,8 +135,7 @@ const Game = () => {
         position = rightPos;
       }
     }
-  }
-
+  };
 
   const idToHandOfIdType = (id) => {
     let hand = [];
@@ -182,9 +176,10 @@ const Game = () => {
               left: "2%",
             }}
           >
-            Es tu turno!
+            Es tu turno,{" "}
+            {gameData.players.find((player) => player.id === userid).name}!
           </Alert>
-          ) : (
+        ) : (
           <h1> </h1>
         )}
         {loading ? (
@@ -230,24 +225,56 @@ const Game = () => {
               ></div>
             </Box>
             <Box>
-              <Grid container spacing={2}>
-                <Grid item xs={6} md={20}>
+              <Grid
+                container
+                spacing={2}
+                sx={{
+                  position: "relative",
+                  top: "170px",
+                  justifyContent: "center",
+                }}
+              >
+                <Grid
+                  item
+                  xs={6}
+                  md={12}
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: 1,
+                  }}
+                >
                   <Hand cardList={idToHandOfIdType(userid)} />
+                  <Chip
+                    color="success"
+                    variant="outlined"
+                    label={
+                      gameData.players.find((player) => player.id === userid)
+                        .name
+                    }
+                    sx={{
+                      fontSize: "1rem",
+                      fontWeight: "bold",
+                      color: "black",
+                    }}
+                  />
                 </Grid>
               </Grid>
               <div
                 style={{
                   position: "relative",
-                  left: "50%",
+                  left: "55%",
                   transform: "translate(16%, 0%)",
                   marginTop: 0,
+                  top: "-80px",
                 }}
               >
-                <Buttons 
-                  current_player={positionToId(currentTurn)} 
+                <Buttons
+                  current_player={positionToId(currentTurn)}
                   gameId={gameId}
-                  left_id = {getLeftId(currentTurn)}
-                  right_id = {getRightId(currentTurn)}  
+                  left_id={getLeftId(currentTurn)}
+                  right_id={getRightId(currentTurn)}
                 />
               </div>
             </Box>
