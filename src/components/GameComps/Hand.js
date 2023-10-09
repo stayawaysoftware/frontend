@@ -1,13 +1,13 @@
-import React, { useEffect, useState, useContext } from "react";
+import { useState, useContext } from "react";
 
 import { Box } from "@mui/material";
 
 import { UserContext } from "../../contexts/UserContext";
 import { IdToAsset } from "../../utils/CardHandler";
 
-const Hand = (props) => {
+const Hand = ({ cardList = [] }) => {
   const [selectedCard, setSelectedCard] = useState(null);
-  const { clickedCard, setClickedCard } = useContext(UserContext);
+  const { setClickedCard } = useContext(UserContext);
 
   const baseCardStyle = {
     width: "10%",
@@ -34,7 +34,7 @@ const Hand = (props) => {
       setClickedCard(cardId);
     }
   };
-  console.log({ selectedCard });
+
   return (
     <div>
       <div
@@ -44,11 +44,11 @@ const Hand = (props) => {
           alignItems: "center",
         }}
       >
-        {props.cardList.map((cardId, index) => (
+        {cardList?.map(({ id, idtype }, index) => (
           <Box
-            key={`card-hand-${cardId}`}
+            key={`card-hand-${id}`}
             sx={[
-              selectedCard === cardId && highlightedCardStyle,
+              selectedCard === id && highlightedCardStyle,
               {
                 ...baseCardStyle,
                 right: `${10 + index * 30}px`,
@@ -57,11 +57,11 @@ const Hand = (props) => {
                 },
               },
             ]}
-            onClick={() => handleCardClick(cardId)}
+            onClick={() => handleCardClick(id)}
           >
             <img
-              src={IdToAsset(cardId)}
-              alt={`${cardId + 1}`}
+              src={IdToAsset(idtype)}
+              alt={`${idtype + 1}`}
               style={{
                 width: "100%",
                 height: "auto",
