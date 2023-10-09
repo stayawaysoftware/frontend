@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useContext } from "react";
+
+import { Box } from "@mui/material";
+
 import { UserContext } from "../../contexts/UserContext";
 import { IdToAsset } from "../../utils/CardHandler";
 
 const Hand = (props) => {
   const [selectedCard, setSelectedCard] = useState(null);
-  const [hoveredCard, setHoveredCard] = useState(null);
   const { clickedCard, setClickedCard } = useContext(UserContext);
 
   const baseCardStyle = {
@@ -15,20 +17,12 @@ const Hand = (props) => {
     userSelect: "none",
     cursor: "pointer",
     border: "none",
-    transition: "width 0.2s, height 0.2s", // Add transition for smooth animation
   };
 
   const highlightedCardStyle = {
     border: "1px groove",
-  };
-
-  const hoverCardStyle = {
-    border: "1px groove",
-  };
-
-  const enlargedCardStyle = {
-    width: "11%", // Adjust the width to enlarge the card
-    height: "auto", // Maintain the aspect ratio
+    borderRadius: "15px",
+    transform: "scale(1.1)",
   };
 
   const handleCardClick = (cardId) => {
@@ -40,15 +34,7 @@ const Hand = (props) => {
       setClickedCard(cardId);
     }
   };
-
-  const handleCardHover = (cardId) => {
-    setHoveredCard(cardId);
-  };
-
-  const handleCardLeave = () => {
-    setHoveredCard(null);
-  };
-
+  console.log({ selectedCard });
   return (
     <div>
       <div
@@ -59,22 +45,29 @@ const Hand = (props) => {
         }}
       >
         {props.cardList.map((cardId, index) => (
-          <img
-            key={index}
-            src={IdToAsset(cardId)}
-            alt={`${cardId + 1}`}
-            style={{
-              ...baseCardStyle,
-              ...(selectedCard === `card${index + 1}`
-                ? { ...highlightedCardStyle, ...enlargedCardStyle } // Enlarge selected card
-                : {}),
-              ...(hoveredCard === `card${index + 1}` ? hoverCardStyle : {}), // Apply hover style if card is hovered
-              right: `${10 + index * 30}px`,
-            }}
-            onClick={() => handleCardClick(`${cardId}`)}
-            onMouseEnter={() => handleCardHover(`card${index + 1}`)} // Handle mouse enter
-            onMouseLeave={handleCardLeave} // Handle mouse leave
-          />
+          <Box
+            key={`card-hand-${cardId}`}
+            sx={[
+              selectedCard === cardId && highlightedCardStyle,
+              {
+                ...baseCardStyle,
+                right: `${10 + index * 30}px`,
+                "&:hover": {
+                  ...highlightedCardStyle,
+                },
+              },
+            ]}
+            onClick={() => handleCardClick(cardId)}
+          >
+            <img
+              src={IdToAsset(cardId)}
+              alt={`${cardId + 1}`}
+              style={{
+                width: "100%",
+                height: "auto",
+              }}
+            />
+          </Box>
         ))}
       </div>
     </div>
@@ -82,4 +75,3 @@ const Hand = (props) => {
 };
 
 export default Hand;
-
