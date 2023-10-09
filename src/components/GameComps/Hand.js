@@ -13,7 +13,6 @@ const Hand = (props) => {
     width: "10%",
     height: "auto",
     position: "relative",
-    top: "170px",
     userSelect: "none",
     cursor: "pointer",
     border: "none",
