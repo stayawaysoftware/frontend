@@ -1,13 +1,12 @@
-import React, { useEffect, useState, useContext } from "react";
+import { useState, useContext } from "react";
 
 import { Box } from "@mui/material";
 
 import { UserContext } from "../../contexts/UserContext";
 import { IdToAsset } from "../../utils/CardHandler";
 
-const Hand = (props) => {
-  const [selectedCard, setSelectedCard] = useState(null);
-  const { clickedCard, setClickedCard } = useContext(UserContext);
+const Hand = ({ cardList = [] }) => {
+  const { clickedCard, onCardClicked } = useContext(UserContext);
 
   const baseCardStyle = {
     width: "10%",
@@ -24,16 +23,6 @@ const Hand = (props) => {
     transform: "scale(1.1)",
   };
 
-  const handleCardClick = (cardId) => {
-    if (selectedCard === cardId) {
-      setSelectedCard(null);
-      setClickedCard(null);
-    } else {
-      setSelectedCard(cardId);
-      setClickedCard(cardId);
-    }
-  };
-  console.log({ selectedCard });
   return (
     <div>
       <div
@@ -43,11 +32,11 @@ const Hand = (props) => {
           alignItems: "center",
         }}
       >
-        {props.cardList.map((cardId, index) => (
+        {cardList?.map(({ id, idtype }, index) => (
           <Box
-            key={`card-hand-${cardId}`}
+            key={`card-hand-${id}`}
             sx={[
-              selectedCard === cardId && highlightedCardStyle,
+              clickedCard?.id === id && highlightedCardStyle,
               {
                 ...baseCardStyle,
                 right: `${10 + index * 30}px`,
@@ -56,11 +45,11 @@ const Hand = (props) => {
                 },
               },
             ]}
-            onClick={() => handleCardClick(cardId)}
+            onClick={() => onCardClicked({ id, idtype })}
           >
             <img
-              src={IdToAsset(cardId)}
-              alt={`${cardId + 1}`}
+              src={IdToAsset(idtype)}
+              alt={`${idtype + 1}`}
               style={{
                 width: "100%",
                 height: "auto",

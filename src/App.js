@@ -1,5 +1,6 @@
 import "./App.css";
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { UserContext } from "./contexts/UserContext";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -33,6 +34,7 @@ const routes = createBrowserRouter([
 
 function App() {
   const { username, userid } = useContext(UserContext);
+  const [queryClient] = useState(new QueryClient());
 
   useEffect(() => {
     window.addEventListener("beforeunload", alertUser);
@@ -51,11 +53,13 @@ function App() {
   };
 
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <div className="App">
-        {!!username ? <RouterProvider router={routes} /> : <Register />}
-      </div>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={defaultTheme}>
+        <div className="App">
+          {!!username ? <RouterProvider router={routes} /> : <Register />}
+        </div>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
 

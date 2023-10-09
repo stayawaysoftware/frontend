@@ -39,7 +39,7 @@ const Room = () => {
       setRoomData(response.data);
       setRoomName(response.data.name);
       setUsers(response.data.usernames);
-      console.log("users es", response.data);
+
       if (response.data.in_game) {
         navigate(`/game/${roomId}`);
       }
