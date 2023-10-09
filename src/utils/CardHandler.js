@@ -39,65 +39,58 @@ import CantWeBeFriends from "../assets/cards/29_CantWeBeFriends.png";
 import BlindDate from "../assets/cards/30_BlindDate.png";
 import Ups from "../assets/cards/31_Ups.png";
 
-
-
-
-
 export function IdToAsset(id) {
-
   const cardAssetsPath = "../assets/cards/";
 
   const cardAssets = {
-    1 : TheThing,
-    2 : Infected,
-    3 : Flamethrower,
-    4 : Analysis,
-    5 : Axe,
-    6 : Suspicion,
-    7 : Determination,
-    8 : Whisky,
-    9 : ChangeOfPosition,
-    10 : WatchYourBack,
-    11 : Seduction,
-    12 : YouBetterRun,
-    13 : ImFineHere,
-    14 : Terrifying,
-    15 : NoThanks,
-    16 : YouFailed,
-    17 : NoBarbecues,
-    18 : Quarantine,
-    19 : LockedDoor,
-    20 : Revelations,
-    21 : RottenRopes,
-    22 : GetOutOfHere,
-    23 : Forgetful,
-    24 : OneTwo,
-    25 : ThreeFour,
-    26 : IsThePartyHere,
-    27 : LetItStayBetweenUs,
-    28 : TurnAndTurn,
-    29 : CantWeBeFriends,
-    30 : BlindDate,
-    31 : Ups
+    1: TheThing,
+    2: Infected,
+    3: Flamethrower,
+    4: Analysis,
+    5: Axe,
+    6: Suspicion,
+    7: Determination,
+    8: Whisky,
+    9: ChangeOfPosition,
+    10: WatchYourBack,
+    11: Seduction,
+    12: YouBetterRun,
+    13: ImFineHere,
+    14: Terrifying,
+    15: NoThanks,
+    16: YouFailed,
+    17: NoBarbecues,
+    18: Quarantine,
+    19: LockedDoor,
+    20: Revelations,
+    21: RottenRopes,
+    22: GetOutOfHere,
+    23: Forgetful,
+    24: OneTwo,
+    25: ThreeFour,
+    26: IsThePartyHere,
+    27: LetItStayBetweenUs,
+    28: TurnAndTurn,
+    29: CantWeBeFriends,
+    30: BlindDate,
+    31: Ups,
   };
-  
+
   const assetName = cardAssets[id];
-    if (!assetName) {
+  if (!assetName) {
     return deck;
   }
 
   return assetName;
-  
 }
 
 const cardTargets = {
-  3 : true,
-}
+  3: true,
+};
 
 export function CardHasTarget(id) {
   //this function checks if a card has a target
   //for the moment, only the flamethrower has a target
   // console.log("la id es", id);
   return cardTargets[id];
-  
 }
