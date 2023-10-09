@@ -14,12 +14,6 @@ import FinishedAlert from "../../components/FinishedAlert/FinishedAlert";
 import { Box, Grid, Alert, Chip } from "@mui/material";
 import { UserContext } from "../../contexts/UserContext";
 
-import Button from "@mui/material/Button";
-
-import CheckIcon from "@mui/icons-material/Check";
-
-import axios from "axios";
-
 const Game = () => {
   const { gameId } = useParams();
   const { userid } = useContext(UserContext);
@@ -121,9 +115,7 @@ const Game = () => {
           justifyContent: "center",
           minHeight: "100vh",
           backgroundImage: `url(${image})`,
-          backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
-          backgroundSize: "cover",
           overflow: "hidden",
         }}
       >
@@ -207,6 +199,12 @@ const Game = () => {
                   }}
                 >
                   <Hand cardList={currentUserCardList} />
+                </Grid>
+                <Box
+                  sx={{
+                    marginBottom: "4%",
+                  }}
+                >
                   <Chip
                     color="success"
                     variant="outlined"
@@ -220,7 +218,7 @@ const Game = () => {
                       color: "black",
                     }}
                   />
-                </Grid>
+                </Box>
               </Grid>
               <div
                 style={{

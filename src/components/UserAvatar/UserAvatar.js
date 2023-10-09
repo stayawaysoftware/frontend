@@ -70,11 +70,9 @@ export const UserAvatar = ({ name, css, death, turn, onClick }) => (
             },
             onClick && {
               cursor: "pointer",
-              "&:hover": {
-                outline: "none",
-                borderColor: "#9ecaed",
-                boxShadow: "0 0 10px #9ecaed",
-              },
+              outline: "none",
+              borderColor: "#9ecaed",
+              boxShadow: "0 0 10px #9ecaed",
             },
           ]}
           onClick={onClick}

@@ -15,10 +15,10 @@ export const UserProvider = ({ children }) => {
     (card) => {
       if (clickedCard?.id === card?.id) {
         setClickedCard(null);
+        setTargetsEnable(false); 
       } else {
         setClickedCard(card);
-
-        setTargetsEnable(card && CardHasTarget(card?.idtype));
+        setTargetsEnable(CardHasTarget(card?.idtype));
       }
     },
     [clickedCard, setClickedCard]
