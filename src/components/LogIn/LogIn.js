@@ -25,7 +25,7 @@ const centerStyle = {
 export default function LogIn() {
   const [username, setUserNameLocal] = useState(undefined);
 
-  const { setUserName, setUserId } = useContext(UserContext);
+  // const { setUserName, setUserId } = useContext(UserContext);
 
   const usernameHandler = (e) => {
     setUserNameLocal(e.target.value);
@@ -42,8 +42,10 @@ export default function LogIn() {
       .post(urlFinal)
       .then((response) => {
         console.log("Solicitud POST exitosa", response.data);
-        setUserId(response.data.id);
-        setUserName(username);
+        // setUserId(response.data.id);
+        // setUserName(username);
+        localStorage.setItem("username", response.data.username);
+        localStorage.setItem("userid", response.data.id);
       })
       .catch((error) => {
         console.error("Error en la solicitud POST", error);
