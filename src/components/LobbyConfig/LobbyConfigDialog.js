@@ -39,14 +39,14 @@ export default function CreateRoomDialog({ open, onClose }) {
       .post(url, parameters)
       .then((response) => {
         console.log("Solicitud POST exitosa", response.data);
-        roomid = response.data.id; //get the roomid from the response
+        roomid = response.data.room_id; //get the roomid from the response
+        navigate("/room/" + roomid);
       })
       .catch((error) => {
         console.error("Error en la solicitud POST", error);
       });
 
     console.log(roomid);
-    navigate("/room/" + roomid);
     onClose();
   };
 
