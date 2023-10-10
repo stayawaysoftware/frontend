@@ -12,11 +12,13 @@ import LoginIcon from "@mui/icons-material/Login";
 import CreateRoomDialog from "../LobbyConfig/LobbyConfigDialog";
 import axios from "axios";
 
+import { API_ENDPOINT_ROOM_JOIN } from "../../utils/ApiTypes";
+
 export default function ButtonList({ joinRoom }) {
   const [isCreateRoomDialogOpen, setCreateRoomDialogOpen] = useState(false);
   const { roomid } = useContext(UserContext);
   const navigate = useNavigate();
-  const {userid} = React.useContext(UserContext);    
+  const { userid } = React.useContext(UserContext);
 
   const handleCreateRoomClick = () => {
     setCreateRoomDialogOpen(true);
@@ -27,20 +29,20 @@ export default function ButtonList({ joinRoom }) {
   };
 
   const handleJoinRoom = async () => {
-    navigate("/room/" + roomid);
-    
-    const url = "http://localhost:8000/rooms" + "/" + roomid + "/join";
-    const params = "?user_id=" + userid;
-    const urlFinal = url + params;
+    const url = API_ENDPOINT_ROOM_JOIN;
+    let parameters = new FormData();
+    parameters.append("room_id", roomid);
+    parameters.append("user_id", userid);
 
-    await axios.put(urlFinal)
-    .then((response) => {
-      console.log('Solicitud POST exitosa', response.data);
-    })
-    .catch((error) => {
-      console.error('Error en la solicitud POST', error);
-    });
-
+    await axios
+      .put(url, parameters)
+      .then((response) => {
+        console.log("Solicitud POST exitosa", response.data);
+        navigate("/room/" + roomid);
+      })
+      .catch((error) => {
+        console.error("Error en la solicitud POST", error);
+      });
   };
 
   return (
@@ -75,9 +77,9 @@ export default function ButtonList({ joinRoom }) {
           <ListItem>
             <Button
               variant="contained"
-              disabled={roomid === null }
+              disabled={roomid === null}
               startIcon={<LoginIcon />}
-              style={{ 
+              style={{
                 width: "180px",
               }}
               color="success"
