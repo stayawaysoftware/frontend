@@ -34,22 +34,22 @@ const Room = () => {
 
   useEffect(() => {
     //get room data from the server
-    const getRoomData = async () => {
-      const response = await axios.get(`http://localhost:8000/rooms/${roomId}`);
-      setRoomData(response.data);
-      setRoomName(response.data.name);
-      setUsers(response.data.usernames);
+    const ws = new WebSocket(`ws://localhost:8000/ws/${roomId}/${userid}`)
+    
+    ws.onopen = () => {
+      console.log(`Se inició el websocket de ${userid}`);
+    }
 
-      if (response.data.in_game) {
-        navigate(`/game/${roomId}`);
-      }
-    };
-    getRoomData();
+    ws.onmessage = (event) => {
+      const json = JSON.parse(event.data);
+      console.log("Mensaje recibido fue", json);
+    }
 
-    const interval = setInterval(getRoomData, 2000);
+    ws.onclose = () => {
+      console.log("Se cerró el socket");
+    }
 
-    return () => clearInterval(interval);
-  }, [roomId, navigate]);
+      }, [roomId]);
 
   const startGame = async () => {
     try {
