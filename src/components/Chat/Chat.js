@@ -14,8 +14,9 @@ export const Chat = ({ socket }) => {
       // Send the message to the WebSocket server as a JSON string
       // with user and input
       const messageData = JSON.stringify({
-        user: username,
-        message: input,
+        type: "message",
+        sender: username,
+        content: input,
       });
       socket.send(messageData);
 
@@ -33,9 +34,9 @@ export const Chat = ({ socket }) => {
     const handleMessage = (event) => {
       const newMessage = event.data;
       console.log("Mensaje recibido en handlemessage: ", newMessage);
-      // if (newMessage.event == "message") {
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
-      // }
+      if (newMessage.event == "message") {
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
+      }
     };
 
     socket.addEventListener("message", handleMessage);

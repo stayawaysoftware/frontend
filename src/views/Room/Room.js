@@ -49,11 +49,11 @@ const Room = () => {
       const json = JSON.parse(event.data);
       console.log("Mensaje: ", json);
 
-      if (json.event == "info") {
+      if (json.type == "info") {
         setRoomData(json.room);
         setRoomName(json.room.name);
         setUsers(json.room.users);
-      } else if (json.event == "join") {
+      } else if (json.type == "join") {
         setRoomData(json.room);
         setRoomName(json.room.name);
         setUsers(json.room.users);
