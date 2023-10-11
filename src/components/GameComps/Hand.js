@@ -31,10 +31,12 @@ const Hand = ({ cardList = [] }) => {
           justifyContent: "center",
           alignItems: "center",
         }}
+        id="hand"
       >
         {cardList?.map(({ id, idtype }, index) => (
           <Box
             key={`card-hand-${id}`}
+            id={`card-hand-${index}`}
             sx={[
               clickedCard?.id === id && highlightedCardStyle,
               {

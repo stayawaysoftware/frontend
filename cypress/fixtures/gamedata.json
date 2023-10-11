@@ -1,0 +1,313 @@
+{
+  "alive_players": 12,
+  "current_turn": 1,
+  "lastPlayedCard": null,
+  "players": [
+    {
+      "id": 8,
+      "name": "8",
+      "round_position": 1,
+      "alive": true,
+      "role": "The Thing",
+      "hand": [
+        {
+          "id": 37,
+          "idtype": 6
+        },
+        {
+          "id": 74,
+          "idtype": 15
+        },
+        {
+          "id": 96,
+          "idtype": 25
+        },
+        {
+          "id": 15,
+          "idtype": 2
+        },
+        {
+          "id": 20,
+          "idtype": 2
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "name": "1",
+      "round_position": 2,
+      "alive": true,
+      "role": "Human",
+      "hand": [
+        {
+          "id": 107,
+          "idtype": 30
+        },
+        {
+          "id": 22,
+          "idtype": 3
+        },
+        {
+          "id": 32,
+          "idtype": 6
+        },
+        {
+          "id": 9,
+          "idtype": 2
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "2",
+      "round_position": 12,
+      "alive": true,
+      "role": "Human",
+      "hand": [
+        {
+          "id": 54,
+          "idtype": 10
+        },
+        {
+          "id": 47,
+          "idtype": 8
+        },
+        {
+          "id": 80,
+          "idtype": 16
+        },
+        {
+          "id": 75,
+          "idtype": 15
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "11",
+      "round_position": 10,
+      "alive": true,
+      "role": "Human",
+      "hand": [
+        {
+          "id": 51,
+          "idtype": 9
+        },
+        {
+          "id": 28,
+          "idtype": 4
+        },
+        {
+          "id": 1,
+          "idtype": 2
+        },
+        {
+          "id": 77,
+          "idtype": 15
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "12",
+      "round_position": 11,
+      "alive": false,
+      "role": "Human",
+      "hand": [
+        {
+          "id": 82,
+          "idtype": 17
+        },
+        {
+          "id": 62,
+          "idtype": 12
+        },
+        {
+          "id": 60,
+          "idtype": 11
+        },
+        {
+          "id": 66,
+          "idtype": 12
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "6",
+      "round_position": 3,
+      "alive": true,
+      "role": "Human",
+      "hand": [
+        {
+          "id": 64,
+          "idtype": 12
+        },
+        {
+          "id": 21,
+          "idtype": 3
+        },
+        {
+          "id": 29,
+          "idtype": 4
+        },
+        {
+          "id": 91,
+          "idtype": 21
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "3",
+      "round_position": 9,
+      "alive": true,
+      "role": "Human",
+      "hand": [
+        {
+          "id": 70,
+          "idtype": 14
+        },
+        {
+          "id": 81,
+          "idtype": 17
+        },
+        {
+          "id": 0,
+          "idtype": 1
+        },
+        {
+          "id": 101,
+          "idtype": 27
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "7",
+      "round_position": 4,
+      "alive": true,
+      "role": "Human",
+      "hand": [
+        {
+          "id": 76,
+          "idtype": 15
+        },
+        {
+          "id": 65,
+          "idtype": 12
+        },
+        {
+          "id": 24,
+          "idtype": 3
+        },
+        {
+          "id": 56,
+          "idtype": 11
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "10",
+      "round_position": 6,
+      "alive": true,
+      "role": "Human",
+      "hand": [
+        {
+          "id": 11,
+          "idtype": 2
+        },
+        {
+          "id": 52,
+          "idtype": 9
+        },
+        {
+          "id": 93,
+          "idtype": 23
+        },
+        {
+          "id": 14,
+          "idtype": 2
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "4",
+      "round_position": 7,
+      "alive": true,
+      "role": "Human",
+      "hand": [
+        {
+          "id": 98,
+          "idtype": 26
+        },
+        {
+          "id": 53,
+          "idtype": 10
+        },
+        {
+          "id": 10,
+          "idtype": 2
+        },
+        {
+          "id": 23,
+          "idtype": 3
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "9",
+      "round_position": 5,
+      "alive": true,
+      "role": "Human",
+      "hand": [
+        {
+          "id": 46,
+          "idtype": 8
+        },
+        {
+          "id": 31,
+          "idtype": 5
+        },
+        {
+          "id": 106,
+          "idtype": 30
+        },
+        {
+          "id": 8,
+          "idtype": 2
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "5",
+      "round_position": 8,
+      "alive": true,
+      "role": "Human",
+      "hand": [
+        {
+          "id": 58,
+          "idtype": 11
+        },
+        {
+          "id": 33,
+          "idtype": 6
+        },
+        {
+          "id": 30,
+          "idtype": 5
+        },
+        {
+          "id": 108,
+          "idtype": 31
+        }
+      ]
+    }
+  ],
+  "the_thing_is_alive": true,
+  "turn_phase": "Draw"
+}

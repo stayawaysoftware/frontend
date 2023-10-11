@@ -23,7 +23,7 @@ const Game = () => {
   const [forceRender, setForceRender] = useState(0);
 
   const { data: gameData, isLoading } = useGame(gameId);
-  console.log({ gameData });
+  console.log({ gameData, isLoading });
   const {
     players: gamePlayers = [],
     current_turn: currentTurn,
@@ -81,7 +81,7 @@ const Game = () => {
       const leftPos = position === 1 ? n : position - 1;
       const leftId = positionToId(leftPos);
       //check if leftid is alive
-      if (gamePlayers?.find((player) => player.id === leftId).alive) {
+      if (gamePlayers.find((player) => player.id === leftId).alive) {
         return leftId;
       } else {
         position = leftPos;
@@ -97,7 +97,7 @@ const Game = () => {
       const rightPos = position === n ? 1 : position + 1;
       const rightId = positionToId(rightPos);
       //check if rightid is alive
-      if (gamePlayers?.find((player) => player.id === rightId).alive) {
+      if (gamePlayers.find((player) => player.id === rightId).alive) {
         return rightId;
       } else {
         position = rightPos;
@@ -134,7 +134,11 @@ const Game = () => {
         ) : (
           <h1> </h1>
         )}
-        {isLoading ? (
+        {isLoading ||
+        gameData === undefined ||
+        gamePlayers === undefined ||
+        gameData === null ||
+        gamePlayers === null ? (
           // Mostrar el mensaje de carga si loading es true
           <p>Loading...</p>
         ) : (
