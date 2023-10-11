@@ -37,7 +37,7 @@ export const UserAvatar = ({ name, css, death, turn, onClick }) => (
           justifyContent: "center",
         }}
       >
-        <Avatar sx={{ width: 50, height: 50, bgcolor: pink[500] }}>
+        <Avatar sx={{ width: 50, height: 50, bgcolor: pink[500] }} id="death">
           <CloseIcon />
         </Avatar>
         <Typography variant="h7" component="div" gutterBottom>
