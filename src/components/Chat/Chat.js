@@ -1,15 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Box, TextField, Button, Grid } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
+import { UserContext } from "../../contexts/UserContext";
 
 export const Chat = ({ socket }) => {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
 
+  const { username } = useContext(UserContext);
+
   const handleSend = () => {
     if (input.trim() !== "") {
-      // Send the message to the WebSocket server
-      socket.send(input);
+      // Send the message to the WebSocket server as a JSON string
+      // with user and input
+      const messageData = JSON.stringify({
+        user: username,
+        message: input,
+      });
+      socket.send(messageData);
+
+      console.log("Mensaje enviado: ", messageData);
       setInput("");
     }
   };
@@ -22,7 +32,10 @@ export const Chat = ({ socket }) => {
   useEffect(() => {
     const handleMessage = (event) => {
       const newMessage = event.data;
+      console.log("Mensaje recibido en handlemessage: ", newMessage);
+      // if (newMessage.event == "message") {
       setMessages((prevMessages) => [...prevMessages, newMessage]);
+      // }
     };
 
     socket.addEventListener("message", handleMessage);

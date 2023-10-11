@@ -1,4 +1,5 @@
 export const BASE_URL = "http://localhost:8000";
+export const BASE_WS = "ws://localhost:8000/ws";
 
 export const API_ENDPOINT_USERS = `${BASE_URL}/users`;
 
