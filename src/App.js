@@ -10,6 +10,7 @@ import Register from "./views/Register/Register";
 import PageNotFound from "./views/PageNotFound/PageNotFound";
 import Room from "./views/Room/Room";
 import Game from "./views/Game/Game";
+import axios from "axios";
 
 const defaultTheme = createTheme();
 
@@ -33,11 +34,14 @@ const routes = createBrowserRouter([
 ]);
 
 function App() {
-  const { username, userid } = useContext(UserContext);
+  const { username, userid, setUserName, setUserId } = useContext(UserContext);
   const [queryClient] = useState(new QueryClient());
 
   useEffect(() => {
     window.addEventListener("beforeunload", alertUser);
+    setUserName(sessionStorage.getItem("username"));
+    setUserId(sessionStorage.getItem("userid"));
+
     return () => {
       window.removeEventListener("beforeunload", alertUser);
     };
