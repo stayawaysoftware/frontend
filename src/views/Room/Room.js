@@ -4,7 +4,7 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import image from '../Background/Hex.svg';
+import image from "../Background/Hex.svg";
 
 import { TextField } from "@mui/material";
 import List from "@mui/material/List";
@@ -84,43 +84,59 @@ const Room = () => {
         {/* First element, Room Name */}
         <Grid item xs={8}>
           <Paper
-          square={false}
-          style={{ height: "100px", textAlign: "center", padding: "16px", background: "rgba(255,255,255,0.7)" }}
-        >
-            <h1 style={{color: "rgba(30,40,30,1)"}}>{roomName}</h1>
+            square={false}
+            style={{
+              height: "100px",
+              textAlign: "center",
+              padding: "16px",
+              background: "rgba(255,255,255,0.7)",
+            }}
+          >
+            <h1 style={{ color: "rgba(30,40,30,1)" }}>{roomName}</h1>
           </Paper>
         </Grid>
 
-      {/* Second element, boton de iniciar partida, centrado en el paper */}
-      <Grid item xs={4}>
-        <Paper
-          square={false}
-          style={{ height: "100px"  , textAlign: "center", padding: "16px", background: "rgba(255,255,255,0.0)" }}
-        >
-          {!!roomData ? (
-            <Button
-              variant="contained"
-              size="small"
-              color="success"
-              disabled={
-                userid !== roomData.host_id ||
-                users.length < 4 ||
-                users.length > 12
-              }
-              onClick={startGame}
-            >
-              <h2>Empezar partida</h2>
-            </Button>
-          ) : null}
-        </Paper>
-      </Grid>
+        {/* Second element, boton de iniciar partida, centrado en el paper */}
+        <Grid item xs={4}>
+          <Paper
+            square={false}
+            style={{
+              height: "100px",
+              textAlign: "center",
+              padding: "16px",
+              background: "rgba(255,255,255,0.0)",
+            }}
+          >
+            {!!roomData ? (
+              <Button
+                variant="contained"
+                size="small"
+                color="success"
+                id="start-game"
+                disabled={
+                  userid !== roomData.host_id ||
+                  users.length < 4 ||
+                  users.length > 12
+                }
+                onClick={startGame}
+              >
+                <h2>Empezar partida</h2>
+              </Button>
+            ) : null}
+          </Paper>
+        </Grid>
 
         {/* Tercer elemento */}
         <Grid item xs={8}>
           <Paper
-          square={false}
-          style={{ height: "450px", textAlign: "center", padding: "16px", background: "rgba(255,255,255,0.7)" }}
-        >
+            square={false}
+            style={{
+              height: "450px",
+              textAlign: "center",
+              padding: "16px",
+              background: "rgba(255,255,255,0.7)",
+            }}
+          >
             Chat
           </Paper>
         </Grid>
@@ -128,17 +144,22 @@ const Room = () => {
         {/* Cuarto elemento, cant de jugadores n/N y una lista de jugadores con emoji de people*/}
         <Grid item xs={4}>
           <Paper
-          square={false}
-          style={{ height: "450px", textAlign: "center", padding: "16px", background: "rgba(255,255,255,0.7)" }}
-        >
+            square={false}
+            style={{
+              height: "450px",
+              textAlign: "center",
+              padding: "16px",
+              background: "rgba(255,255,255,0.7)",
+            }}
+          >
             <Stack>
               <Stack direction="row">
                 {/* cant de jugadores */}
                 <PeopleIcon style={{ fontSize: 20, marginRight: "8px" }} />
                 <strong>
-                {" "}
-                Jugadores {users.length}/{12}
-              </strong>
+                  {" "}
+                  Jugadores {users.length}/{12}
+                </strong>
               </Stack>
               <List>
                 {users.map((users, index) => (
