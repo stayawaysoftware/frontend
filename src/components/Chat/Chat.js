@@ -32,10 +32,10 @@ export const Chat = ({ socket }) => {
   // Handle messages received from the WebSocket server
   useEffect(() => {
     const handleMessage = (event) => {
-      const newMessage = event.data;
-      console.log("Mensaje recibido en handlemessage: ", newMessage);
-      if (newMessage.type == "message") {
-        setMessages((prevMessages) => [...prevMessages, newMessage]);
+      const json = JSON.parse(event.data);
+      if (json.type === "message") {
+        const builtMessage = `${json.sender}: ${json.content}`;
+        setMessages((messages) => [...messages, builtMessage]);
       }
     };
 
