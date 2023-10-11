@@ -34,7 +34,7 @@ export const Chat = ({ socket }) => {
     const handleMessage = (event) => {
       const newMessage = event.data;
       console.log("Mensaje recibido en handlemessage: ", newMessage);
-      if (newMessage.event == "message") {
+      if (newMessage.type == "message") {
         setMessages((prevMessages) => [...prevMessages, newMessage]);
       }
     };
