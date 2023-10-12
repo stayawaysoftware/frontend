@@ -52,11 +52,11 @@ const Room = () => {
       if (json.type == "info") {
         setRoomData(json.room);
         setRoomName(json.room.name);
-        setUsers(json.room.users);
+        setUsers(json.room.users.names);
       } else if (json.type == "join") {
         setRoomData(json.room);
         setRoomName(json.room.name);
-        setUsers(json.room.users);
+        setUsers(json.room.users.names);
       }
     };
 
@@ -94,6 +94,7 @@ const Room = () => {
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
         backgroundSize: "cover",
+        overflow: "hidden",
         height: "100vh",
         width: "100vw",
       }}
