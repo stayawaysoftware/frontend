@@ -13,6 +13,7 @@ import PeopleIcon from "@mui/icons-material/People";
 import { useParams, useNavigate } from "react-router-dom";
 import { UserContext } from "../../contexts/UserContext";
 import axios from "axios";
+import { Chat } from "../../components/Chat/Chat";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -32,24 +33,41 @@ const Room = () => {
   const [roomName, setRoomName] = useState(null);
   const [users, setUsers] = useState([]);
 
+  const [socket, setSocket] = useState(null);
+
   useEffect(() => {
     //get room data from the server
-    const getRoomData = async () => {
-      const response = await axios.get(`http://localhost:8000/rooms/${roomId}`);
-      setRoomData(response.data);
-      setRoomName(response.data.name);
-      setUsers(response.data.usernames);
+    const ws = new WebSocket(`ws://localhost:8000/ws/${roomId}/${userid}`);
 
-      if (response.data.in_game) {
-        navigate(`/game/${roomId}`);
+    setSocket(ws);
+
+    ws.onopen = () => {
+      console.log(`Se inició el websocket de ${userid}`);
+    };
+
+    ws.onmessage = (event) => {
+      const json = JSON.parse(event.data);
+      console.log("Mensaje: ", json);
+
+      if (json.type == "info") {
+        setRoomData(json.room);
+        setRoomName(json.room.name);
+        setUsers(json.room.users.names);
+      } else if (json.type == "join") {
+        setRoomData(json.room);
+        setRoomName(json.room.name);
+        setUsers(json.room.users.names);
       }
     };
-    getRoomData();
 
-    const interval = setInterval(getRoomData, 2000);
+    ws.onclose = () => {
+      console.log("Se cerró el socket");
+    };
 
-    return () => clearInterval(interval);
-  }, [roomId, navigate]);
+    return () => {
+      ws.close();
+    };
+  }, [roomId]);
 
   const startGame = async () => {
     try {
@@ -76,6 +94,7 @@ const Room = () => {
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
         backgroundSize: "cover",
+        overflow: "hidden",
         height: "100vh",
         width: "100vw",
       }}
@@ -112,7 +131,6 @@ const Room = () => {
                 variant="contained"
                 size="small"
                 color="success"
-                id="start-game"
                 disabled={
                   userid !== roomData.host_id ||
                   users.length < 4 ||
@@ -137,7 +155,7 @@ const Room = () => {
               background: "rgba(255,255,255,0.7)",
             }}
           >
-            Chat
+            {socket && <Chat socket={socket} />}
           </Paper>
         </Grid>
 

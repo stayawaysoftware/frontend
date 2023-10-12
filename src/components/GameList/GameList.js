@@ -16,6 +16,8 @@ import axios from "axios";
 import PeopleIcon from "@mui/icons-material/People";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 
+import { API_ENDPOINT_ROOM_LIST } from "../../utils/ApiTypes";
+
 const Demo = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
 }));
@@ -33,7 +35,7 @@ export default function GameList() {
 
   useEffect(() => {
     // should be changed to the API URL constant
-    const apiUrl = "http://localhost:8000/rooms";
+    const apiUrl = API_ENDPOINT_ROOM_LIST;
 
     const getRoomList = async () => {
       axios
