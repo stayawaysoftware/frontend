@@ -1,0 +1,7 @@
+{
+  "id": 1,
+  "name": "Ejemplo 1",
+  "host_id": 1,
+  "in_game": false,
+  "usernames": ["Visitante 1", "Visitante 2", "Visitante 3", "Visitante 4"]
+}

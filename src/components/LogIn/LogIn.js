@@ -100,7 +100,7 @@ export default function LogIn() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Play
+              Jugar
             </Button>
           </Box>
         </Container>

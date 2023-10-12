@@ -27,16 +27,10 @@ describe("checks home page", () => {
   });
 
   it("create a room", () => {
-    cy.contains("Crear Sala").click();
-    cy.get("form").type("Sala de prueba");
-    cy.get(".MuiDialogActions-root > .MuiButton-contained").click();
-    cy.location("pathname").should("include", "/room");
+    cy.create_room(`Sala de prueba`);
   });
 
   it("user can join to a room", () => {
-    cy.get("div[id=0]").click();
-    cy.contains("Unirse").should("be.enabled");
-    cy.contains("Unirse").click();
-    cy.location("pathname").should("include", "/room");
+    cy.join_room();
   });
 });
