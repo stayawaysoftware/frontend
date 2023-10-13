@@ -56,7 +56,7 @@ export default function GameList() {
   const displayItem = (roominfo) => {
     // request to get the room info here
     setSelectedItem(roominfo.id);
-    if (!roominfo.in_game && roominfo.usernames.length < 12) {
+    if (!roominfo.in_game && roominfo.users.names.length < 12) {
       setRoomId(roominfo.id);
     }
   };
@@ -70,7 +70,7 @@ export default function GameList() {
         >
           <List>
             {gameData.length === 0 ? ( //ternary for checking if there are rooms
-              <div>Create a room and start playing!</div>
+              <div>¡Crea una sala y empieza a jugar!</div>
             ) : (
               <div>
                 {" "}
@@ -117,7 +117,8 @@ export default function GameList() {
                                 <PeopleIcon
                                   style={{ fontSize: 20, marginRight: "8px" }}
                                 />
-                                {gameData.usernames.length}/12
+                                {gameData.users.names.length}/
+                                {gameData.users.max}
                               </Typography>
                               {/* {typography should be at position right} */}
                               <Typography
@@ -125,7 +126,7 @@ export default function GameList() {
                                 style={{
                                   display: "flex",
                                   width:
-                                    gameData.usernames.length < 12
+                                    gameData.users.names.length < 12
                                       ? "45%"
                                       : "25%",
                                   marginLeft: "auto",
@@ -137,7 +138,8 @@ export default function GameList() {
                                   <div>En juego</div>
                                 ) : (
                                   <div>
-                                    {gameData.usernames.length < 12 ? (
+                                    {gameData.users.names.length <
+                                    gameData.users.max ? (
                                       <div>Esperando a los jugadores</div>
                                     ) : (
                                       <div>Sala llena</div>

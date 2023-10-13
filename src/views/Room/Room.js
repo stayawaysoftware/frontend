@@ -10,10 +10,12 @@ import { TextField } from "@mui/material";
 import List from "@mui/material/List";
 import PeopleIcon from "@mui/icons-material/People";
 
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Form } from "react-router-dom";
 import { UserContext } from "../../contexts/UserContext";
 import axios from "axios";
 import { Chat } from "../../components/Chat/Chat";
+import { API_ENDPOINT_ROOM_START } from "../../utils/ApiTypes";
+import { useWebSocket } from "../../contexts/WebsocketContext";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -28,52 +30,54 @@ const Room = () => {
   const { userid } = useContext(UserContext);
   const navigate = useNavigate();
 
-  //get room data from the server
+  //Room data
   const [roomData, setRoomData] = useState(null);
   const [roomName, setRoomName] = useState(null);
   const [users, setUsers] = useState([]);
+  const [minUsers, setMinUsers] = useState(null);
+  const [maxUsers, setMaxUsers] = useState(null);
 
-  const [socket, setSocket] = useState(null);
+  // esto es una manera mas limpia de llamar el contexto
+  const { websocket } = useWebSocket();
+  const { createWebSocket } = useWebSocket();
 
   useEffect(() => {
-    //get room data from the server
-    const ws = new WebSocket(`ws://localhost:8000/ws/${roomId}/${userid}`);
+    // esto se ejecuta cuando se monta el componente y crea el websocket
+    createWebSocket(roomId);
+  }, []);
 
-    setSocket(ws);
+  useEffect(() => {
+    if (websocket) {
+      websocket.onmessage = (event) => {
+        const json = JSON.parse(event.data);
+        console.log("Mensaje recibido: ", json);
 
-    ws.onopen = () => {
-      console.log(`Se inició el websocket de ${userid}`);
-    };
+        if (
+          json.type === "info" ||
+          json.type === "join" ||
+          json.type === "leave"
+        ) {
+          setRoomData(json.room);
+          setRoomName(json.room.name);
+          setUsers(json.room.users.names);
+          setMinUsers(json.room.users.min);
+          setMaxUsers(json.room.users.max);
+        } else if (json.type === "start") {
+          navigate(`/game/${roomId}`);
+        }
+      };
+    }
+  }, [roomId, websocket]);
 
-    ws.onmessage = (event) => {
-      const json = JSON.parse(event.data);
-      console.log("Mensaje: ", json);
-
-      if (json.type == "info") {
-        setRoomData(json.room);
-        setRoomName(json.room.name);
-        setUsers(json.room.users.names);
-      } else if (json.type == "join") {
-        setRoomData(json.room);
-        setRoomName(json.room.name);
-        setUsers(json.room.users.names);
-      }
-    };
-
-    ws.onclose = () => {
-      console.log("Se cerró el socket");
-    };
-
-    return () => {
-      ws.close();
-    };
-  }, [roomId]);
-
+  // cambiar para que sea manejado por mensajes del websocket
   const startGame = async () => {
+    const startParameters = new FormData();
+    startParameters.append("room_id", roomId);
+    startParameters.append("user_id", userid);
+
+    const url = API_ENDPOINT_ROOM_START;
     try {
-      const response = await axios.put(
-        `http://localhost:8000/rooms/${roomId}/start?host_id=${userid}`
-      );
+      const response = await axios.put(url, startParameters);
       console.log(response);
       navigate(`/game/${roomId}`);
     } catch (error) {
@@ -81,6 +85,50 @@ const Room = () => {
         alert(error.response.data.message);
       }
       console.log(error);
+    }
+  };
+
+  //voy a laburar asumiendo que el websocket esta listo
+  // const startGame = () => {
+  //   if (websocket) {
+  //     const messageData = JSON.stringify({
+  //       type: "start",
+  //       sender: userid,
+  //     });
+  //     websocket.send(messageData);
+  //     console.log("Mensaje enviado: ", messageData);
+  //     // navigate(`/game/${roomId}`);
+  //   }
+  // };
+
+  // const leaveRoom = async () => {
+  //   const leaveParameters = JSON.stringify({
+  //     room_id: roomId,
+  //     user_id: userid,
+  //   });
+  //   const url = API_ENDPOINT_ROOM_LEAVE;
+
+  //   try {
+  //     const response = await axios.put(url, leaveParameters);
+  //     console.log(response);
+  //     navigate(`/`);
+  //   } catch (error) {
+  //     if (error.response.status === 500) {
+  //       alert(error.response.data.message);
+  //     }
+  //     console.log(error);
+  //   }
+  // };
+
+  const leaveRoom = () => {
+    if (websocket) {
+      const messageData = JSON.stringify({
+        type: "leave",
+        sender: userid,
+      });
+      websocket.send(messageData);
+      console.log("Mensaje enviado: ", messageData);
+      // navigate(`/game/${roomId}`);
     }
   };
 
@@ -133,8 +181,8 @@ const Room = () => {
                 color="success"
                 disabled={
                   userid !== roomData.host_id ||
-                  users.length < 4 ||
-                  users.length > 12
+                  users.length < minUsers ||
+                  users.length > maxUsers
                 }
                 onClick={startGame}
               >
@@ -155,7 +203,7 @@ const Room = () => {
               background: "rgba(255,255,255,0.7)",
             }}
           >
-            {socket && <Chat socket={socket} />}
+            {websocket && <Chat />}
           </Paper>
         </Grid>
 
@@ -176,7 +224,7 @@ const Room = () => {
                 <PeopleIcon style={{ fontSize: 20, marginRight: "8px" }} />
                 <strong>
                   {" "}
-                  Jugadores {users.length}/{12}
+                  Jugadores {users.length}/{maxUsers}
                 </strong>
               </Stack>
               <List>
@@ -184,6 +232,17 @@ const Room = () => {
                   <Item key={index}>{users}</Item>
                 ))}
               </List>
+              {/* leave button */}
+              <Button
+                variant="contained"
+                size="small"
+                color="error"
+                onClick={() => {
+                  leaveRoom();
+                }}
+              >
+                <h2>Salir</h2>
+              </Button>
             </Stack>
           </Paper>
         </Grid>

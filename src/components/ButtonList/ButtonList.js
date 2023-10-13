@@ -32,9 +32,11 @@ export default function ButtonList({ joinRoom }) {
 
   const handleJoinRoom = async () => {
     const url = API_ENDPOINT_ROOM_JOIN;
-    let parameters = new FormData();
-    parameters.append("room_id", roomid);
-    parameters.append("user_id", userid);
+    const parameters = {
+      room_id: roomid,
+      user_id: userid,
+      password: "",
+    };
 
     await axios
       .put(url, parameters)

@@ -15,7 +15,7 @@ export const UserProvider = ({ children }) => {
     (card) => {
       if (clickedCard?.id === card?.id) {
         setClickedCard(null);
-        setTargetsEnable(false); 
+        setTargetsEnable(false);
       } else {
         setClickedCard(card);
         setTargetsEnable(CardHasTarget(card?.idtype));

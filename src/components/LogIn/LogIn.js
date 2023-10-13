@@ -11,6 +11,7 @@ import IconButton from "@mui/material/IconButton";
 import CasinoIcon from "@mui/icons-material/Casino";
 import Button from "@mui/material/Button";
 import axios from "axios";
+import { API_ENDPOINT_USER_NEW } from "../../utils/ApiTypes";
 import { Alert } from "@mui/material";
 
 const defaultTheme = createTheme();
@@ -35,13 +36,13 @@ export default function LogIn() {
 
   const loginHandler = async (e) => {
     e.preventDefault();
-    const url = "http://localhost:8000/users";
-    //build de url with the params
-    const params = "?username=" + username;
-    const urlFinal = url + params;
+    const url = API_ENDPOINT_USER_NEW;
+    const parameters = {
+      username: username,
+    };
 
     await axios
-      .post(urlFinal)
+      .post(url, parameters)
       .then((response) => {
         console.log("Solicitud POST exitosa", response.data);
         setUserId(response.data.id);
