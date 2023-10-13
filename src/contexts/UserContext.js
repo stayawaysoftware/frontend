@@ -10,7 +10,6 @@ export const UserProvider = ({ children }) => {
   const [userid, setUserId] = useState(null);
   const [clickedCard, setClickedCard] = useState(null);
   const [targetsEnable, setTargetsEnable] = useState(null);
-  const [userWebsocket, setUserWebsocket] = useState(null);
 
   const onCardClicked = useCallback(
     (card) => {
@@ -37,8 +36,6 @@ export const UserProvider = ({ children }) => {
         clickedCard,
         onCardClicked,
         targetsEnable,
-        userWebsocket,
-        setUserWebsocket,
       }}
     >
       {children}
