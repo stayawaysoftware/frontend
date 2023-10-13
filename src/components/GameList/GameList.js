@@ -14,7 +14,6 @@ import Collapse from "@mui/material/Collapse";
 import ExpandableItem from "./ExpandableItem";
 import axios from "axios";
 import PeopleIcon from "@mui/icons-material/People";
-import LockOpenIcon from "@mui/icons-material/LockOpen";
 
 import { API_ENDPOINT_ROOM_LIST } from "../../utils/ApiTypes";
 
@@ -54,6 +53,14 @@ export default function GameList() {
     return () => clearInterval(interval);
   }, []);
 
+  const displayItem = (roominfo) => {
+    // request to get the room info here
+    setSelectedItem(roominfo.id);
+    if (!roominfo.in_game && roominfo.usernames.length < 12) {
+      setRoomId(roominfo.id);
+    }
+  };
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} md={10}>
@@ -79,17 +86,13 @@ export default function GameList() {
                             id={index}
                             onClick={() => {
                               xprops.setOpen(!xprops.open);
-                              setSelectedItem(gameData.id);
-                              setRoomId(gameData.id);
+                              displayItem(gameData);
                             }}
                           >
                             <ListItemAvatar>
                               <Avatar>{GetInitials(gameData.name)}</Avatar>
                             </ListItemAvatar>
-                            <ListItemText
-                              primary={gameData.name}
-                              //secondary={secondary ? "Secondary text" : null}
-                            />
+                            <ListItemText primary={gameData.name} />
                             {xprops.open ? <ExpandLess /> : <ExpandMore />}
                           </ListItemButton>
                           <Collapse
@@ -116,12 +119,30 @@ export default function GameList() {
                                 />
                                 {gameData.usernames.length}/12
                               </Typography>
-                              <Typography component="div">
+                              {/* {typography should be at position right} */}
+                              <Typography
+                                component="div"
+                                style={{
+                                  display: "flex",
+                                  width:
+                                    gameData.usernames.length < 12
+                                      ? "45%"
+                                      : "25%",
+                                  marginLeft: "auto",
+                                  marginRight: "10px",
+                                }}
+                              >
                                 {/* {ternary for checking if the game in in_game} */}
                                 {gameData.in_game ? (
                                   <div>En juego</div>
                                 ) : (
-                                  <div>Esperando a los jugadores</div>
+                                  <div>
+                                    {gameData.usernames.length < 12 ? (
+                                      <div>Esperando a los jugadores</div>
+                                    ) : (
+                                      <div>Sala llena</div>
+                                    )}
+                                  </div>
                                 )}
                               </Typography>
                               {/* <Typography component="div">

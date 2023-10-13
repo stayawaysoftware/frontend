@@ -11,6 +11,7 @@ import AddIcon from "@mui/icons-material/Add";
 import LoginIcon from "@mui/icons-material/Login";
 import CreateRoomDialog from "../LobbyConfig/LobbyConfigDialog";
 import axios from "axios";
+import { Alert } from "@mui/material";
 
 import { API_ENDPOINT_ROOM_JOIN } from "../../utils/ApiTypes";
 
@@ -19,6 +20,7 @@ export default function ButtonList({ joinRoom }) {
   const { roomid } = useContext(UserContext);
   const navigate = useNavigate();
   const { userid } = React.useContext(UserContext);
+  const [error, setError] = useState(null);
 
   const handleCreateRoomClick = () => {
     setCreateRoomDialogOpen(true);
@@ -42,6 +44,7 @@ export default function ButtonList({ joinRoom }) {
       })
       .catch((error) => {
         console.error("Error en la solicitud POST", error);
+        setError(error.response.data.detail);
       });
   };
 
@@ -94,6 +97,11 @@ export default function ButtonList({ joinRoom }) {
         open={isCreateRoomDialogOpen}
         onClose={handleCloseCreateRoomDialog}
       />
+      {!!error && (
+        <Alert severity="error" onClose={() => setError(null)}>
+          {error}
+        </Alert>
+      )}
     </Grid>
   );
 }
