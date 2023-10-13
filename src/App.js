@@ -10,6 +10,8 @@ import Register from "./views/Register/Register";
 import PageNotFound from "./views/PageNotFound/PageNotFound";
 import Room from "./views/Room/Room";
 import Game from "./views/Game/Game";
+import axios from "axios";
+import { API_ENDPOINT_USER_DELETE } from "./utils/ApiTypes";
 
 const defaultTheme = createTheme();
 
@@ -46,9 +48,18 @@ function App() {
   const alertUser = (event) => {
     event.preventDefault();
     //con axios no funciona, no se porque xdnt
-    fetch(`http://localhost:8000/users/${userid}`, {
-      method: "DELETE",
-    });
+    const url = API_ENDPOINT_USER_DELETE;
+    let parameters = new FormData();
+    parameters.append("id", userid);
+    axios
+      .post(url, parameters)
+      .then((response) => {
+        console.log("Solicitud POST exitosa", response.data);
+      })
+      .catch((error) => {
+        console.error("Error en la solicitud POST", error);
+      });
+
     event.returnValue = "";
   };
 

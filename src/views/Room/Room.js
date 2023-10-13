@@ -14,6 +14,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { UserContext } from "../../contexts/UserContext";
 import axios from "axios";
 import { Chat } from "../../components/Chat/Chat";
+import { BASE_URL } from "../../utils/ApiTypes";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -37,7 +38,7 @@ const Room = () => {
 
   useEffect(() => {
     //get room data from the server
-    const ws = new WebSocket(`ws://localhost:8000/ws/${roomId}/${userid}`);
+    const ws = new WebSocket(`${BASE_URL}/${roomId}/${userid}`);
 
     setSocket(ws);
 

@@ -23,7 +23,6 @@ export const Chat = ({ socket }) => {
     }
   };
 
-
   const handleInputChange = (event) => {
     setInput(event.target.value);
   };
@@ -34,7 +33,6 @@ export const Chat = ({ socket }) => {
       handleSend();
     }
   };
-
 
   useEffect(() => {
     const handleMessage = (event) => {
@@ -69,14 +67,17 @@ export const Chat = ({ socket }) => {
               my: 1,
               borderRadius: "8px",
               backgroundColor:
-                message.sender === username ? "rgba(0, 100, 0, 0.5)" : "rgba(255, 255, 255, 0.5)",
+                message.sender === username
+                  ? "rgba(0, 100, 0, 0.5)"
+                  : "rgba(255, 255, 255, 0.5)",
               marginLeft: username === message.sender ? "auto" : "0",
               wordWrap: "break-word",
               width: "fit-content",
-
             }}
           >
-            {message.sender === username ? message.content : `${message.sender}: ${message.content}`}
+            {message.sender === username
+              ? message.content
+              : `${message.sender}: ${message.content}`}
           </Box>
         ))}
       </Box>
