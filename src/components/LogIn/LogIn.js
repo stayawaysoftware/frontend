@@ -12,6 +12,7 @@ import CasinoIcon from "@mui/icons-material/Casino";
 import Button from "@mui/material/Button";
 import axios from "axios";
 import { API_ENDPOINT_USER_NEW } from "../../utils/ApiTypes";
+import { Alert } from "@mui/material";
 
 const defaultTheme = createTheme();
 
@@ -25,6 +26,7 @@ const centerStyle = {
 
 export default function LogIn() {
   const [username, setUserNameLocal] = useState(undefined);
+  const [error, setError] = useState(null);
 
   const { setUserName, setUserId } = useContext(UserContext);
 
@@ -48,9 +50,7 @@ export default function LogIn() {
       })
       .catch((error) => {
         console.error("Error en la solicitud POST", error);
-        if (error.response.status === 500) {
-          alert(error.response.data.detail);
-        }
+        setError(error.response.data.detail);
       });
   };
 
@@ -106,6 +106,11 @@ export default function LogIn() {
           </Box>
         </Container>
       </div>
+      {!!error && (
+        <Alert severity="error" onClose={() => setError(null)}>
+          {error}
+        </Alert>
+      )}
     </ThemeProvider>
   );
 }
