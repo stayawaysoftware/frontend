@@ -15,8 +15,7 @@ export const Chat = () => {
     if (input.trim() !== "") {
       const messageData = JSON.stringify({
         type: "message",
-        sender: username,
-        content: input,
+        message: input,
       });
 
       websocket.send(messageData);
@@ -78,8 +77,8 @@ export const Chat = () => {
             }}
           >
             {message.sender === username
-              ? message.content
-              : `${message.sender}: ${message.content}`}
+              ? message.message
+              : `${message.sender}: ${message.message}`}
           </Box>
         ))}
       </Box>

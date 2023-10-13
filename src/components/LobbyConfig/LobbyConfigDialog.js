@@ -87,20 +87,20 @@ export default function CreateRoomDialog({ open, onClose }) {
     var roomid = null; //initialize the roomid variable
 
     const url = API_ENDPOINT_ROOM_CREATE;
-    let parameters = new FormData();
-    parameters.append("name", name);
-    parameters.append("password", password);
-    parameters.append("host_id", userid);
-    parameters.append("min_users", minUsers);
-    parameters.append("max_users", maxUsers);
-    console.log("Parameters: ", parameters);
+    const parameters = {
+      name: name,
+      password: password,
+      host_id: userid,
+      min_users: minUsers,
+      max_users: maxUsers,
+    };
 
     //base url, should be changed to the API URL constant
     const response = await axios
       .post(url, parameters)
       .then((response) => {
         console.log("Solicitud POST exitosa", response.data);
-        roomid = response.data.room_id; //get the roomid from the response
+        roomid = response.data.id; //get the roomid from the response
         navigate("/room/" + roomid);
       })
       .catch((error) => {

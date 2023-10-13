@@ -35,11 +35,9 @@ export default function LogIn() {
   const loginHandler = async (e) => {
     e.preventDefault();
     const url = API_ENDPOINT_USER_NEW;
-    let parameters = new FormData();
-    parameters.append("username", username);
-    // const parameters = {
-    //   username: username,
-    // };
+    const parameters = {
+      username: username,
+    };
 
     await axios
       .post(url, parameters)
