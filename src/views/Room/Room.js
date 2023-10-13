@@ -14,7 +14,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { UserContext } from "../../contexts/UserContext";
 import axios from "axios";
 import { Chat } from "../../components/Chat/Chat";
-import { BASE_URL } from "../../utils/ApiTypes";
+import { BASE_URL, BASE_WS } from "../../utils/ApiTypes";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -33,13 +33,14 @@ const Room = () => {
   const [roomData, setRoomData] = useState(null);
   const [roomName, setRoomName] = useState(null);
   const [users, setUsers] = useState([]);
+  const [minUsers, setMinUsers] = useState(null);
+  const [maxUsers, setMaxUsers] = useState(null);
 
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
     //get room data from the server
-    const ws = new WebSocket(`${BASE_URL}/${roomId}/${userid}`);
-
+    const ws = new WebSocket(`${BASE_WS}/${roomId}/${userid}`);
     setSocket(ws);
 
     ws.onopen = () => {
@@ -54,10 +55,14 @@ const Room = () => {
         setRoomData(json.room);
         setRoomName(json.room.name);
         setUsers(json.room.users.names);
+        setMinUsers(json.room.users.min);
+        setMaxUsers(json.room.users.max);
       } else if (json.type == "join") {
         setRoomData(json.room);
         setRoomName(json.room.name);
         setUsers(json.room.users.names);
+        setMinUsers(json.room.users.min);
+        setMaxUsers(json.room.users.max);
       }
     };
 
@@ -134,8 +139,8 @@ const Room = () => {
                 color="success"
                 disabled={
                   userid !== roomData.host_id ||
-                  users.length < 4 ||
-                  users.length > 12
+                  users.length < minUsers ||
+                  users.length > maxUsers
                 }
                 onClick={startGame}
               >
@@ -177,7 +182,7 @@ const Room = () => {
                 <PeopleIcon style={{ fontSize: 20, marginRight: "8px" }} />
                 <strong>
                   {" "}
-                  Jugadores {users.length}/{12}
+                  Jugadores {users.length}/{maxUsers}
                 </strong>
               </Stack>
               <List>

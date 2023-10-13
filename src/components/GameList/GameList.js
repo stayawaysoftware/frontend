@@ -63,7 +63,7 @@ export default function GameList() {
         >
           <List>
             {gameData.length === 0 ? ( //ternary for checking if there are rooms
-              <div>Create a room and start playing!</div>
+              <div>¡Crea una sala y empieza a jugar!</div>
             ) : (
               <div>
                 {" "}
@@ -114,14 +114,15 @@ export default function GameList() {
                                 <PeopleIcon
                                   style={{ fontSize: 20, marginRight: "8px" }}
                                 />
-                                {gameData.usernames.length}/12
+                                {gameData.users.names.length}/
+                                {gameData.users.max}
                               </Typography>
                               <Typography component="div">
                                 {/* {ternary for checking if the game in in_game} */}
                                 {gameData.in_game ? (
                                   <div>En juego</div>
                                 ) : (
-                                  <div>Esperando a los jugadores</div>
+                                  <div>Esperando jugadores</div>
                                 )}
                               </Typography>
                               {/* <Typography component="div">
