@@ -105,6 +105,13 @@ export default function CreateRoomDialog({ open, onClose }) {
       })
       .catch((error) => {
         console.error("Error en la solicitud POST", error);
+        if (error.response.status === 400) {
+          alert(error.response.data.message);
+        } else if (error.response.status === 500) {
+          alert(error.response.data.message);
+        } else {
+          alert("Error bizarro");
+        }
       });
 
     onClose();
