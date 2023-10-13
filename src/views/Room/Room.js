@@ -15,6 +15,7 @@ import { UserContext } from "../../contexts/UserContext";
 import axios from "axios";
 import { Chat } from "../../components/Chat/Chat";
 import { BASE_URL, BASE_WS } from "../../utils/ApiTypes";
+import { useWebSocket } from "../../contexts/WebsocketContext";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -29,52 +30,44 @@ const Room = () => {
   const { userid } = useContext(UserContext);
   const navigate = useNavigate();
 
-  //get room data from the server
+  //Room data
   const [roomData, setRoomData] = useState(null);
   const [roomName, setRoomName] = useState(null);
   const [users, setUsers] = useState([]);
   const [minUsers, setMinUsers] = useState(null);
   const [maxUsers, setMaxUsers] = useState(null);
 
-  const [socket, setSocket] = useState(null);
+  // esto es una manera mas limpia de llamar el contexto
+  const { websocket } = useWebSocket();
+  const { createWebSocket } = useWebSocket();
 
   useEffect(() => {
-    //get room data from the server
-    const ws = new WebSocket(`${BASE_WS}/${roomId}/${userid}`);
-    setSocket(ws);
+    // esto se ejecuta cuando se monta el componente y crea el websocket
+    createWebSocket(roomId);
+  }, []);
 
-    ws.onopen = () => {
-      console.log(`Se inició el websocket de ${userid}`);
-    };
+  useEffect(() => {
+    if (websocket) {
+      websocket.onmessage = (event) => {
+        const json = JSON.parse(event.data);
+        console.log("Mensaje: ", json);
 
-    ws.onmessage = (event) => {
-      const json = JSON.parse(event.data);
-      console.log("Mensaje: ", json);
+        if (
+          json.type === "info" ||
+          json.type === "join" ||
+          json.type === "leave"
+        ) {
+          setRoomData(json.room);
+          setRoomName(json.room.name);
+          setUsers(json.room.users.names);
+          setMinUsers(json.room.users.min);
+          setMaxUsers(json.room.users.max);
+        }
+      };
+    }
+  }, [roomId, websocket]);
 
-      if (json.type == "info") {
-        setRoomData(json.room);
-        setRoomName(json.room.name);
-        setUsers(json.room.users.names);
-        setMinUsers(json.room.users.min);
-        setMaxUsers(json.room.users.max);
-      } else if (json.type == "join") {
-        setRoomData(json.room);
-        setRoomName(json.room.name);
-        setUsers(json.room.users.names);
-        setMinUsers(json.room.users.min);
-        setMaxUsers(json.room.users.max);
-      }
-    };
-
-    ws.onclose = () => {
-      console.log("Se cerró el socket");
-    };
-
-    return () => {
-      ws.close();
-    };
-  }, [roomId]);
-
+  // cambiar para que sea manejado por mensajes del websocket
   const startGame = async () => {
     try {
       const response = await axios.put(
@@ -161,7 +154,7 @@ const Room = () => {
               background: "rgba(255,255,255,0.7)",
             }}
           >
-            {socket && <Chat socket={socket} />}
+            {websocket && <Chat />}
           </Paper>
         </Grid>
 

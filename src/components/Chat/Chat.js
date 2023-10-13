@@ -2,12 +2,14 @@ import React, { useState, useEffect, useContext } from "react";
 import { Box, TextField, Button, Grid } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { UserContext } from "../../contexts/UserContext";
+import { useWebSocket } from "../../contexts/WebsocketContext";
 
-export const Chat = ({ socket }) => {
+export const Chat = () => {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
 
   const { username } = useContext(UserContext);
+  const { websocket } = useWebSocket();
 
   const handleSend = () => {
     if (input.trim() !== "") {
@@ -17,7 +19,7 @@ export const Chat = ({ socket }) => {
         content: input,
       });
 
-      socket.send(messageData);
+      websocket.send(messageData);
       console.log("Mensaje enviado: ", messageData);
       setInput("");
     }
@@ -42,12 +44,12 @@ export const Chat = ({ socket }) => {
       }
     };
 
-    socket.addEventListener("message", handleMessage);
+    websocket.addEventListener("message", handleMessage);
 
     return () => {
-      socket.removeEventListener("message", handleMessage);
+      websocket.removeEventListener("message", handleMessage);
     };
-  }, [socket]);
+  }, [websocket]);
 
   return (
     <Box

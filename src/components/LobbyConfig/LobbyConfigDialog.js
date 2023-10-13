@@ -46,7 +46,6 @@ export default function CreateRoomDialog({ open, onClose }) {
         console.error("Error en la solicitud POST", error);
       });
 
-    console.log(roomid);
     onClose();
   };
 
