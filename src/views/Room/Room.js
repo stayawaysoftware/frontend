@@ -69,37 +69,17 @@ const Room = () => {
     }
   }, [roomId, websocket]);
 
-  // cambiar para que sea manejado por mensajes del websocket
-  const startGame = async () => {
-    const startParameters = new FormData();
-    startParameters.append("room_id", roomId);
-    startParameters.append("user_id", userid);
-
-    const url = API_ENDPOINT_ROOM_START;
-    try {
-      const response = await axios.put(url, startParameters);
-      console.log(response);
-      navigate(`/game/${roomId}`);
-    } catch (error) {
-      if (error.response.status === 500) {
-        alert(error.response.data.message);
-      }
-      console.log(error);
+  const startGame = () => {
+    if (websocket) {
+      const messageData = JSON.stringify({
+        type: "start",
+        // sender: userid,
+      });
+      websocket.send(messageData);
+      console.log("Mensaje enviado: ", messageData);
+      // navigate(`/game/${roomId}`);
     }
   };
-
-  //voy a laburar asumiendo que el websocket esta listo
-  // const startGame = () => {
-  //   if (websocket) {
-  //     const messageData = JSON.stringify({
-  //       type: "start",
-  //       sender: userid,
-  //     });
-  //     websocket.send(messageData);
-  //     console.log("Mensaje enviado: ", messageData);
-  //     // navigate(`/game/${roomId}`);
-  //   }
-  // };
 
   // const leaveRoom = async () => {
   //   const leaveParameters = JSON.stringify({
