@@ -33,6 +33,7 @@ const Room = () => {
   //Room data
   const [roomData, setRoomData] = useState(null);
   const [roomName, setRoomName] = useState(null);
+  const [hostId, setHostId] = useState(null);
   const [users, setUsers] = useState([]);
   const [minUsers, setMinUsers] = useState(null);
   const [maxUsers, setMaxUsers] = useState(null);
@@ -51,17 +52,17 @@ const Room = () => {
       websocket.onmessage = (event) => {
         const json = JSON.parse(event.data);
         console.log("Mensaje recibido: ", json);
+        const room_data = json.room;
 
-        if (
-          json.type === "info" ||
-          json.type === "join" ||
-          json.type === "leave"
-        ) {
-          setRoomData(json.room);
-          setRoomName(json.room.name);
-          setUsers(json.room.users.names);
-          setMinUsers(json.room.users.min);
-          setMaxUsers(json.room.users.max);
+        if (json.type === "info") {
+          setRoomData(room_data);
+          setRoomName(room_data.name);
+          setHostId(room_data.host_id);
+          setUsers(room_data.users.names);
+          setMinUsers(room_data.users.min);
+          setMaxUsers(room_data.users.max);
+        } else if (json.type === "join") {
+          setUsers(room_data.users.names);
         } else if (json.type === "start") {
           navigate(`/game/${roomId}`);
         }
@@ -73,7 +74,8 @@ const Room = () => {
     if (websocket) {
       const messageData = JSON.stringify({
         type: "start",
-        // sender: userid,
+        room_id: roomId,
+        host_id: userid,
       });
       websocket.send(messageData);
       console.log("Mensaje enviado: ", messageData);
@@ -160,7 +162,7 @@ const Room = () => {
                 size="small"
                 color="success"
                 disabled={
-                  userid !== roomData.host_id ||
+                  userid !== hostId ||
                   users.length < minUsers ||
                   users.length > maxUsers
                 }
