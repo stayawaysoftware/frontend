@@ -1,6 +1,6 @@
 import { createContext, useState, useCallback } from "react";
 
-import { CardHasTarget } from "../utils/CardHandler";
+import { CardHasTarget, CntTarget } from "../utils/CardHandler";
 
 export const UserContext = createContext();
 
@@ -18,7 +18,14 @@ export const UserProvider = ({ children }) => {
         setTargetsEnable(false);
       } else {
         setClickedCard(card);
-        setTargetsEnable(CardHasTarget(card?.idtype));
+        if (
+          CardHasTarget(card?.idtype) === CntTarget.ADJACENT ||
+          CardHasTarget(card?.idtype) === CntTarget.ALL
+        ) {
+          setTargetsEnable(true);
+        } else {
+          setTargetsEnable(false);
+        }
       }
     },
     [clickedCard, setClickedCard]
