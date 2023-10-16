@@ -19,11 +19,10 @@ const Game = () => {
   const { userid } = useContext(UserContext);
 
   //game data
-  const [finished, setFinished] = useState(true);
+  const [finished, setFinished] = useState(false);
   const [forceRender, setForceRender] = useState(0);
 
   const { data: gameData, isLoading } = useGame(gameId);
-  console.log({ gameData, isLoading });
   const {
     players: gamePlayers = [],
     current_turn: currentTurn,
@@ -105,6 +104,17 @@ const Game = () => {
     }
   };
 
+  const checkIfDead = () => {
+    let b = false;
+    gamePlayers?.forEach((player) => {
+      if (player.id === userid && player.alive === false) {
+        console.log("alive players");
+        b = true;
+      }
+    });
+    return b;
+  };
+
   return (
     <div>
       <div
@@ -144,6 +154,21 @@ const Game = () => {
         ) : (
           // Mostrar los datos del juego si loading es false
           <>
+            {true === checkIfDead() ? (
+              <Alert
+                severity="error"
+                style={{
+                  position: "absolute",
+                  top: "5%",
+                  left: "2%",
+                }}
+              >
+                Estas muerto,{" "}
+                {gameData.players.find((player) => player.id === userid).name}!
+              </Alert>
+            ) : (
+              <h1> </h1>
+            )}
             <GameTable
               playersTable={tableData}
               currentTurn={currentTurn}
