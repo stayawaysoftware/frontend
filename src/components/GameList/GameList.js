@@ -14,6 +14,8 @@ import Collapse from "@mui/material/Collapse";
 import ExpandableItem from "./ExpandableItem";
 import axios from "axios";
 import PeopleIcon from "@mui/icons-material/People";
+import LockIcon from "@mui/icons-material/Lock";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
 
 import { API_ENDPOINT_ROOM_LIST } from "../../utils/ApiTypes";
 
@@ -112,13 +114,32 @@ export default function GameList() {
                                   display: "flex",
                                   width: "30%",
                                 }}
-                                ml={9}
+                                ml={2}
                               >
                                 <PeopleIcon
                                   style={{ fontSize: 20, marginRight: "8px" }}
                                 />
                                 {gameData.users.names.length}/
                                 {gameData.users.max}
+                              </Typography>
+                              {/* typography for is_priavte */}
+                              <Typography
+                                component="div"
+                                style={{
+                                  display: "flex",
+                                  width: "30%",
+                                }}
+                              >
+                                {!gameData.is_private ? (
+                                  // <LockOpenIcon
+                                  //   style={{ fontSize: 20, marginRight: "8px" }}
+                                  // />
+                                  <div></div>
+                                ) : (
+                                  <LockIcon
+                                    style={{ fontSize: 20, marginRight: "8px" }}
+                                  />
+                                )}
                               </Typography>
                               {/* {typography should be at position right} */}
                               <Typography
@@ -130,7 +151,7 @@ export default function GameList() {
                                       ? "45%"
                                       : "25%",
                                   marginLeft: "auto",
-                                  marginRight: "10px",
+                                  marginRight: "2px",
                                 }}
                               >
                                 {/* {ternary for checking if the game in in_game} */}
@@ -140,7 +161,7 @@ export default function GameList() {
                                   <div>
                                     {gameData.users.names.length <
                                     gameData.users.max ? (
-                                      <div>Esperando a los jugadores</div>
+                                      <div>Esperando jugadores</div>
                                     ) : (
                                       <div>Sala llena</div>
                                     )}

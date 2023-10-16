@@ -89,7 +89,7 @@ export default function CreateRoomDialog({ open, onClose }) {
     const url = API_ENDPOINT_ROOM_CREATE;
     const parameters = {
       name: name,
-      password: password,
+      password: password.trim() === "" ? null : password,
       host_id: userid,
       min_users: minUsers,
       max_users: maxUsers,
