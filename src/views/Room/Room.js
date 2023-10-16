@@ -70,6 +70,7 @@ const Room = () => {
     }
   }, [roomId, websocket]);
 
+  //esta constante se encarga de enviar el mensaje de start al websocket
   const startGame = () => {
     if (websocket) {
       const messageData = JSON.stringify({

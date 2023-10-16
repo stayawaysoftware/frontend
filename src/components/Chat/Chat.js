@@ -11,6 +11,7 @@ export const Chat = () => {
   const { username } = useContext(UserContext);
   const { websocket } = useWebSocket();
 
+  //este handleSend se encarga de enviar el mensaje al websocket
   const handleSend = () => {
     if (input.trim() !== "") {
       const messageData = JSON.stringify({
