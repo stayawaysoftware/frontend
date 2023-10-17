@@ -1,6 +1,8 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
+
 import { useGame } from "../../hooks/useGame";
+
 import Hand from "../../components/GameComps/Hand";
 import Buttons from "../../components/GameComps/GameButtons";
 import image from "../Background/xd.svg";
@@ -8,59 +10,61 @@ import GameTable from "../../components/GameTable/GameTable";
 import Deck from "../../components/GameComps/Deck";
 import DescPile from "../../components/GameComps/DescPile";
 import FinishedAlert from "../../components/FinishedAlert/FinishedAlert";
+import OpponentHandDialog from "../../components/OpponentHandDialog/OpponentHandDialog";
+
 import { Box, Grid, Alert, Chip } from "@mui/material";
 import { UserContext } from "../../contexts/UserContext";
-import { useWebSocket } from "../../contexts/WebsocketContext";
 
 const Game = () => {
   const { gameId } = useParams();
   const { userid } = useContext(UserContext);
 
   //game data
-  const [finished, setFinished] = useState(true);
+  const [finished, setFinished] = useState(false);
   const [forceRender, setForceRender] = useState(0);
-  const [last_played_card, setLastPlayedCard] = useState(null);
-  const [target_player, setTargetPlayer] = useState(null);
-  const [new_card, setNewCard] = useState(null);
-  const [played_defense, setPlayedDefense] = useState(null);
-  const [defended_card, setDefendedCard] = useState(null);
-  const [winners, setWinners] = useState(null);
-  const [turn_order, setTurnOrder] = useState(null);
-  const [turn_phase, setTurnPhase] = useState(null);
-  const [current_turn, setCurrentTurn] = useState(null);
-  const [alive_players, setAlivePlayers] = useState(0);
-  const [players, setPlayers] = useState(null);
-
-  const { websocket } = useWebSocket();
+  const [showOpponentCard, setShowOpponentCard] = useState(false);
   const { data: gameData, isLoading } = useGame(gameId);
-  console.log({ gameData, isLoading });
+  const {
+    players: gamePlayers = [],
+    current_turn: currentTurn,
+    last_played_card,
+    alive_players = 0,
+  } = useMemo(() => gameData ?? {}, [gameData]);
 
-  const gamePlayers = gameData?.players;
-  const currentTurn = gameData?.current_turn;
-
-  const tableData = gamePlayers
-    ? gamePlayers.map((player) => ({
-        id: player.id,
-        name: player.name,
-        death: !player.alive,
-        position: player.round_position,
-      }))
-    : [];
-
-  let currentUserCardList = [];
-  if (gamePlayers) {
-    currentUserCardList = gamePlayers
-      .find((player) => player.id === userid)
-      ?.hand.sort(function (a, b) {
-        return a.id - b.id;
+  const { tableData, currentUserCardList } = useMemo(() => {
+    const tableData = [];
+    if (gamePlayers) {
+      gamePlayers.forEach((player) => {
+        tableData.push({
+          id: player.id,
+          name: player.name,
+          death: !player.alive,
+          position: player.round_position,
+        });
       });
-  }
+    }
+
+    let currentUserCardList = [];
+    if (gamePlayers) {
+      currentUserCardList = gamePlayers
+        .find((player) => player.id === userid)
+        ?.hand.sort(function (a, b) {
+          return a.id - b.id;
+        });
+    }
+
+    return {
+      tableData,
+      currentUserCardList,
+    };
+  }, [gamePlayers, userid]);
 
   const handleForceRender = () => {
     setForceRender(currentTurn);
   };
 
   const positionToId = (position) => {
+    // console.log("game players es", gamePlayers);
     let id = null;
     gamePlayers?.forEach((player) => {
       if (player.round_position === position) {
@@ -72,9 +76,11 @@ const Game = () => {
 
   const getLeftId = (position) => {
     const n = gamePlayers.length;
+    //must return the next valid id, considering if the player is alive or not
     while (1) {
       const leftPos = position === 1 ? n : position - 1;
       const leftId = positionToId(leftPos);
+      //check if leftid is alive
       if (gamePlayers.find((player) => player.id === leftId).alive) {
         return leftId;
       } else {
@@ -85,9 +91,12 @@ const Game = () => {
 
   const getRightId = (position) => {
     const n = gamePlayers.length;
+    // Si la posición es n, entonces la posición derecha es 1
+    // Si no, la posición derecha es la posición actual + 1
     while (1) {
       const rightPos = position === n ? 1 : position + 1;
       const rightId = positionToId(rightPos);
+      //check if rightid is alive
       if (gamePlayers.find((player) => player.id === rightId).alive) {
         return rightId;
       } else {
@@ -96,72 +105,18 @@ const Game = () => {
     }
   };
 
-/*   // Este useEffect se encarga de escuchar los mensajes del websocket
-  useEffect(() => {
-    if (websocket) {
-      websocket.onmessage = (event) => {
-        const json = JSON.parse(event.data);
-        console.log("Mensaje recibido: ", json);
-
-        if (json.type === "game_status") {
-          setPlayers(json.players);
-          setAlivePlayers(json.alive_players);
-          setCurrentTurn(json.current_turn);
-          setTurnPhase(json.turn_phase);
-          setWinners(json.winners);
-          setTurnOrder(json.turn_order);
-        } else if (json.type === "new_turn") {
-          setCurrentTurn(json.current_turn);
-        } else if (json.type === "draw") {
-          setNewCard(json.new_card);
-        } else if (json.type === "play") {
-          setLastPlayedCard(json.last_played_card);
-          setTargetPlayer(json.target_player);
-        } else if (json.type === "try_defense") {
-          setLastPlayedCard(json.last_played_card);
-          setTargetPlayer(json.target_player);
-        } else if (json.type === "defense") {
-          setPlayedDefense(json.played_defense);
-        } else if (json.type === "exchange_ask") {
-          setTargetPlayer(json.target_player);
-        }
-      };
-    }
-  }, [websocket]);
-
-  const handlePlay = (card) => {
-    if (websocket) {
-      const messageData = JSON.stringify({
-        type: "play",
-        last_played_card: card,
-        target_player: gamePlayers.find((player) => player.id === userid).id,
-      });
-      websocket.send(messageData);
-      console.log("Mensaje enviado: ", messageData);
-    }
-  }
-
-  const handleDiscard = (card) => {
-    if (websocket) {
-      const messageData = JSON.stringify({
-        type: "discard",
-        last_played_card: card,
-      });
-      websocket.send(messageData);
-      console.log("Mensaje enviado: ", messageData);
-    }
-  }
-
-  const handleExchange = (card) => {
-    if (websocket) {
-      const messageData = JSON.stringify({
-        type: "exchange_ask",
-        target_player: gamePlayers.find((player) => player.id === userid).id,
-      });
-      websocket.send(messageData);
-      console.log("Mensaje enviado: ", messageData);
-    }
-  } */
+  const handleCloseOpponentCardDialog = () => {
+    setShowOpponentCard(false);
+  };
+  const checkIfDead = () => {
+    let b = false;
+    gamePlayers?.forEach((player) => {
+      if (player.id === userid && player.alive === false) {
+        b = true;
+      }
+    });
+    return b;
+  };
 
   return (
     <div>
@@ -202,6 +157,21 @@ const Game = () => {
         ) : (
           // Mostrar los datos del juego si loading es false
           <>
+            {true === checkIfDead() ? (
+              <Alert
+                severity="error"
+                style={{
+                  position: "absolute",
+                  top: "5%",
+                  left: "2%",
+                }}
+              >
+                Estas muerto,{" "}
+                {gameData.players.find((player) => player.id === userid).name}!
+              </Alert>
+            ) : (
+              <h1> </h1>
+            )}
             <GameTable
               playersTable={tableData}
               currentTurn={currentTurn}
@@ -239,6 +209,18 @@ const Game = () => {
                 }}
               ></div>
             </Box>
+
+            <>
+              <OpponentHandDialog
+                open={showOpponentCard}
+                onClose={handleCloseOpponentCardDialog}
+                cardList={currentUserCardList}
+                opponentName={
+                  gameData.players.find((player) => player.id === userid).name
+                }
+              />
+            </>
+
             <Box>
               <Grid
                 container
