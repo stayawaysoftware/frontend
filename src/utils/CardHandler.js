@@ -77,8 +77,44 @@ export function IdToAsset(id) {
   return assetName;
 }
 
+export const CntTarget = Object.freeze({
+  NONE: 0,
+  ADJACENT: 1,
+  ALL: 2,
+});
+
 const cardTargets = {
-  3: true,
+  1: CntTarget.NONE,
+  2: CntTarget.NONE,
+  3: CntTarget.ADJACENT,
+  4: CntTarget.ADJACENT,
+  5: CntTarget.ADJACENT, // hacha: a vos mismo o adjacente
+  6: CntTarget.ADJACENT,
+  7: CntTarget.NONE,
+  8: CntTarget.NONE,
+  9: CntTarget.ADJACENT,
+  10: CntTarget.NONE,
+  11: CntTarget.ALL,
+  12: CntTarget.ALL,
+  13: CntTarget.NONE,
+  14: CntTarget.NONE,
+  15: CntTarget.NONE,
+  16: CntTarget.NONE,
+  17: CntTarget.NONE,
+  18: CntTarget.ADJACENT,
+  19: CntTarget.ADJACENT,
+  20: CntTarget.NONE,
+  21: CntTarget.NONE,
+  22: CntTarget.ALL,
+  23: CntTarget.NONE,
+  24: CntTarget.ADJACENT,
+  25: CntTarget.NONE,
+  26: CntTarget.NONE,
+  27: CntTarget.ADJACENT,
+  28: CntTarget.NONE,
+  29: CntTarget.ALL,
+  30: CntTarget.NONE,
+  31: CntTarget.NONE,
 };
 
 export function CardHasTarget(id) {
