@@ -6,6 +6,7 @@ const DescPile = ({ lastCard }) => {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    perspective: "1000px",
   };
 
   return (
@@ -15,12 +16,13 @@ const DescPile = ({ lastCard }) => {
           src={IdToAsset(lastCard)}
           alt="descarte"
           style={{
-            width: "25%",
+            width: "24%",
             height: "auto",
             position: "relative",
             border: "none",
             right: "-20%",
-            bottom: "170px",
+            bottom: "160px",
+            transform: "rotateX(25deg)",
           }}
         />
       </div>

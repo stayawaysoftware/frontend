@@ -10,6 +10,7 @@ import GameTable from "../../components/GameTable/GameTable";
 import Deck from "../../components/GameComps/Deck";
 import DescPile from "../../components/GameComps/DescPile";
 import FinishedAlert from "../../components/FinishedAlert/FinishedAlert";
+import Arrows from "../../components/GameComps/Arrows";
 
 import { Box, Grid, Alert, Chip } from "@mui/material";
 import { UserContext } from "../../contexts/UserContext";
@@ -17,6 +18,7 @@ import { UserContext } from "../../contexts/UserContext";
 const Game = () => {
   const { gameId } = useParams();
   const { userid } = useContext(UserContext);
+  const order = false;
 
   //game data
   const [finished, setFinished] = useState(true);
@@ -183,6 +185,20 @@ const Game = () => {
             </Box>
             <Box>
               <Grid
+                    item
+                    xs={6}
+                    md={12}
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
+                  <Arrows turn_order={order}/>
+              </Grid>
+            </Box>
+            <Box>
+              <Grid
                 container
                 spacing={2}
                 sx={{
@@ -200,6 +216,7 @@ const Game = () => {
                     flexDirection: "column",
                     alignItems: "center",
                     gap: 1,
+                    marginTop: "-11%",
                   }}
                 >
                   <Hand cardList={currentUserCardList} />
