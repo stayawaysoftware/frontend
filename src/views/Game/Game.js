@@ -14,6 +14,7 @@ import OpponentHandDialog from "../../components/OpponentHandDialog/OpponentHand
 
 import { Box, Grid, Alert, Chip } from "@mui/material";
 import { UserContext } from "../../contexts/UserContext";
+import GameChat from "../../components/Chat/GameChat";
 
 const Game = () => {
   const { gameId } = useParams();
@@ -300,6 +301,7 @@ const Game = () => {
           </>
         )}
       </div>
+      <GameChat />
     </div>
   );
 };
