@@ -6,14 +6,14 @@
 .horario1 {
     transform: rotate(180deg);
     position: relative;
-    bottom: 45vh; /* Posición relativa al 10% del contenedor */
+    bottom: 265px; /* Posición relativa al 10% del contenedor */
     right: 15%; /* Posición relativa al 5% del contenedor */
 }
 
 .antihorario1 {
     transform: rotate(0deg);
     position: relative;
-    bottom: 8vh; /* Posición relativa al 2% del contenedor */
+    bottom: 60px; /* Posición relativa al 2% del contenedor */
     right: 18%; /* Posición relativa al 5% del contenedor */
 }
 
@@ -25,14 +25,14 @@
 .horario2 {
     transform: rotate(0deg);
     position: relative;
-    bottom: 8vh; /* Posición relativa al 2% del contenedor */
+    bottom: 60px; /* Posición relativa al 2% del contenedor */
     right: -15%; /* Posición relativa al -5% del contenedor */
 }
 
 .antihorario2 {
     transform: rotate(180deg);
     position: relative;
-    bottom: 45vh; /* Posición relativa al 10% del contenedor */
+    bottom: 265px; /* Posición relativa al 10% del contenedor */
     right: -15%; /* Posición relativa al -5% del contenedor */
 }
 

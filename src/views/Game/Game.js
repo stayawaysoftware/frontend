@@ -18,7 +18,7 @@ import { UserContext } from "../../contexts/UserContext";
 const Game = () => {
   const { gameId } = useParams();
   const { userid } = useContext(UserContext);
-  const order = true;
+  const order = false;
 
   //game data
   const [finished, setFinished] = useState(true);
