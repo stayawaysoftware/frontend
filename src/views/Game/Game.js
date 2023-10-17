@@ -18,7 +18,7 @@ import { UserContext } from "../../contexts/UserContext";
 const Game = () => {
   const { gameId } = useParams();
   const { userid } = useContext(UserContext);
-  const order = false;
+  const order = true;
 
   //game data
   const [finished, setFinished] = useState(true);
@@ -192,6 +192,8 @@ const Game = () => {
                       display: "flex",
                       flexDirection: "column",
                       alignItems: "center",
+                      width: "100%",
+                      gap: 1,
                     }}
                   >
                   <Arrows turn_order={order}/>
