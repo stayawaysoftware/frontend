@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState, useContext, useCallback } from "react";
 import { useParams } from "react-router-dom";
 
+import { CntTarget, CardHasTarget } from "../../utils/CardHandler";
 import { UserAvatar } from "../UserAvatar";
 import { UserContext } from "../../contexts/UserContext";
 import "./GameTable.css";
@@ -127,14 +128,34 @@ const GameTable = ({
     onCardClicked(null);
   };
 
-  const getUserFunction = (id) => {
-    console.log({ targetsEnable, id, left_id, right_id });
+  const handlePlayCard = async () => {
+    await axios.put(
+      `http://localhost:8000/game/${gameId}/play_turn?card_idtype=${clickedCard?.idtype}&current_player_id=${userid}`
+    );
 
+    onCardClicked(null);
+  };
+
+  const getUserFunction = (id) => {
     if (targetsEnable) {
-      if (id === left_id) {
-        return handlePlayLeft;
-      } else if (id === right_id) {
-        return handlePlayRight;
+      if (CardHasTarget(clickedCard.idtype) === CntTarget.ADJACENT) {
+        if (id === left_id) {
+          if (clickedCard?.idtype === 3) {
+            return handlePlayLeft;
+          } else {
+            return handlePlayCard;
+          }
+        } else if (id === right_id) {
+          if (clickedCard?.idtype === 3) {
+            return handlePlayRight;
+          } else {
+            return handlePlayCard;
+          }
+        }
+      }
+
+      if (CardHasTarget(clickedCard.idtype) === CntTarget.ALL) {
+        return handlePlayCard;
       }
     }
 
