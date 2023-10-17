@@ -19,11 +19,10 @@ const Game = () => {
   const { userid } = useContext(UserContext);
 
   //game data
-  const [finished, setFinished] = useState(true);
+  const [finished, setFinished] = useState(false);
   const [forceRender, setForceRender] = useState(0);
 
   const { data: gameData, isLoading } = useGame(gameId);
-  console.log({ gameData, isLoading });
   const {
     players: gamePlayers = [],
     current_turn: currentTurn,
