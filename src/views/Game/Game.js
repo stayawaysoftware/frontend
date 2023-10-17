@@ -10,6 +10,7 @@ import GameTable from "../../components/GameTable/GameTable";
 import Deck from "../../components/GameComps/Deck";
 import DescPile from "../../components/GameComps/DescPile";
 import FinishedAlert from "../../components/FinishedAlert/FinishedAlert";
+import OpponentHandDialog from "../../components/OpponentHandDialog/OpponentHandDialog";
 
 import { Box, Grid, Alert, Chip } from "@mui/material";
 import { UserContext } from "../../contexts/UserContext";
@@ -21,7 +22,7 @@ const Game = () => {
   //game data
   const [finished, setFinished] = useState(false);
   const [forceRender, setForceRender] = useState(0);
-
+  const [showOpponentCard, setShowOpponentCard] = useState(false);
   const { data: gameData, isLoading } = useGame(gameId);
   const {
     players: gamePlayers = [],
@@ -104,11 +105,13 @@ const Game = () => {
     }
   };
 
+  const handleCloseOpponentCardDialog = () => {
+    setShowOpponentCard(false);
+  };
   const checkIfDead = () => {
     let b = false;
     gamePlayers?.forEach((player) => {
       if (player.id === userid && player.alive === false) {
-        console.log("alive players");
         b = true;
       }
     });
@@ -206,6 +209,18 @@ const Game = () => {
                 }}
               ></div>
             </Box>
+
+            <>
+              <OpponentHandDialog
+                open={showOpponentCard}
+                onClose={handleCloseOpponentCardDialog}
+                cardList={currentUserCardList}
+                opponentName={
+                  gameData.players.find((player) => player.id === userid).name
+                }
+              />
+            </>
+
             <Box>
               <Grid
                 container
