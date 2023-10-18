@@ -24,7 +24,7 @@ const Deck= () => {
             cursor: "pointer",
             border: "none",
             right: "20%",
-            bottom: "160px",
+            bottom: "310px",
             transform: "rotateX(25deg)",
           }}
         />
