@@ -19,7 +19,7 @@ const Buttons = ({ current_player, gameId, left_id, right_id }) => {
   }, [current_player, userid, clickedCard, targetsEnable]);
 
   const handlePlayCard = async () => {
-    const response = await axios.put(
+    await axios.put(
       `http://localhost:8000/game/${gameId}/play_turn?card_idtype=${clickedCard?.idtype}&current_player_id=${userid}`
     );
 

@@ -4,13 +4,14 @@ import SendIcon from "@mui/icons-material/Send";
 import { UserContext } from "../../contexts/UserContext";
 import { useWebSocket } from "../../contexts/WebsocketContext";
 
-export const Chat = () => {
+export const Chat = ({ inGame }) => {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
 
   const { username } = useContext(UserContext);
   const { websocket } = useWebSocket();
 
+  //este handleSend se encarga de enviar el mensaje al websocket
   const handleSend = () => {
     if (input.trim() !== "") {
       const messageData = JSON.stringify({
@@ -105,7 +106,8 @@ export const Chat = () => {
               endIcon={<SendIcon />}
               onClick={handleSend}
             >
-              Enviar
+              {/* Enviar queda feo en el game*/}
+              {inGame ? "" : "Enviar"}
             </Button>
           </Grid>
         </Grid>

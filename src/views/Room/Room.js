@@ -61,15 +61,21 @@ const Room = () => {
           setUsers(room_data.users.names);
           setMinUsers(room_data.users.min);
           setMaxUsers(room_data.users.max);
-        } else if (json.type === "join") {
+        } else if (json.type === "join" || json.type === "leave") {
           setUsers(room_data.users.names);
         } else if (json.type === "start") {
           navigate(`/game/${roomId}`);
         }
       };
+
+      websocket.onclose = (event) => {
+        console.log("Websocket cerrado");
+        navigate(`/`);
+      };
     }
   }, [roomId, websocket]);
 
+  //esta constante se encarga de enviar el mensaje de start al websocket
   const startGame = () => {
     if (websocket) {
       const messageData = JSON.stringify({
@@ -79,38 +85,18 @@ const Room = () => {
       });
       websocket.send(messageData);
       console.log("Mensaje enviado: ", messageData);
-      // navigate(`/game/${roomId}`);
     }
   };
-
-  // const leaveRoom = async () => {
-  //   const leaveParameters = JSON.stringify({
-  //     room_id: roomId,
-  //     user_id: userid,
-  //   });
-  //   const url = API_ENDPOINT_ROOM_LEAVE;
-
-  //   try {
-  //     const response = await axios.put(url, leaveParameters);
-  //     console.log(response);
-  //     navigate(`/`);
-  //   } catch (error) {
-  //     if (error.response.status === 500) {
-  //       alert(error.response.data.message);
-  //     }
-  //     console.log(error);
-  //   }
-  // };
 
   const leaveRoom = () => {
     if (websocket) {
       const messageData = JSON.stringify({
         type: "leave",
-        sender: userid,
       });
       websocket.send(messageData);
       console.log("Mensaje enviado: ", messageData);
-      // navigate(`/game/${roomId}`);
+      // navigate(`/`);
+      // se navega en el onclose
     }
   };
 
@@ -185,7 +171,7 @@ const Room = () => {
               background: "rgba(255,255,255,0.7)",
             }}
           >
-            {websocket && <Chat />}
+            {websocket && <Chat inGame={false} />}
           </Paper>
         </Grid>
 

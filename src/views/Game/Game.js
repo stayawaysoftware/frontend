@@ -11,9 +11,11 @@ import Deck from "../../components/GameComps/Deck";
 import DescPile from "../../components/GameComps/DescPile";
 import FinishedAlert from "../../components/FinishedAlert/FinishedAlert";
 import Arrows from "../../components/GameComps/Arrows";
+import OpponentHandDialog from "../../components/OpponentHandDialog/OpponentHandDialog";
 
 import { Box, Grid, Alert, Chip } from "@mui/material";
 import { UserContext } from "../../contexts/UserContext";
+import GameChat from "../../components/Chat/GameChat";
 
 const Game = () => {
   const { gameId } = useParams();
@@ -21,11 +23,10 @@ const Game = () => {
   const order = false;
 
   //game data
-  const [finished, setFinished] = useState(true);
+  const [finished, setFinished] = useState(false);
   const [forceRender, setForceRender] = useState(0);
-
+  const [showOpponentCard, setShowOpponentCard] = useState(false);
   const { data: gameData, isLoading } = useGame(gameId);
-  console.log({ gameData, isLoading });
   const {
     players: gamePlayers = [],
     current_turn: currentTurn,
@@ -107,6 +108,19 @@ const Game = () => {
     }
   };
 
+  const handleCloseOpponentCardDialog = () => {
+    setShowOpponentCard(false);
+  };
+  const checkIfDead = () => {
+    let b = false;
+    gamePlayers?.forEach((player) => {
+      if (player.id === userid && player.alive === false) {
+        b = true;
+      }
+    });
+    return b;
+  };
+
   return (
     <div>
       <div
@@ -146,6 +160,21 @@ const Game = () => {
         ) : (
           // Mostrar los datos del juego si loading es false
           <>
+            {true === checkIfDead() ? (
+              <Alert
+                severity="error"
+                style={{
+                  position: "absolute",
+                  top: "5%",
+                  left: "2%",
+                }}
+              >
+                Estas muerto,{" "}
+                {gameData.players.find((player) => player.id === userid).name}!
+              </Alert>
+            ) : (
+              <h1> </h1>
+            )}
             <GameTable
               playersTable={tableData}
               currentTurn={currentTurn}
@@ -198,6 +227,18 @@ const Game = () => {
                 }}
               ></div>
             </Box>
+
+            <>
+              <OpponentHandDialog
+                open={showOpponentCard}
+                onClose={handleCloseOpponentCardDialog}
+                cardList={currentUserCardList}
+                opponentName={
+                  gameData.players.find((player) => player.id === userid).name
+                }
+              />
+            </>
+
             <Box>
               <Grid
                 spacing={2}
@@ -278,6 +319,7 @@ const Game = () => {
           </>
         )}
       </div>
+      <GameChat />
     </div>
   );
 };
