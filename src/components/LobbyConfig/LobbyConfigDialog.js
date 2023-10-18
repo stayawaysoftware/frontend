@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -73,7 +73,7 @@ function MinMaxSlider({ value, onChangeSlider }) {
   );
 }
 
-export default function CreateRoomDialog({ open, onClose }) {
+export default function CreateRoomDialog({ open, onClose, setError }) {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [minUsers, setMinUsers] = useState(4);
@@ -95,8 +95,7 @@ export default function CreateRoomDialog({ open, onClose }) {
       max_users: maxUsers,
     };
 
-    //base url, should be changed to the API URL constant
-    const response = await axios
+    await axios
       .post(url, parameters)
       .then((response) => {
         console.log("Solicitud POST exitosa", response.data);
@@ -105,13 +104,7 @@ export default function CreateRoomDialog({ open, onClose }) {
       })
       .catch((error) => {
         console.error("Error en la solicitud POST", error);
-        if (error.response.status === 400) {
-          alert(error.response.data.message);
-        } else if (error.response.status === 500) {
-          alert(error.response.data.message);
-        } else {
-          alert("Error bizarro");
-        }
+        setError(error.response.data.detail);
       });
 
     onClose();

@@ -1,4 +1,3 @@
-// import * as React from "react";
 import React, { useState, useContext } from "react";
 import { UserContext } from "../../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
@@ -11,16 +10,14 @@ import AddIcon from "@mui/icons-material/Add";
 import LoginIcon from "@mui/icons-material/Login";
 import CreateRoomDialog from "../LobbyConfig/LobbyConfigDialog";
 import axios from "axios";
-import { Alert } from "@mui/material";
 
 import { API_ENDPOINT_ROOM_JOIN } from "../../utils/ApiTypes";
 
-export default function ButtonList({ joinRoom }) {
+export default function ButtonList({ setError }) {
   const [isCreateRoomDialogOpen, setCreateRoomDialogOpen] = useState(false);
   const { roomid } = useContext(UserContext);
   const navigate = useNavigate();
   const { userid } = React.useContext(UserContext);
-  const [error, setError] = useState(null);
 
   const handleCreateRoomClick = () => {
     setCreateRoomDialogOpen(true);
@@ -98,12 +95,8 @@ export default function ButtonList({ joinRoom }) {
       <CreateRoomDialog
         open={isCreateRoomDialogOpen}
         onClose={handleCloseCreateRoomDialog}
+        setError={setError}
       />
-      {!!error && (
-        <Alert severity="error" onClose={() => setError(null)}>
-          {error}
-        </Alert>
-      )}
     </Grid>
   );
 }
