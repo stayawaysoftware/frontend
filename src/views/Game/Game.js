@@ -10,6 +10,7 @@ import GameTable from "../../components/GameTable/GameTable";
 import Deck from "../../components/GameComps/Deck";
 import DescPile from "../../components/GameComps/DescPile";
 import FinishedAlert from "../../components/FinishedAlert/FinishedAlert";
+import Arrows from "../../components/GameComps/Arrows";
 import OpponentHandDialog from "../../components/OpponentHandDialog/OpponentHandDialog";
 
 import { Box, Grid, Alert, Chip } from "@mui/material";
@@ -19,6 +20,7 @@ import GameChat from "../../components/Chat/GameChat";
 const Game = () => {
   const { gameId } = useParams();
   const { userid } = useContext(UserContext);
+  const order = false;
 
   //game data
   const [finished, setFinished] = useState(false);
@@ -181,6 +183,22 @@ const Game = () => {
               right_id={getRightId(currentTurn)}
             />
             <Box>
+              <Grid
+                item
+                xs={6}
+                md={12}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  width: "100%",
+                  gap: 1,
+                }}
+              >
+                <Arrows turn_order={order} />
+              </Grid>
+            </Box>
+            <Box>
               <Grid container spacing={2}>
                 <Grid item xs={6} md={20}>
                   <Deck />
@@ -206,7 +224,6 @@ const Game = () => {
                   position: "relative",
                   left: "10%",
                   transform: "translate(16%, 0%)",
-                  marginBottom: "-70%",
                 }}
               ></div>
             </Box>
@@ -224,7 +241,6 @@ const Game = () => {
 
             <Box>
               <Grid
-                container
                 spacing={2}
                 sx={{
                   position: "relative",
@@ -234,13 +250,14 @@ const Game = () => {
               >
                 <Grid
                   item
+                  spacing={2}
                   xs={6}
                   md={12}
                   sx={{
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    gap: 1,
+                    marginTop: "-280px",
                   }}
                 >
                   <Hand cardList={currentUserCardList} />
@@ -261,6 +278,7 @@ const Game = () => {
                       fontSize: "1rem",
                       fontWeight: "bold",
                       color: "black",
+                      marginTop: "1%",
                     }}
                   />
                 </Box>
@@ -271,7 +289,7 @@ const Game = () => {
                   left: "55%",
                   transform: "translate(16%, 0%)",
                   marginTop: 0,
-                  top: "-80px",
+                  top: "-120px",
                 }}
               >
                 <Buttons
