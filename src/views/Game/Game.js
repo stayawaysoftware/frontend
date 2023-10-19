@@ -41,7 +41,6 @@ const Game = () => {
   const [isLoading, setIsLoading] = useState(true);
   //console.log({ gameData, isLoading });
 
-
   const tableData = players
     ? players.map((player) => ({
         id: player.id,
@@ -220,8 +219,7 @@ const Game = () => {
             )}
             <GameTable
               playersTable={tableData}
-              currentTurn={current_turn}
-              //forceRender={forceRender}
+              currentTurn={positionToId(current_turn)}
               left_id={getLeftId(current_turn)}
               right_id={getRightId(current_turn)}
             />

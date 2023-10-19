@@ -7,15 +7,16 @@ import { UserContext } from "../../contexts/UserContext";
 import "./GameTable.css";
 import { useWebSocket } from "../../contexts/WebsocketContext";
 
-const GameTable = ({
-  playersTable,
-  currentTurn,
-  left_id,
-  right_id,
-}) => {
+const GameTable = ({ playersTable, currentTurn, left_id, right_id }) => {
   const { gameId } = useParams();
-  const { userid, targetsEnable, clickedCard, onCardClicked, setPlayedCard, setTargetId } =
-    useContext(UserContext);
+  const {
+    userid,
+    targetsEnable,
+    clickedCard,
+    onCardClicked,
+    setPlayedCard,
+    setTargetId,
+  } = useContext(UserContext);
   const [players, setPlayers] = useState([]);
   const { websocket } = useWebSocket();
 
@@ -129,16 +130,15 @@ const GameTable = ({
   };
 
   const getUserFunction = (id) => {
-    if (targetsEnable) {
+    if (targetsEnable && currentTurn === userid) {
       console.log("currentTurn:", currentTurn);
       console.log("userid:", userid);
-      if (CardHasTarget(clickedCard.idtype) === CntTarget.ADJACENT && currentTurn === userid) {
+      if (CardHasTarget(clickedCard.idtype) === CntTarget.ADJACENT) {
         if (id === left_id || id === right_id) {
-          return () => handlePlayCard(id); 
+          return () => handlePlayCard(id);
         }
-      } else
-      if (CardHasTarget(clickedCard.idtype) === CntTarget.ALL && currentTurn === userid) {
-        return () => handlePlayCard(id); 
+      } else if (CardHasTarget(clickedCard.idtype) === CntTarget.ALL) {
+        return () => handlePlayCard(id);
       }
     }
 

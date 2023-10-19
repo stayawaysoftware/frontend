@@ -9,16 +9,23 @@ import { useWebSocket } from "../../contexts/WebsocketContext";
 
 import { UserContext } from "../../contexts/UserContext";
 
-const Buttons = ({current_player, target_player}) => {
-  const { userid, clickedCard, onCardClicked, targetsEnable, setPlayedCard, targetId} =
-    useContext(UserContext);
+const Buttons = ({ current_player, target_player }) => {
+  const {
+    userid,
+    clickedCard,
+    onCardClicked,
+    targetsEnable,
+    setPlayedCard,
+    targetId,
+  } = useContext(UserContext);
 
   const { websocket } = useWebSocket();
 
   const isTurn = current_player === userid;
   const isCardClicked = clickedCard !== null && !targetsEnable;
   const isCardTarget = target_player === targetId;
-  const playEnabled = (isTurn && isCardClicked) || (isCardTarget && isCardClicked && isTurn);
+  const playEnabled =
+    (isTurn && isCardClicked) || (isCardTarget && isCardClicked && isTurn);
 
   const handlePlayCard = () => {
     if (websocket) {
