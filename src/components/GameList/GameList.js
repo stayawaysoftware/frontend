@@ -1,20 +1,24 @@
 import React, { useState, useEffect, useContext } from "react";
+import axios from "axios";
 import { UserContext } from "../../contexts/UserContext";
 import { styled } from "@mui/material/styles";
-import List from "@mui/material/List";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import ListItemText from "@mui/material/ListItemText";
-import Avatar from "@mui/material/Avatar";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import { ListItemButton } from "@mui/material";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import Collapse from "@mui/material/Collapse";
-import ExpandableItem from "./ExpandableItem";
-import axios from "axios";
 import PeopleIcon from "@mui/icons-material/People";
-
+import LockIcon from "@mui/icons-material/Lock";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
+import {
+  ListItemButton,
+  Collapse,
+  Typography,
+  Grid,
+  Avatar,
+  ListItemText,
+  ListItemAvatar,
+  List,
+} from "@mui/material";
+import ExpandableItem from "./ExpandableItem";
+import PasswordDialog from "../LobbyConfig/PasswordDialog";
 import { API_ENDPOINT_ROOM_LIST } from "../../utils/ApiTypes";
 
 const Demo = styled("div")(({ theme }) => ({
@@ -27,10 +31,11 @@ function GetInitials(name) {
   return twoFirstLetters;
 }
 
-export default function GameList() {
+export default function GameList({ setError }) {
   const [gameData, setGameData] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
-  const { setRoomId } = useContext(UserContext);
+  const [openPasswordDialog, setOpenPasswordDialog] = useState(false);
+  const { userid, setRoomId } = useContext(UserContext);
 
   useEffect(() => {
     // should be changed to the API URL constant
@@ -44,6 +49,7 @@ export default function GameList() {
         })
         .catch((error) => {
           console.error("Error al hacer la solicitud GET:", error);
+          setError(error.response.data.detail);
         });
     };
     getRoomList();
@@ -56,9 +62,20 @@ export default function GameList() {
   const displayItem = (roominfo) => {
     // request to get the room info here
     setSelectedItem(roominfo.id);
-    if (!roominfo.in_game && roominfo.users.names.length < 12) {
-      setRoomId(roominfo.id);
+    if (!roominfo.in_game && roominfo.users.names.length < roominfo.users.max) {
+      if (roominfo.is_private) {
+        setOpenPasswordDialog(true);
+      } else {
+        setRoomId(roominfo.id);
+      }
+    } else {
+      setSelectedItem(null);
+      setRoomId(null);
     }
+  };
+
+  const handleClosePasswordDialog = () => {
+    setOpenPasswordDialog(false);
   };
 
   return (
@@ -86,7 +103,9 @@ export default function GameList() {
                             id={index}
                             onClick={() => {
                               xprops.setOpen(!xprops.open);
-                              displayItem(gameData);
+                              if (!xprops.open) {
+                                displayItem(gameData);
+                              }
                             }}
                           >
                             <ListItemAvatar>
@@ -112,7 +131,7 @@ export default function GameList() {
                                   display: "flex",
                                   width: "30%",
                                 }}
-                                ml={9}
+                                ml={2}
                               >
                                 <PeopleIcon
                                   style={{ fontSize: 20, marginRight: "8px" }}
@@ -120,19 +139,42 @@ export default function GameList() {
                                 {gameData.users.names.length}/
                                 {gameData.users.max}
                               </Typography>
+                              {/* typography for is_priavte */}
+                              <Typography
+                                component="div"
+                                style={{
+                                  display: "flex",
+                                  width: "30%",
+                                }}
+                              ></Typography>
                               {/* {typography should be at position right} */}
                               <Typography
                                 component="div"
                                 style={{
                                   display: "flex",
                                   width:
-                                    gameData.users.names.length < 12
-                                      ? "45%"
+                                    gameData.users.names.length <
+                                      gameData.users.max && !gameData.in_game
+                                      ? "55%"
                                       : "25%",
                                   marginLeft: "auto",
-                                  marginRight: "10px",
+                                  marginRight: "2px",
                                 }}
                               >
+                                {!gameData.is_private &&
+                                !gameData.in_game &&
+                                !(
+                                  gameData.users.names.length >=
+                                  gameData.users.max
+                                ) ? (
+                                  <LockOpenIcon
+                                    style={{ fontSize: 20, marginRight: "8px" }}
+                                  />
+                                ) : (
+                                  <LockIcon
+                                    style={{ fontSize: 20, marginRight: "8px" }}
+                                  />
+                                )}
                                 {/* {ternary for checking if the game in in_game} */}
                                 {gameData.in_game ? (
                                   <div>En juego</div>
@@ -140,16 +182,13 @@ export default function GameList() {
                                   <div>
                                     {gameData.users.names.length <
                                     gameData.users.max ? (
-                                      <div>Esperando a los jugadores</div>
+                                      <div>Esperando jugadores</div>
                                     ) : (
                                       <div>Sala llena</div>
                                     )}
                                   </div>
                                 )}
                               </Typography>
-                              {/* <Typography component="div">
-                            <LockOpenIcon style={{ fontSize: 18, marginRight: '8px'}}/>                         
-                          </Typography> */}
                             </div>
                           </Collapse>
                         </div>
@@ -157,6 +196,18 @@ export default function GameList() {
                     )}
                   />
                 ))}
+                <PasswordDialog
+                  open={openPasswordDialog}
+                  onClose={handleClosePasswordDialog}
+                  room_name={
+                    selectedItem != null &&
+                    gameData !== undefined &&
+                    gameData !== null &&
+                    gameData.find((room) => room.id === selectedItem).name
+                  }
+                  userid={userid}
+                  roomid={selectedItem}
+                />
               </div>
             )}
           </List>

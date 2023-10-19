@@ -23,22 +23,22 @@ const Buttons = ({ current_player, gameId, left_id, right_id }) => {
   const { websocket } = useWebSocket();
 
   const handlePlayCard = () => {
-      if (websocket) {
-        const messageData = JSON.stringify({
-          type: "play",
-          played_card: clickedCard,
-          card_target: null,
-        });
-        console.log("ws:", websocket); 
-        websocket.send(messageData);
-        console.log("clickedCard:", clickedCard);
-      }
+    if (websocket) {
+      const messageData = JSON.stringify({
+        type: "play",
+        played_card: clickedCard,
+        card_target: null,
+      });
+      console.log("ws:", websocket);
+      websocket.send(messageData);
+      console.log("clickedCard:", clickedCard);
+    }
     onCardClicked(null);
   };
 
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={8} md={10}>
+    <Grid>
+      <Grid item xs={6} md={12}>
         <List>
           <ListItem>
             <Button

@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
 //import { useGame } from "../../hooks/useGame";
 import Hand from "../../components/GameComps/Hand";
@@ -8,16 +8,21 @@ import GameTable from "../../components/GameTable/GameTable";
 import Deck from "../../components/GameComps/Deck";
 import DescPile from "../../components/GameComps/DescPile";
 import FinishedAlert from "../../components/FinishedAlert/FinishedAlert";
+import Arrows from "../../components/GameComps/Arrows";
+import OpponentHandDialog from "../../components/OpponentHandDialog/OpponentHandDialog";
+
 import { Box, Grid, Alert, Chip } from "@mui/material";
 import { UserContext } from "../../contexts/UserContext";
+import GameChat from "../../components/Chat/GameChat";
 import { useWebSocket } from "../../contexts/WebsocketContext";
 
 const Game = () => {
   const { gameId } = useParams();
   const { userid } = useContext(UserContext);
+  const order = false;
 
   //game data
-  const [finished, setFinished] = useState(true);
+  const [finished, setFinished] = useState(false);
   //const [forceRender, setForceRender] = useState(0);
   const [last_played_card, setLastPlayedCard] = useState(null);
   const [card_target, setCardTarget] = useState(null);
@@ -29,11 +34,12 @@ const Game = () => {
   const [current_turn, setCurrentTurn] = useState(null);
   const [players, setPlayers] = useState(null);
   const [played_card, setPlayedCard] = useState(null);
+  const [showOpponentCard, setShowOpponentCard] = useState(false);
 
   const { websocket } = useWebSocket();
   const [isLoading, setIsLoading] = useState(true);
   //console.log({ gameData, isLoading });
-  console.log("websocket:", websocket );
+  console.log("websocket:", websocket);
 
   const currentTurn = current_turn;
 
@@ -49,17 +55,14 @@ const Game = () => {
   let currentUserCardList = [];
   if (players) {
     currentUserCardList = players
-      .find((player) => player.id === userid)
+      ?.find((player) => player.id === userid)
       ?.hand.sort(function (a, b) {
         return a.id - b.id;
       });
   }
 
-/*   const handleForceRender = () => {
-    setForceRender(currentTurn);
-  }; */
-
   const positionToId = (position) => {
+    // console.log("game players es", gamePlayers);
     let id = null;
     players?.forEach((player) => {
       if (player.round_position === position) {
@@ -103,7 +106,7 @@ const Game = () => {
     const game_data = json.game;
     console.log("Game info received: ", game_data);
     if (json.type === "game_info") {
-      setPlayers(game_data.players.players);
+      setPlayers(game_data.players);
       setCurrentTurn(game_data.current_turn);
       setTurnPhase(game_data.turn_phase);
       setTurnOrder(game_data.turn_order);
@@ -129,7 +132,7 @@ const Game = () => {
     websocket.onmessage = onGameMessage;
   }
 
-/*   const handleDiscard = (card) => {
+  /*   const handleDiscard = (card) => {
     if (websocket) {
       const messageData = JSON.stringify({
         type: "discard",
@@ -148,6 +151,18 @@ const Game = () => {
       websocket.send(messageData);
     }
   } */
+  const handleCloseOpponentCardDialog = () => {
+    setShowOpponentCard(false);
+  };
+  const checkIfDead = () => {
+    let b = false;
+    players?.forEach((player) => {
+      if (player.id === userid && player.alive === false) {
+        b = true;
+      }
+    });
+    return b;
+  };
 
   return (
     <div>
@@ -172,8 +187,7 @@ const Game = () => {
               left: "2%",
             }}
           >
-            Es tu turno,{" "}
-            {players.find((player) => player.id === userid).name}!
+            Es tu turno, {players.find((player) => player.id === userid).name}!
           </Alert>
         ) : (
           <h1> </h1>
@@ -183,7 +197,22 @@ const Game = () => {
           <p>Loading...</p>
         ) : (
           // Mostrar los datos del juego si loading es false
-          <> 
+          <>
+            {true === checkIfDead() ? (
+              <Alert
+                severity="error"
+                style={{
+                  position: "absolute",
+                  top: "5%",
+                  left: "2%",
+                }}
+              >
+                Estas muerto,{" "}
+                {players.find((player) => player.id === userid).name}!
+              </Alert>
+            ) : (
+              <h1> </h1>
+            )}
             <GameTable
               playersTable={tableData}
               currentTurn={currentTurn}
@@ -191,6 +220,22 @@ const Game = () => {
               left_id={getLeftId(currentTurn)}
               right_id={getRightId(currentTurn)}
             />
+            <Box>
+              <Grid
+                item
+                xs={6}
+                md={12}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  width: "100%",
+                  gap: 1,
+                }}
+              >
+                <Arrows turn_order={order} />
+              </Grid>
+            </Box>
             <Box>
               <Grid container spacing={2}>
                 <Grid item xs={6} md={20}>
@@ -217,13 +262,23 @@ const Game = () => {
                   position: "relative",
                   left: "10%",
                   transform: "translate(16%, 0%)",
-                  marginBottom: "-70%",
                 }}
               ></div>
             </Box>
+
+            <>
+              <OpponentHandDialog
+                open={showOpponentCard}
+                onClose={handleCloseOpponentCardDialog}
+                cardList={currentUserCardList}
+                opponentName={
+                  players?.find((player) => player.id === userid).name
+                }
+              />
+            </>
+
             <Box>
               <Grid
-                container
                 spacing={2}
                 sx={{
                   position: "relative",
@@ -233,13 +288,14 @@ const Game = () => {
               >
                 <Grid
                   item
+                  spacing={2}
                   xs={6}
                   md={12}
                   sx={{
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    gap: 1,
+                    marginTop: "-280px",
                   }}
                 >
                   <Hand cardList={currentUserCardList} />
@@ -252,14 +308,12 @@ const Game = () => {
                   <Chip
                     color="success"
                     variant="outlined"
-                    label={
-                      players.find((player) => player.id === userid)
-                        .name
-                    }
+                    label={players.find((player) => player.id === userid).name}
                     sx={{
                       fontSize: "1rem",
                       fontWeight: "bold",
                       color: "black",
+                      marginTop: "1%",
                     }}
                   />
                 </Box>
@@ -270,7 +324,7 @@ const Game = () => {
                   left: "55%",
                   transform: "translate(16%, 0%)",
                   marginTop: 0,
-                  top: "-80px",
+                  top: "-120px",
                 }}
               >
                 <Buttons
@@ -291,15 +345,13 @@ const Game = () => {
                   left: "2%",
                 }}
               >
-                <FinishedAlert
-                  playersName={players[0]?.name}
-                  gameId={gameId}
-                />
+                <FinishedAlert playersName={players[0]?.name} gameId={gameId} />
               </Grid>
             )}
           </>
-        )} 
+        )}
       </div>
+      <GameChat />
     </div>
   );
 };
