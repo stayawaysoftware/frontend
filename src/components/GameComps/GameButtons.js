@@ -5,6 +5,8 @@ import List from "@mui/material/List";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import ListItem from "@mui/material/ListItem";
+//importar websocket
+import { useWebSocket } from "../../contexts/WebsocketContext";
 
 import { UserContext } from "../../contexts/UserContext";
 
@@ -18,11 +20,19 @@ const Buttons = ({ current_player, gameId, left_id, right_id }) => {
     return isTurn && isCardClicked;
   }, [current_player, userid, clickedCard, targetsEnable]);
 
-  const handlePlayCard = async () => {
-    const response = await axios.put(
-      `http://localhost:8000/game/${gameId}/play_turn?card_idtype=${clickedCard?.idtype}&current_player_id=${userid}`
-    );
+  const { websocket } = useWebSocket();
 
+  const handlePlayCard = () => {
+      if (websocket) {
+        const messageData = JSON.stringify({
+          type: "play",
+          played_card: clickedCard,
+          card_target: null,
+        });
+        console.log("ws:", websocket); 
+        websocket.send(messageData);
+        console.log("clickedCard:", clickedCard);
+      }
     onCardClicked(null);
   };
 

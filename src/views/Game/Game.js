@@ -18,9 +18,9 @@ const Game = () => {
 
   //game data
   const [finished, setFinished] = useState(true);
-  const [forceRender, setForceRender] = useState(0);
+  //const [forceRender, setForceRender] = useState(0);
   const [last_played_card, setLastPlayedCard] = useState(null);
-  const [target_player, setTargetPlayer] = useState(null);
+  const [card_target, setCardTarget] = useState(null);
   const [new_card, setNewCard] = useState(null);
   const [played_defense, setPlayedDefense] = useState(null);
   const [defended_card, setDefendedCard] = useState(null);
@@ -28,10 +28,12 @@ const Game = () => {
   const [turn_phase, setTurnPhase] = useState(null);
   const [current_turn, setCurrentTurn] = useState(null);
   const [players, setPlayers] = useState(null);
+  const [played_card, setPlayedCard] = useState(null);
 
   const { websocket } = useWebSocket();
-  const { isLoading, setIsLoading } = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   //console.log({ gameData, isLoading });
+  console.log("websocket:", websocket );
 
   const currentTurn = current_turn;
 
@@ -43,7 +45,6 @@ const Game = () => {
         position: player.round_position,
       }))
     : [];
-    console.log(players);
 
   let currentUserCardList = [];
   if (players) {
@@ -95,58 +96,46 @@ const Game = () => {
   };
 
   // Este useEffect se encarga de escuchar los mensajes del websocket
-  useEffect(() => {
-    if (websocket) {
-      websocket.onmessage = (event) => {
-        const json = JSON.parse(event.data);
-        console.log("Mensaje recibido: ", json);
-        const game_data = json.game;
 
-        if (json.type === "game_info") {
-          setPlayers(game_data.players);
-          setCurrentTurn(game_data.current_turn);
-          setTurnPhase(game_data.turn_phase);
-          setTurnOrder(game_data.turn_order);
-          setIsLoading(false);
-        } else if (json.type === "new_turn") {
-          setCurrentTurn(game_data.current_turn);
-        } else if (json.type === "draw") {
-          setNewCard(game_data.new_card);
-        } else if (json.type === "play") {
-          setLastPlayedCard(game_data.last_played_card);
-          setTargetPlayer(game_data.target_player);
-        } else if (json.type === "try_defense") {
-          setLastPlayedCard(game_data.last_played_card);
-          setTargetPlayer(game_data.target_player);
-        } else if (json.type === "defense") {
-          setPlayedDefense(game_data.played_defense);
-        } else if (json.type === "exchange_ask") {
-          setTargetPlayer(game_data.target_player);
-        }
-      };
-    }
-  }, [websocket]);
-
-/*   const handlePlay = (card) => {
-    if (websocket) {
-      const messageData = JSON.stringify({
-        type: "play",
-        last_played_card: card,
-        target_player: players.find((player) => player.id === userid).id,
-      });
-      websocket.send(messageData);
-      console.log("Mensaje enviado: ", messageData);
+  function onGameMessage(event) {
+    const json = JSON.parse(event.data);
+    console.log("Mensaje recibido en game: ", json);
+    const game_data = json.game;
+    console.log("Game info received: ", game_data);
+    if (json.type === "game_info") {
+      setPlayers(game_data.players.players);
+      setCurrentTurn(game_data.current_turn);
+      setTurnPhase(game_data.turn_phase);
+      setTurnOrder(game_data.turn_order);
+      setIsLoading(false);
+    } else if (json.type === "new_turn") {
+      setCurrentTurn(game_data.current_turn);
+    } else if (json.type === "draw") {
+      setNewCard(game_data.new_card);
+    } else if (json.type === "play") {
+      setPlayedCard(json.played_card);
+      setCardTarget(json.card_player);
+    } else if (json.type === "try_defense") {
+      setLastPlayedCard(game_data.last_played_card);
+      setCardTarget(game_data.target_player);
+    } else if (json.type === "defense") {
+      setPlayedDefense(game_data.played_defense);
+    } else if (json.type === "exchange_ask") {
+      setCardTarget(game_data.target_player);
     }
   }
 
-  const handleDiscard = (card) => {
+  if (websocket) {
+    websocket.onmessage = onGameMessage;
+  }
+
+/*   const handleDiscard = (card) => {
     if (websocket) {
       const messageData = JSON.stringify({
         type: "discard",
         last_played_card: card,
       });
       websocket.send(messageData);
-      console.log("Mensaje enviado: ", messageData);
     }
   }
 
@@ -157,7 +146,6 @@ const Game = () => {
         target_player: players.find((player) => player.id === userid).id,
       });
       websocket.send(messageData);
-      console.log("Mensaje enviado: ", messageData);
     }
   } */
 
@@ -199,7 +187,7 @@ const Game = () => {
             <GameTable
               playersTable={tableData}
               currentTurn={currentTurn}
-              forceRender={forceRender}
+              //forceRender={forceRender}
               left_id={getLeftId(currentTurn)}
               right_id={getRightId(currentTurn)}
             />
