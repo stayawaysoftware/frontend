@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useGame } from "../../hooks/useGame";
+//import { useGame } from "../../hooks/useGame";
 import Hand from "../../components/GameComps/Hand";
 import Buttons from "../../components/GameComps/GameButtons";
 import image from "../Background/xd.svg";
@@ -24,45 +24,43 @@ const Game = () => {
   const [new_card, setNewCard] = useState(null);
   const [played_defense, setPlayedDefense] = useState(null);
   const [defended_card, setDefendedCard] = useState(null);
-  const [winners, setWinners] = useState(null);
   const [turn_order, setTurnOrder] = useState(null);
   const [turn_phase, setTurnPhase] = useState(null);
   const [current_turn, setCurrentTurn] = useState(null);
-  const [alive_players, setAlivePlayers] = useState(0);
   const [players, setPlayers] = useState(null);
 
   const { websocket } = useWebSocket();
-  const { data: gameData, isLoading } = useGame(gameId);
-  console.log({ gameData, isLoading });
+  const { isLoading, setIsLoading } = useState(true);
+  //console.log({ gameData, isLoading });
 
-  const gamePlayers = gameData?.players;
-  const currentTurn = gameData?.current_turn;
+  const currentTurn = current_turn;
 
-  const tableData = gamePlayers
-    ? gamePlayers.map((player) => ({
+  const tableData = players
+    ? players.map((player) => ({
         id: player.id,
         name: player.name,
         death: !player.alive,
         position: player.round_position,
       }))
     : [];
+    console.log(players);
 
   let currentUserCardList = [];
-  if (gamePlayers) {
-    currentUserCardList = gamePlayers
+  if (players) {
+    currentUserCardList = players
       .find((player) => player.id === userid)
       ?.hand.sort(function (a, b) {
         return a.id - b.id;
       });
   }
 
-  const handleForceRender = () => {
+/*   const handleForceRender = () => {
     setForceRender(currentTurn);
-  };
+  }; */
 
   const positionToId = (position) => {
     let id = null;
-    gamePlayers?.forEach((player) => {
+    players?.forEach((player) => {
       if (player.round_position === position) {
         id = player.id;
       }
@@ -71,11 +69,11 @@ const Game = () => {
   };
 
   const getLeftId = (position) => {
-    const n = gamePlayers.length;
+    const n = players.length;
     while (1) {
       const leftPos = position === 1 ? n : position - 1;
       const leftId = positionToId(leftPos);
-      if (gamePlayers.find((player) => player.id === leftId).alive) {
+      if (players.find((player) => player.id === leftId).alive) {
         return leftId;
       } else {
         position = leftPos;
@@ -84,11 +82,11 @@ const Game = () => {
   };
 
   const getRightId = (position) => {
-    const n = gamePlayers.length;
+    const n = players.length;
     while (1) {
       const rightPos = position === n ? 1 : position + 1;
       const rightId = positionToId(rightPos);
-      if (gamePlayers.find((player) => player.id === rightId).alive) {
+      if (players.find((player) => player.id === rightId).alive) {
         return rightId;
       } else {
         position = rightPos;
@@ -96,45 +94,45 @@ const Game = () => {
     }
   };
 
-/*   // Este useEffect se encarga de escuchar los mensajes del websocket
+  // Este useEffect se encarga de escuchar los mensajes del websocket
   useEffect(() => {
     if (websocket) {
       websocket.onmessage = (event) => {
         const json = JSON.parse(event.data);
         console.log("Mensaje recibido: ", json);
+        const game_data = json.game;
 
-        if (json.type === "game_status") {
-          setPlayers(json.players);
-          setAlivePlayers(json.alive_players);
-          setCurrentTurn(json.current_turn);
-          setTurnPhase(json.turn_phase);
-          setWinners(json.winners);
-          setTurnOrder(json.turn_order);
+        if (json.type === "game_info") {
+          setPlayers(game_data.players);
+          setCurrentTurn(game_data.current_turn);
+          setTurnPhase(game_data.turn_phase);
+          setTurnOrder(game_data.turn_order);
+          setIsLoading(false);
         } else if (json.type === "new_turn") {
-          setCurrentTurn(json.current_turn);
+          setCurrentTurn(game_data.current_turn);
         } else if (json.type === "draw") {
-          setNewCard(json.new_card);
+          setNewCard(game_data.new_card);
         } else if (json.type === "play") {
-          setLastPlayedCard(json.last_played_card);
-          setTargetPlayer(json.target_player);
+          setLastPlayedCard(game_data.last_played_card);
+          setTargetPlayer(game_data.target_player);
         } else if (json.type === "try_defense") {
-          setLastPlayedCard(json.last_played_card);
-          setTargetPlayer(json.target_player);
+          setLastPlayedCard(game_data.last_played_card);
+          setTargetPlayer(game_data.target_player);
         } else if (json.type === "defense") {
-          setPlayedDefense(json.played_defense);
+          setPlayedDefense(game_data.played_defense);
         } else if (json.type === "exchange_ask") {
-          setTargetPlayer(json.target_player);
+          setTargetPlayer(game_data.target_player);
         }
       };
     }
   }, [websocket]);
 
-  const handlePlay = (card) => {
+/*   const handlePlay = (card) => {
     if (websocket) {
       const messageData = JSON.stringify({
         type: "play",
         last_played_card: card,
-        target_player: gamePlayers.find((player) => player.id === userid).id,
+        target_player: players.find((player) => player.id === userid).id,
       });
       websocket.send(messageData);
       console.log("Mensaje enviado: ", messageData);
@@ -156,7 +154,7 @@ const Game = () => {
     if (websocket) {
       const messageData = JSON.stringify({
         type: "exchange_ask",
-        target_player: gamePlayers.find((player) => player.id === userid).id,
+        target_player: players.find((player) => player.id === userid).id,
       });
       websocket.send(messageData);
       console.log("Mensaje enviado: ", messageData);
@@ -187,21 +185,17 @@ const Game = () => {
             }}
           >
             Es tu turno,{" "}
-            {gameData.players.find((player) => player.id === userid).name}!
+            {players.find((player) => player.id === userid).name}!
           </Alert>
         ) : (
           <h1> </h1>
         )}
-        {isLoading ||
-        gameData === undefined ||
-        gamePlayers === undefined ||
-        gameData === null ||
-        gamePlayers === null ? (
+        {isLoading ? (
           // Mostrar el mensaje de carga si loading es true
           <p>Loading...</p>
         ) : (
           // Mostrar los datos del juego si loading es false
-          <>
+          <> 
             <GameTable
               playersTable={tableData}
               currentTurn={currentTurn}
@@ -271,7 +265,7 @@ const Game = () => {
                     color="success"
                     variant="outlined"
                     label={
-                      gameData.players.find((player) => player.id === userid)
+                      players.find((player) => player.id === userid)
                         .name
                     }
                     sx={{
@@ -310,13 +304,13 @@ const Game = () => {
                 }}
               >
                 <FinishedAlert
-                  gamePlayersName={gamePlayers[0]?.name}
+                  playersName={players[0]?.name}
                   gameId={gameId}
                 />
               </Grid>
             )}
           </>
-        )}
+        )} 
       </div>
     </div>
   );
