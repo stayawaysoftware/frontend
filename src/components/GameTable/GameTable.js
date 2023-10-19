@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useEffect, useState, useContext, useCallback } from "react";
 import { useParams } from "react-router-dom";
 
@@ -6,18 +5,19 @@ import { CntTarget, CardHasTarget } from "../../utils/CardHandler";
 import { UserAvatar } from "../UserAvatar";
 import { UserContext } from "../../contexts/UserContext";
 import "./GameTable.css";
+import { useWebSocket } from "../../contexts/WebsocketContext";
 
 const GameTable = ({
   playersTable,
   currentTurn,
-  forceRender,
   left_id,
   right_id,
 }) => {
   const { gameId } = useParams();
-  const { userid, targetsEnable, clickedCard, onCardClicked, setPlayedCard } =
+  const { userid, targetsEnable, clickedCard, onCardClicked, setPlayedCard, setTargetId } =
     useContext(UserContext);
   const [players, setPlayers] = useState([]);
+  const { websocket } = useWebSocket();
 
   const buildCircle = useCallback(
     (players) => {
@@ -112,53 +112,31 @@ const GameTable = ({
     sortPlayers();
   }, [buildCircle, playersTable, userid]);
 
-  const handlePlayLeft = async () => {
-    await axios.put(
-      `http://localhost:8000/game/${gameId}/play_turn?card_idtype=${clickedCard?.idtype}&current_player_id=${userid}&target_player_id=${left_id}`
-    );
-
+  const handlePlayCard = (id) => {
+    if (websocket) {
+      const messageData = JSON.stringify({
+        type: "play",
+        played_card: clickedCard,
+        card_target: id,
+      });
+      console.log("ws:", websocket);
+      websocket.send(messageData);
+      console.log("clickedCard:", clickedCard);
+    }
     setPlayedCard(clickedCard);
     onCardClicked(null);
-  };
-
-  const handlePlayRight = async () => {
-    await axios.put(
-      `http://localhost:8000/game/${gameId}/play_turn?card_idtype=${clickedCard?.idtype}&current_player_id=${userid}&target_player_id=${right_id}`
-    );
-
-    setPlayedCard(clickedCard);
-    onCardClicked(null);
-  };
-
-  const handlePlayCard = async () => {
-    await axios.put(
-      `http://localhost:8000/game/${gameId}/play_turn?card_idtype=${clickedCard?.idtype}&current_player_id=${userid}`
-    );
-
-    setPlayedCard(clickedCard);
-    onCardClicked(null);
+    setTargetId(id);
   };
 
   const getUserFunction = (id) => {
     if (targetsEnable) {
       if (CardHasTarget(clickedCard.idtype) === CntTarget.ADJACENT) {
-        if (id === left_id) {
-          if (clickedCard?.idtype === 3) {
-            return handlePlayLeft;
-          } else {
-            return handlePlayCard;
-          }
-        } else if (id === right_id) {
-          if (clickedCard?.idtype === 3) {
-            return handlePlayRight;
-          } else {
-            return handlePlayCard;
-          }
+        if (id === left_id || id === right_id) {
+          return handlePlayCard(id);
         }
-      }
-
+      } else
       if (CardHasTarget(clickedCard.idtype) === CntTarget.ALL) {
-        return handlePlayCard;
+        return handlePlayCard(id);
       }
     }
 

@@ -18,7 +18,7 @@ import { useWebSocket } from "../../contexts/WebsocketContext";
 
 const Game = () => {
   const { gameId } = useParams();
-  const { userid, playedCard, setPlayedCard } = useContext(UserContext);
+  const { userid, playedCard, setPlayedCard, targetId} = useContext(UserContext);
   const order = false;
 
   //game data
@@ -338,6 +338,7 @@ const Game = () => {
                 <Buttons
                   current_player={positionToId(currentTurn)}
                   gameId={gameId}
+                  target_player={card_target}
                 />
               </div>
             </Box>

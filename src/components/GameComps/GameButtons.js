@@ -1,6 +1,5 @@
 // import * as React from "react";
-import axios from "axios";
-import { useContext, useMemo } from "react";
+import { useContext } from "react";
 import List from "@mui/material/List";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
@@ -10,17 +9,16 @@ import { useWebSocket } from "../../contexts/WebsocketContext";
 
 import { UserContext } from "../../contexts/UserContext";
 
-const Buttons = ({ current_player, gameId, left_id, right_id }) => {
-  const { userid, clickedCard, onCardClicked, targetsEnable, setPlayedCard } =
+const Buttons = ({current_player, target_player}) => {
+  const { userid, clickedCard, onCardClicked, targetsEnable, setPlayedCard, targetId} =
     useContext(UserContext);
 
-  const playEnabled = useMemo(() => {
-    const isTurn = current_player === userid;
-    const isCardClicked = clickedCard !== null && !targetsEnable;
-    return isTurn && isCardClicked;
-  }, [current_player, userid, clickedCard, targetsEnable]);
-
   const { websocket } = useWebSocket();
+
+  const isTurn = current_player === userid;
+  const isCardClicked = clickedCard !== null && !targetsEnable;
+  const isCardTarget = target_player === targetId;
+  const playEnabled = (isTurn && isCardClicked) || (isCardTarget && isCardClicked);
 
   const handlePlayCard = () => {
     if (websocket) {
@@ -34,7 +32,6 @@ const Buttons = ({ current_player, gameId, left_id, right_id }) => {
       console.log("clickedCard:", clickedCard);
     }
     setPlayedCard(clickedCard);
-    console.log("playedCard:", clickedCard);
     onCardClicked(null);
   };
 
