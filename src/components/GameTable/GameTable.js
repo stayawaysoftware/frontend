@@ -130,13 +130,15 @@ const GameTable = ({
 
   const getUserFunction = (id) => {
     if (targetsEnable) {
-      if (CardHasTarget(clickedCard.idtype) === CntTarget.ADJACENT) {
+      console.log("currentTurn:", currentTurn);
+      console.log("userid:", userid);
+      if (CardHasTarget(clickedCard.idtype) === CntTarget.ADJACENT && currentTurn === userid) {
         if (id === left_id || id === right_id) {
-          return handlePlayCard(id);
+          return () => handlePlayCard(id); 
         }
       } else
-      if (CardHasTarget(clickedCard.idtype) === CntTarget.ALL) {
-        return handlePlayCard(id);
+      if (CardHasTarget(clickedCard.idtype) === CntTarget.ALL && currentTurn === userid) {
+        return () => handlePlayCard(id); 
       }
     }
 

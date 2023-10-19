@@ -18,7 +18,7 @@ const Buttons = ({current_player, target_player}) => {
   const isTurn = current_player === userid;
   const isCardClicked = clickedCard !== null && !targetsEnable;
   const isCardTarget = target_player === targetId;
-  const playEnabled = (isTurn && isCardClicked) || (isCardTarget && isCardClicked);
+  const playEnabled = (isTurn && isCardClicked) || (isCardTarget && isCardClicked && isTurn);
 
   const handlePlayCard = () => {
     if (websocket) {

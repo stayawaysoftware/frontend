@@ -40,9 +40,7 @@ const Game = () => {
   const { websocket } = useWebSocket();
   const [isLoading, setIsLoading] = useState(true);
   //console.log({ gameData, isLoading });
-  console.log("websocket:", websocket);
 
-  const currentTurn = current_turn;
 
   const tableData = players
     ? players.map((player) => ({
@@ -185,7 +183,7 @@ const Game = () => {
           overflow: "hidden",
         }}
       >
-        {userid === positionToId(currentTurn) ? (
+        {userid === positionToId(current_turn) ? (
           <Alert
             severity="success"
             style={{
@@ -222,10 +220,10 @@ const Game = () => {
             )}
             <GameTable
               playersTable={tableData}
-              currentTurn={currentTurn}
+              currentTurn={current_turn}
               //forceRender={forceRender}
-              left_id={getLeftId(currentTurn)}
-              right_id={getRightId(currentTurn)}
+              left_id={getLeftId(current_turn)}
+              right_id={getRightId(current_turn)}
             />
             <Box>
               <Grid
@@ -335,7 +333,7 @@ const Game = () => {
                 }}
               >
                 <Buttons
-                  current_player={positionToId(currentTurn)}
+                  current_player={positionToId(current_turn)}
                   gameId={gameId}
                   target_player={card_target}
                 />
