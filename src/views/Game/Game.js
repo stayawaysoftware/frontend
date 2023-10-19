@@ -18,7 +18,8 @@ import { useWebSocket } from "../../contexts/WebsocketContext";
 
 const Game = () => {
   const { gameId } = useParams();
-  const { userid, playedCard, setPlayedCard, targetId} = useContext(UserContext);
+  const { userid, playedCard, setPlayedCard, targetId } =
+    useContext(UserContext);
   const order = false;
 
   //game data
@@ -33,7 +34,7 @@ const Game = () => {
   const [turn_phase, setTurnPhase] = useState(null);
   const [current_turn, setCurrentTurn] = useState(null);
   const [players, setPlayers] = useState(null);
-  const [played_card, setPlayedDefenseCard] = useState(null);
+  const [showPlayedCard, setShowPlayedCard] = useState(null);
   const [showOpponentCard, setShowOpponentCard] = useState(false);
 
   const { websocket } = useWebSocket();
@@ -110,29 +111,27 @@ const Game = () => {
   function onGameMessage(event) {
     const json = JSON.parse(event.data);
     console.log("Mensaje recibido en game: ", json);
-    const game_data = json.game;
-    console.log("Game info received: ", game_data);
     if (json.type === "game_info") {
-      setPlayers(game_data.players);
-      setCurrentTurn(game_data.current_turn);
-      setTurnPhase(game_data.turn_phase);
-      setTurnOrder(game_data.turn_order);
+      setPlayers(json.game.players);
+      setCurrentTurn(json.game.current_turn);
+      setTurnPhase(json.game.turn_phase);
+      setTurnOrder(json.game.turn_order);
       setIsLoading(false);
     } else if (json.type === "new_turn") {
-      setCurrentTurn(game_data.current_turn);
+      setCurrentTurn(json.current_turn);
     } else if (json.type === "draw") {
-      setNewCard(game_data.new_card);
+      setNewCard(json.new_card);
     } else if (json.type === "play") {
-      setPlayedDefenseCard(json.played_card);
+      setShowPlayedCard(json.played_card.idtype);
       setCardTarget(json.card_player);
     } else if (json.type === "try_defense") {
-      console.log("try_defense" + game_data);
-      setLastPlayedCard(game_data.last_played_card);
-      setCardTarget(game_data.target_player);
+      console.log("try_defense " + json);
+      setLastPlayedCard(json.last_played_card_id);
+      setCardTarget(json.target_player);
     } else if (json.type === "defense") {
-      setPlayedDefense(game_data.played_defense);
+      setPlayedDefense(json.played_defense);
     } else if (json.type === "exchange_ask") {
-      setCardTarget(game_data.target_player);
+      setCardTarget(json.target_player);
     }
   }
 
@@ -262,7 +261,7 @@ const Game = () => {
             <Box>
               <Grid container spacing={2}>
                 <Grid item xs={6} md={20}>
-                  <DescPile lastCard={last_played_card} />
+                  <DescPile lastCard={showPlayedCard} />
                 </Grid>
               </Grid>
               <div

@@ -12,19 +12,40 @@ const DescPile = ({ lastCard }) => {
   return (
     <div>
       <div style={containerStyle}>
-        <img
-          src={IdToAsset(lastCard)}
-          alt="descarte"
-          style={{
-            width: "24%",
-            height: "auto",
-            position: "relative",
-            border: "none",
-            right: "-20%",
-            bottom: "310px",
-            transform: "rotateX(25deg)",
-          }}
-        />
+        {lastCard ? (
+          <>
+            {" "}
+            <img
+              src={IdToAsset(lastCard)}
+              alt="descarte"
+              style={{
+                width: "13.5%",
+                height: "auto",
+                position: "relative",
+                border: "none",
+                right: "-11%",
+                bottom: "310px",
+                transform: "rotateX(25deg)",
+              }}
+            />
+          </>
+        ) : (
+          <>
+            <img
+              src={IdToAsset(lastCard)}
+              alt="descarte"
+              style={{
+                width: "24%",
+                height: "auto",
+                position: "relative",
+                border: "none",
+                right: "-20%",
+                bottom: "310px",
+                transform: "rotateX(25deg)",
+              }}
+            />
+          </>
+        )}
       </div>
     </div>
   );
