@@ -15,7 +15,7 @@ const GameTable = ({
   right_id,
 }) => {
   const { gameId } = useParams();
-  const { userid, targetsEnable, clickedCard, onCardClicked } =
+  const { userid, targetsEnable, clickedCard, onCardClicked, setPlayedCard } =
     useContext(UserContext);
   const [players, setPlayers] = useState([]);
 
@@ -117,6 +117,7 @@ const GameTable = ({
       `http://localhost:8000/game/${gameId}/play_turn?card_idtype=${clickedCard?.idtype}&current_player_id=${userid}&target_player_id=${left_id}`
     );
 
+    setPlayedCard(clickedCard);
     onCardClicked(null);
   };
 
@@ -125,6 +126,7 @@ const GameTable = ({
       `http://localhost:8000/game/${gameId}/play_turn?card_idtype=${clickedCard?.idtype}&current_player_id=${userid}&target_player_id=${right_id}`
     );
 
+    setPlayedCard(clickedCard);
     onCardClicked(null);
   };
 
@@ -133,6 +135,7 @@ const GameTable = ({
       `http://localhost:8000/game/${gameId}/play_turn?card_idtype=${clickedCard?.idtype}&current_player_id=${userid}`
     );
 
+    setPlayedCard(clickedCard);
     onCardClicked(null);
   };
 

@@ -11,7 +11,7 @@ import { useWebSocket } from "../../contexts/WebsocketContext";
 import { UserContext } from "../../contexts/UserContext";
 
 const Buttons = ({ current_player, gameId, left_id, right_id }) => {
-  const { userid, clickedCard, onCardClicked, targetsEnable } =
+  const { userid, clickedCard, onCardClicked, targetsEnable, setPlayedCard } =
     useContext(UserContext);
 
   const playEnabled = useMemo(() => {
@@ -33,6 +33,8 @@ const Buttons = ({ current_player, gameId, left_id, right_id }) => {
       websocket.send(messageData);
       console.log("clickedCard:", clickedCard);
     }
+    setPlayedCard(clickedCard);
+    console.log("playedCard:", clickedCard);
     onCardClicked(null);
   };
 

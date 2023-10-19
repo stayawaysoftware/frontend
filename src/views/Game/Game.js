@@ -18,7 +18,7 @@ import { useWebSocket } from "../../contexts/WebsocketContext";
 
 const Game = () => {
   const { gameId } = useParams();
-  const { userid } = useContext(UserContext);
+  const { userid, playedCard, setPlayedCard } = useContext(UserContext);
   const order = false;
 
   //game data
@@ -33,7 +33,7 @@ const Game = () => {
   const [turn_phase, setTurnPhase] = useState(null);
   const [current_turn, setCurrentTurn] = useState(null);
   const [players, setPlayers] = useState(null);
-  const [played_card, setPlayedCard] = useState(null);
+  const [played_card, setPlayedDefenseCard] = useState(null);
   const [showOpponentCard, setShowOpponentCard] = useState(false);
 
   const { websocket } = useWebSocket();
@@ -59,6 +59,13 @@ const Game = () => {
       ?.hand.sort(function (a, b) {
         return a.id - b.id;
       });
+  }
+  if (playedCard && players) {
+    const cardRemove = currentUserCardList.find(
+      (card) => card.id === playedCard.id
+    );
+    currentUserCardList.splice(currentUserCardList.indexOf(cardRemove), 1);
+    setPlayedCard(null);
   }
 
   const positionToId = (position) => {
@@ -116,9 +123,10 @@ const Game = () => {
     } else if (json.type === "draw") {
       setNewCard(game_data.new_card);
     } else if (json.type === "play") {
-      setPlayedCard(json.played_card);
+      setPlayedDefenseCard(json.played_card);
       setCardTarget(json.card_player);
     } else if (json.type === "try_defense") {
+      console.log("try_defense" + game_data);
       setLastPlayedCard(game_data.last_played_card);
       setCardTarget(game_data.target_player);
     } else if (json.type === "defense") {
