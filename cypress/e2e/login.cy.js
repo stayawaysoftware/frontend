@@ -1,4 +1,11 @@
 describe("Login and user creation", () => {
+  beforeEach("see the room list", () => {
+    //intercept get room/list to return an empty list
+    cy.intercept("GET", "/room/list", {
+      statusCode: 200,
+      body: [],
+    }).as("getRooms");
+  });
   it("should create a new user", () => {
     // simulate a POST request to /user/new
     cy.intercept("POST", "/user/new", {
