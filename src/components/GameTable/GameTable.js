@@ -156,7 +156,7 @@ const GameTable = ({ playersTable, currentTurn, left_id, right_id }) => {
                 css={{ ...style }}
                 name={name}
                 death={death}
-                turn={turn}
+                turn={currentTurn === id}
                 onClick={getUserFunction(id)}
               />
             );

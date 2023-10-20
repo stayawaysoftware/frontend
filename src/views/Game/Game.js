@@ -20,11 +20,9 @@ const Game = () => {
   const { gameId } = useParams();
   const { userid, playedCard, setPlayedCard, targetId } =
     useContext(UserContext);
-  const order = false;
 
   //game data
   const [finished, setFinished] = useState(false);
-  //const [forceRender, setForceRender] = useState(0);
   const [last_played_card, setLastPlayedCard] = useState(null);
   const [card_target, setCardTarget] = useState(null);
   const [new_card, setNewCard] = useState(null);
@@ -39,7 +37,6 @@ const Game = () => {
 
   const { websocket } = useWebSocket();
   const [isLoading, setIsLoading] = useState(true);
-  //console.log({ gameData, isLoading });
 
   const tableData = players
     ? players.map((player) => ({
@@ -67,7 +64,6 @@ const Game = () => {
   }
 
   const positionToId = (position) => {
-    // console.log("game players es", gamePlayers);
     let id = null;
     players?.forEach((player) => {
       if (player.round_position === position) {
@@ -103,7 +99,6 @@ const Game = () => {
     }
   };
 
-  // Este useEffect se encarga de escuchar los mensajes del websocket
 
   function onGameMessage(event) {
     const json = JSON.parse(event.data);
@@ -236,7 +231,7 @@ const Game = () => {
                   gap: 1,
                 }}
               >
-                <Arrows turn_order={order} />
+                <Arrows turnOrder={turn_order} />
               </Grid>
             </Box>
             <Box>
