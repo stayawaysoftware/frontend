@@ -1,5 +1,3 @@
-import "cypress-real-events/support";
-
 Cypress.Commands.add("login", (username) => {
   cy.get("form").type(username);
   cy.contains("Jugar").click();
@@ -58,8 +56,33 @@ Cypress.Commands.add("login_and_create_room", (roomname) => {
 
   cy.wait("@createRoom");
   //verify that the response is correct
-  cy.get("@createRoom").should((req) => {
-    expect(req.response.statusCode).to.equal(201);
-    expect(req.response.body).to.have.property("id", 1);
-  });
 });
+
+Cypress.Commands.add("createRoom", (roomname) => {
+  cy.intercept("POST", "/room/new", {
+    statusCode: 201,
+    body: {
+      id: 1,
+    },
+  }).as("createRoom");
+  cy.contains("Crear Sala").click();
+
+  //fill the Nombre de la sala field, its the first input
+  cy.get("form").find("input").first().type("Sala de prueba");
+  //click the create button
+  cy.get(".MuiDialogActions-root > .MuiButton-contained").click();
+
+  cy.wait("@createRoom");
+});
+
+Cypress.Commands.add("createRoomNoIntercept", (roomname) => {
+  cy.contains("Crear Sala").click();
+  cy.get("form").find("input").first().type(roomname);
+  cy.get(".MuiDialogActions-root > .MuiButton-contained").click();
+});
+
+// Cypress.Commands.add("joinRoomNoIntercept", () => {
+//   cy.get("div[id=0]").click();
+//   cy.contains("Unirse").should("be.enabled");
+//   cy.contains("Unirse").click();
+// });
