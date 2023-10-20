@@ -7,7 +7,13 @@ import { UserContext } from "../../contexts/UserContext";
 import "./GameTable.css";
 import { useWebSocket } from "../../contexts/WebsocketContext";
 
-const GameTable = ({ playersTable, currentTurn, left_id, right_id }) => {
+const GameTable = ({
+  playersTable,
+  currentTurn,
+  left_id,
+  right_id,
+  turnDefense,
+}) => {
   const { gameId } = useParams();
   const {
     userid,
@@ -130,9 +136,7 @@ const GameTable = ({ playersTable, currentTurn, left_id, right_id }) => {
   };
 
   const getUserFunction = (id) => {
-    if (targetsEnable && currentTurn === userid) {
-      console.log("currentTurn:", currentTurn);
-      console.log("userid:", userid);
+    if (targetsEnable && currentTurn === userid && turnDefense !== userid) {
       if (CardHasTarget(clickedCard.idtype) === CntTarget.ADJACENT) {
         if (id === left_id || id === right_id) {
           return () => handlePlayCard(id);
@@ -158,6 +162,7 @@ const GameTable = ({ playersTable, currentTurn, left_id, right_id }) => {
                 death={death}
                 turn={currentTurn === id}
                 onClick={getUserFunction(id)}
+                turnDefense={turnDefense === id}
               />
             );
           })}

@@ -15,6 +15,7 @@ import { Box, Grid, Alert, Chip } from "@mui/material";
 import { UserContext } from "../../contexts/UserContext";
 import GameChat from "../../components/Chat/GameChat";
 import { useWebSocket } from "../../contexts/WebsocketContext";
+import { IdToNameCard } from "../../utils/CardHandler";
 
 const Game = () => {
   const { gameId } = useParams();
@@ -34,6 +35,7 @@ const Game = () => {
   const [players, setPlayers] = useState(null);
   const [showPlayedCard, setShowPlayedCard] = useState(null);
   const [showOpponentCard, setShowOpponentCard] = useState(false);
+  const [defended_turn, setDefendedTurn] = useState(null);
 
   const { websocket } = useWebSocket();
   const [isLoading, setIsLoading] = useState(true);
@@ -99,7 +101,6 @@ const Game = () => {
     }
   };
 
-
   function onGameMessage(event) {
     const json = JSON.parse(event.data);
     console.log("Mensaje recibido en game: ", json);
@@ -118,6 +119,10 @@ const Game = () => {
       setCardTarget(json.card_player);
     } else if (json.type === "try_defense") {
       console.log("try_defense " + json);
+      // asumimos q el back nos pasa el id de la persona a defenderse
+      // si se pasa la posicion se debera haecer un positionToId(json.defended_turn)
+      // si soy yo mostrar interfaz, sino mostrar espaditas a los otros en la mesa
+      setDefendedTurn(json.defended_turn);
       setLastPlayedCard(json.last_played_card_id);
       setCardTarget(json.target_player);
     } else if (json.type === "defense") {
@@ -177,7 +182,7 @@ const Game = () => {
           overflow: "hidden",
         }}
       >
-        {userid === positionToId(current_turn) ? (
+        {userid === positionToId(current_turn) && (
           <Alert
             severity="success"
             style={{
@@ -188,8 +193,19 @@ const Game = () => {
           >
             Es tu turno, {players.find((player) => player.id === userid).name}!
           </Alert>
-        ) : (
-          <h1> </h1>
+        )}
+        {userid === defended_turn && (
+          <Alert
+            severity="warning"
+            style={{
+              position: "absolute",
+              top: "5%",
+              left: "2%",
+            }}
+          >
+            Te han atacado con {IdToNameCard(last_played_card)},{" "}
+            {players.find((player) => player.id === userid).name}!!
+          </Alert>
         )}
         {isLoading ? (
           // Mostrar el mensaje de carga si loading es true
@@ -217,6 +233,7 @@ const Game = () => {
               currentTurn={positionToId(current_turn)}
               left_id={getLeftId(current_turn)}
               right_id={getRightId(current_turn)}
+              turnDefense={defended_turn}
             />
             <Box>
               <Grid
@@ -329,6 +346,7 @@ const Game = () => {
                   current_player={positionToId(current_turn)}
                   gameId={gameId}
                   target_player={card_target}
+                  defended_player={defended_turn}
                 />
               </div>
             </Box>

@@ -77,6 +77,49 @@ export function IdToAsset(id) {
   return assetName;
 }
 
+export function IdToNameCard(id) {
+  const cardAssets = {
+    1: "La Cosa",
+    2: "Infectado",
+    3: "Lanzallamas",
+    4: "Análisis",
+    5: "Hacha",
+    6: "Sospecha",
+    7: "Determinación",
+    8: "Whisky",
+    9: "Cambio de posición",
+    10: "Cuidado con la espalda",
+    11: "Seducción",
+    12: "Mas vale que corras",
+    13: "Estoy bien aquí",
+    14: "Aterrador",
+    15: "No gracias",
+    16: "Fallaste",
+    17: "No hay barbacoas",
+    18: "Cuarentena",
+    19: "Puerta cerrada",
+    20: "Revelaciones",
+    21: "Cuerdas podridas",
+    22: "Sal de aquí",
+    23: "Olvidadizo",
+    24: "Uno dos",
+    25: "Tres cuatro",
+    26: "¿Es la fiesta aquí?",
+    27: "Que quede entre nosotros",
+    28: "Turno y turno",
+    29: "¿No podemos ser amigos?",
+    30: "Cita a ciegas",
+    31: "Ups",
+  };
+
+  const assetName = cardAssets[id];
+  if (!assetName) {
+    return "Nada";
+  }
+
+  return assetName;
+}
+
 export const CntTarget = Object.freeze({
   NONE: 0,
   ADJACENT: 1,
