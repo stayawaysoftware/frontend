@@ -9,7 +9,12 @@ import { useWebSocket } from "../../contexts/WebsocketContext";
 
 import { UserContext } from "../../contexts/UserContext";
 
-const Buttons = ({ current_player, target_player, isDefended }) => {
+const Buttons = ({
+  current_player,
+  target_player,
+  isDefended,
+  last_played_card,
+}) => {
   const {
     userid,
     clickedCard,
@@ -26,7 +31,7 @@ const Buttons = ({ current_player, target_player, isDefended }) => {
   const playEnabled =
     (isTurn && isCardClicked) ||
     (isCardTarget && isCardClicked && isTurn) ||
-    (isCardClicked && isDefended && current_player !== userid);
+    (isDefended && current_player !== userid);
 
   const handlePlayCard = () => {
     if (websocket) {
@@ -43,13 +48,26 @@ const Buttons = ({ current_player, target_player, isDefended }) => {
 
   const handleDefense = () => {
     if (websocket) {
-      const messageData = JSON.stringify({
-        type: "defense",
-        player_target: userid,
-        played_defense: clickedCard,
-      });
-      websocket.send(messageData);
+      if (clickedCard) {
+        const messageData = JSON.stringify({
+          type: "defense",
+          target_player: userid,
+          played_defense: clickedCard,
+          last_played_card: last_played_card,
+        });
+        websocket.send(messageData);
+      } else {
+        const messageData = JSON.stringify({
+          type: "defense",
+          target_player: userid,
+          played_defense: null,
+          last_played_card: last_played_card,
+        });
+        websocket.send(messageData);
+      }
     }
+    setPlayedCard(clickedCard);
+    onCardClicked(null);
   };
 
   return (

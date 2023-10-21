@@ -112,20 +112,26 @@ const Game = () => {
       setTurnOrder(json.game.turn_order);
       setIsLoading(false);
     } else if (json.type === "new_turn") {
+      setIsSomeoneBeingDefended(false);
+      setCardTarget(null);
+      setDefendedBy([]);
       setCurrentTurn(json.current_turn);
     } else if (json.type === "draw") {
-      setNewCard(json.new_card);
+      setNewCard(json.new_card.idtype);
     } else if (json.type === "play") {
       setShowPlayedCard(json.played_card.idtype);
       setCardTarget(json.card_player);
     } else if (json.type === "try_defense") {
-      setLastPlayedCard(json.played_card.idtype);
+      setLastPlayedCard(json.played_card.idtype); // seria lo mismo q el showPlayedCard
       setCardTarget(json.target_player);
       setDefendedBy(json.defended_by);
       setIsSomeoneBeingDefended(true);
     } else if (json.type === "defense") {
       setIsSomeoneBeingDefended(false);
-      setPlayedDefense(json.played_defense);
+      setCardTarget(null);
+      setDefendedBy([]);
+      // setPlayedDefense(json.played_defense);
+      setShowPlayedCard(json.played_defense.idtype);
     } else if (json.type === "exchange_ask") {
       setCardTarget(json.target_player);
     }
@@ -322,6 +328,7 @@ const Game = () => {
                     cardList={currentUserCardList}
                     defense={defended_by}
                     target_player={card_target}
+                    isSomeoneBeingDefended={isSomeoneBeingDefended}
                   />
                 </Grid>
                 <Box
@@ -356,6 +363,7 @@ const Game = () => {
                   gameId={gameId}
                   target_player={card_target}
                   isDefended={isSomeoneBeingDefended}
+                  last_played_card={last_played_card}
                 />
               </div>
             </Box>

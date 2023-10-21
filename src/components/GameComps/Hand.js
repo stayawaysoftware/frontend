@@ -5,7 +5,12 @@ import { Box } from "@mui/material";
 import { UserContext } from "../../contexts/UserContext";
 import { IdToAsset } from "../../utils/CardHandler";
 
-const Hand = ({ cardList = [], defense, target_player }) => {
+const Hand = ({
+  cardList = [],
+  defense,
+  target_player,
+  isSomeoneBeingDefended,
+}) => {
   const { clickedCard, onCardClicked, userid } = useContext(UserContext);
 
   const isDefended = target_player === userid;
@@ -41,19 +46,32 @@ const Hand = ({ cardList = [], defense, target_player }) => {
       >
         {cardList?.map(({ id, idtype }, index) => {
           const isDefenseCard = defense.some(
-            (elem) => isDefended && elem.id === id && elem.idtype === idtype
+            (elem) =>
+              isDefended &&
+              elem.id === id &&
+              elem.idtype === idtype &&
+              elem.idtype !== 2
           );
           return (
             <Box
               key={`card-hand-${id}`}
               id={`card-hand-${index}`}
               sx={[
-                clickedCard?.id === id && highlightedCardStyle,
+                clickedCard?.id === id &&
+                  (isSomeoneBeingDefended
+                    ? isDefended && isDefenseCard
+                      ? highlightedCardStyle
+                      : false
+                    : highlightedCardStyle),
                 {
                   ...baseCardStyle,
                   right: `${10 + index * 30}px`,
                   "&:hover": {
-                    ...highlightedCardStyle,
+                    ...(isSomeoneBeingDefended
+                      ? isDefended && isDefenseCard
+                        ? highlightedCardStyle
+                        : {}
+                      : highlightedCardStyle),
                     ...(isDefenseCard && auraStyle),
                   },
                   ...(isDefenseCard && auraStyle),
