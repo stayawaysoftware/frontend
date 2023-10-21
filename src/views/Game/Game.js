@@ -36,6 +36,7 @@ const Game = () => {
   const [showPlayedCard, setShowPlayedCard] = useState(null);
   const [showOpponentCard, setShowOpponentCard] = useState(false);
   const [defended_by, setDefendedBy] = useState([]);
+  const [isSomeoneBeingDefended, setIsSomeoneBeingDefended] = useState(false);
 
   const { websocket } = useWebSocket();
   const [isLoading, setIsLoading] = useState(true);
@@ -118,14 +119,12 @@ const Game = () => {
       setShowPlayedCard(json.played_card.idtype);
       setCardTarget(json.card_player);
     } else if (json.type === "try_defense") {
-      console.log("try_defense " + json);
-      // asumimos q el back nos pasa el id de la persona a defenderse
-      // si se pasa la posicion se debera haecer un positionToId(json.defended_turn)
-      // si soy yo mostrar interfaz, sino mostrar espaditas a los otros en la mesa
-      setLastPlayedCard(json.last_played_card);
+      setLastPlayedCard(json.played_card.idtype);
       setCardTarget(json.target_player);
       setDefendedBy(json.defended_by);
+      setIsSomeoneBeingDefended(true);
     } else if (json.type === "defense") {
+      setIsSomeoneBeingDefended(false);
       setPlayedDefense(json.played_defense);
     } else if (json.type === "exchange_ask") {
       setCardTarget(json.target_player);
@@ -135,7 +134,6 @@ const Game = () => {
   if (websocket) {
     websocket.onmessage = onGameMessage;
   }
-
 
   /*   const handleDiscard = (card) => {
     if (websocket) {
@@ -160,7 +158,6 @@ const Game = () => {
       websocket.send(messageData);
     }
   } */
-
 
   const handleCloseOpponentCardDialog = () => {
     setShowOpponentCard(false);
@@ -241,6 +238,7 @@ const Game = () => {
               left_id={getLeftId(current_turn)}
               right_id={getRightId(current_turn)}
               turnDefense={card_target}
+              isSomeoneBeingDefended={isSomeoneBeingDefended}
             />
             <Box>
               <Grid
@@ -320,7 +318,11 @@ const Game = () => {
                     marginTop: "-280px",
                   }}
                 >
-                  <Hand cardList={currentUserCardList} defense={defended_by} target={card_target} />
+                  <Hand
+                    cardList={currentUserCardList}
+                    defense={defended_by}
+                    target_player={card_target}
+                  />
                 </Grid>
                 <Box
                   sx={{
@@ -353,6 +355,7 @@ const Game = () => {
                   current_player={positionToId(current_turn)}
                   gameId={gameId}
                   target_player={card_target}
+                  isDefended={isSomeoneBeingDefended}
                 />
               </div>
             </Box>

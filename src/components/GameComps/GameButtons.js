@@ -9,7 +9,7 @@ import { useWebSocket } from "../../contexts/WebsocketContext";
 
 import { UserContext } from "../../contexts/UserContext";
 
-const Buttons = ({ current_player, target_player}) => {
+const Buttons = ({ current_player, target_player, isDefended }) => {
   const {
     userid,
     clickedCard,
@@ -20,14 +20,13 @@ const Buttons = ({ current_player, target_player}) => {
   } = useContext(UserContext);
 
   const { websocket } = useWebSocket();
-  const isDefended = target_player === userid;
+  const isCardTarget = target_player === targetId;
   const isTurn = current_player === userid && !isDefended;
   const isCardClicked = clickedCard !== null && !targetsEnable;
-  const isCardTarget = target_player === targetId;
   const playEnabled =
     (isTurn && isCardClicked) ||
     (isCardTarget && isCardClicked && isTurn) ||
-    (isCardClicked && isDefended);
+    (isCardClicked && isDefended && current_player !== userid);
 
   const handlePlayCard = () => {
     if (websocket) {
@@ -36,9 +35,7 @@ const Buttons = ({ current_player, target_player}) => {
         played_card: clickedCard,
         card_target: null,
       });
-      console.log("ws:", websocket);
       websocket.send(messageData);
-      console.log("clickedCard:", clickedCard);
     }
     setPlayedCard(clickedCard);
     onCardClicked(null);
@@ -53,7 +50,7 @@ const Buttons = ({ current_player, target_player}) => {
       });
       websocket.send(messageData);
     }
-  }
+  };
 
   return (
     <Grid>

@@ -13,6 +13,7 @@ const GameTable = ({
   left_id,
   right_id,
   turnDefense,
+  isSomeoneBeingDefended,
 }) => {
   const { gameId } = useParams();
   const {
@@ -126,9 +127,7 @@ const GameTable = ({
         played_card: clickedCard,
         card_target: id,
       });
-      console.log("ws:", websocket);
       websocket.send(messageData);
-      console.log("clickedCard:", clickedCard);
     }
     setPlayedCard(clickedCard);
     onCardClicked(null);
@@ -136,7 +135,7 @@ const GameTable = ({
   };
 
   const getUserFunction = (id) => {
-    if (targetsEnable && currentTurn === userid && turnDefense !== userid) {
+    if (targetsEnable && currentTurn === userid && !isSomeoneBeingDefended) {
       if (CardHasTarget(clickedCard.idtype) === CntTarget.ADJACENT) {
         if (id === left_id || id === right_id) {
           return () => handlePlayCard(id);

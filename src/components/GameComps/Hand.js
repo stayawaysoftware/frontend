@@ -5,8 +5,8 @@ import { Box } from "@mui/material";
 import { UserContext } from "../../contexts/UserContext";
 import { IdToAsset } from "../../utils/CardHandler";
 
-const Hand = ({ cardList = [], defense, target_player}) => {
-  const { clickedCard, onCardClicked, userid} = useContext(UserContext);
+const Hand = ({ cardList = [], defense, target_player }) => {
+  const { clickedCard, onCardClicked, userid } = useContext(UserContext);
 
   const isDefended = target_player === userid;
 
@@ -26,7 +26,7 @@ const Hand = ({ cardList = [], defense, target_player}) => {
   };
 
   const auraStyle = {
-    boxShadow: "2px 2px 4px #FFFFF", 
+    boxShadow: "2px 2px 4px #FFFFF",
   };
 
   return (
@@ -40,11 +40,9 @@ const Hand = ({ cardList = [], defense, target_player}) => {
         id="hand"
       >
         {cardList?.map(({ id, idtype }, index) => {
-          const isDefenseCard = defense.some(({defenseId, defenseType}) => isDefended && defenseId === id && defenseType === idtype);
-          console.log("isDefenseCard:", isDefenseCard);
-          console.log("defense:", defense);
-          console.log("cardList:", cardList); 
-          console.log("idtype:", idtype);
+          const isDefenseCard = defense.some(
+            (elem) => isDefended && elem.id === id && elem.idtype === idtype
+          );
           return (
             <Box
               key={`card-hand-${id}`}
@@ -56,9 +54,9 @@ const Hand = ({ cardList = [], defense, target_player}) => {
                   right: `${10 + index * 30}px`,
                   "&:hover": {
                     ...highlightedCardStyle,
-                    ...(isDefenseCard ? auraStyle : {}),
+                    ...(isDefenseCard && auraStyle),
                   },
-                  ...(isDefenseCard ? auraStyle : {}), 
+                  ...(isDefenseCard && auraStyle),
                 },
               ]}
               onClick={() => onCardClicked({ id, idtype })}
