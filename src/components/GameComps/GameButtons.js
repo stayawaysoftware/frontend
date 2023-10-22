@@ -51,7 +51,7 @@ const Buttons = ({
         const messageData = JSON.stringify({
           type: "defense",
           target_player: current_player,
-          last_played_card: last_played_card,
+          last_played_card: last_played_card.id,
           played_defense: clickedCard.id,
         });
         websocket.send(messageData);
@@ -60,7 +60,7 @@ const Buttons = ({
           type: "defense",
           target_player: current_player,
           played_defense: 0,
-          last_played_card: last_played_card,
+          last_played_card: last_played_card.id,
         });
         websocket.send(messageData);
       }

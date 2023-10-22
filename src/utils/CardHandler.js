@@ -77,7 +77,7 @@ export function IdToAsset(id) {
   return assetName;
 }
 
-export function IdToNameCard(id) {
+export function IdToNameCard(card) {
   const cardAssets = {
     1: "La Cosa",
     2: "Infectado",
@@ -112,7 +112,7 @@ export function IdToNameCard(id) {
     31: "Ups",
   };
 
-  const assetName = cardAssets[id];
+  const assetName = cardAssets[card.idtype];
   if (!assetName) {
     return "Nada";
   }

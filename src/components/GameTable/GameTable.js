@@ -124,7 +124,7 @@ const GameTable = ({
     if (websocket) {
       const messageData = JSON.stringify({
         type: "play",
-        played_card: clickedCard.idtype,
+        played_card: clickedCard.id,
         card_target: id,
       });
       websocket.send(messageData);

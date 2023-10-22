@@ -15,6 +15,7 @@ const Hand = ({
 
   const isDefended = target_player === userid;
 
+
   const baseCardStyle = {
     width: "10%",
     height: "auto",
@@ -46,7 +47,7 @@ const Hand = ({
       >
         {cardList?.map(({ id, idtype }, index) => {
           const isDefenseCard = defense.some(
-            (elem) => isDefended && elem.id === id && elem.idtype === idtype
+            (elem) => isDefended && elem === idtype
           );
           return (
             <Box

@@ -123,16 +123,40 @@ const Game = () => {
       setShowPlayedCard(json.played_card.idtype);
       setCardTarget(json.card_player);
     } else if (json.type === "try_defense") {
-      setLastPlayedCard(json.played_card.idtype); // seria lo mismo q el showPlayedCard
-      setCardTarget(json.target_player);
-      setDefendedBy(json.defended_by);
-      setIsSomeoneBeingDefended(true);
+      setLastPlayedCard(json.played_card);
+      if (json.target_player === 0 && last_played_card !== null ) {
+        if (last_played_card === null) {
+        const messageData = JSON.stringify({
+          type: "defense",
+          target_player: 0,
+          played_defense: 0,
+          last_played_card: 0,
+        });
+        websocket.send(messageData);
+        } else {
+          const messageData = JSON.stringify({
+            type: "defense",
+            target_player: 0,
+            played_defense: 0,
+            last_played_card: last_played_card.id,
+          });
+          websocket.send(messageData);
+        }
+      } else {
+        setCardTarget(json.target_player);
+        setDefendedBy(json.defended_by);
+        setIsSomeoneBeingDefended(true);
+      }
     } else if (json.type === "defense") {
       setIsSomeoneBeingDefended(false);
       setCardTarget(null);
       setDefendedBy([]);
-      // setPlayedDefense(json.played_defense);
-      setShowPlayedCard(json.played_defense.idtype);
+      if (json.target_player === 0 || json.played_defense === 0) {
+        setShowPlayedCard(json.last_played_card.idtype);
+      } else {
+        // setPlayedDefense(json.played_defense);
+        setShowPlayedCard(json.played_defense.idtype);
+      }
     } else if (json.type === "exchange_ask") {
       setCardTarget(json.target_player);
     }
