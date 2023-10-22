@@ -65,6 +65,10 @@ const Game = () => {
     currentUserCardList.splice(currentUserCardList.indexOf(cardRemove), 1);
     setPlayedCard(null);
   }
+  if (new_card && players) {
+    currentUserCardList.push(new_card);
+    setNewCard(null);
+  }
 
   const positionToId = (position) => {
     let id = null;
@@ -112,12 +116,9 @@ const Game = () => {
       setTurnOrder(json.game.turn_order);
       setIsLoading(false);
     } else if (json.type === "new_turn") {
-      setIsSomeoneBeingDefended(false);
-      setCardTarget(null);
-      setDefendedBy([]);
       setCurrentTurn(json.current_turn);
     } else if (json.type === "draw") {
-      setNewCard(json.new_card.idtype);
+      setNewCard(json.new_card);
     } else if (json.type === "play") {
       setShowPlayedCard(json.played_card.idtype);
       setCardTarget(json.card_player);

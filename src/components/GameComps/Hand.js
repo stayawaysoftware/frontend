@@ -46,11 +46,7 @@ const Hand = ({
       >
         {cardList?.map(({ id, idtype }, index) => {
           const isDefenseCard = defense.some(
-            (elem) =>
-              isDefended &&
-              elem.id === id &&
-              elem.idtype === idtype &&
-              elem.idtype !== 2
+            (elem) => isDefended && elem.id === id && elem.idtype === idtype
           );
           return (
             <Box
