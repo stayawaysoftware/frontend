@@ -52,7 +52,7 @@ const Buttons = ({
           type: "defense",
           target_player: current_player,
           last_played_card: last_played_card,
-          played_defense: clickedCard.idtype,
+          played_defense: clickedCard.id,
         });
         websocket.send(messageData);
       } else {
