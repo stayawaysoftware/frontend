@@ -15,5 +15,7 @@ module.exports = defineConfig({
       framework: "create-react-app",
       bundler: "webpack",
     },
+    //change where tests are saved
+    specPattern: "cypress/components/**/*.cy.js",
   },
 });

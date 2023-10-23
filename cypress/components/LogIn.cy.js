@@ -1,7 +1,7 @@
 import React from "react";
-import LogIn from "./LogIn";
-import { UserContext, UserProvider } from "../../contexts/UserContext";
-import { WebsocketContextProvider } from "../../contexts/WebsocketContext";
+import LogIn from "../../src/components/LogIn/LogIn";
+import { UserContext, UserProvider } from "../../src/contexts/UserContext";
+import { WebsocketContextProvider } from "../../src/contexts/WebsocketContext";
 import { BrowserRouter } from "react-router-dom";
 
 const userContextValue = {

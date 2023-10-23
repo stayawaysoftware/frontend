@@ -1,7 +1,7 @@
 import React from "react";
-import Hand from "./Hand";
-import { UserContext, UserProvider } from "../../contexts/UserContext";
-import { WebsocketContextProvider } from "../../contexts/WebsocketContext";
+import Hand from "../../src/components/GameComps/Hand";
+import { UserContext, UserProvider } from "../../src/contexts/UserContext";
+import { WebsocketContextProvider } from "../../src/contexts/WebsocketContext";
 import { BrowserRouter } from "react-router-dom";
 
 const userContextValue = {

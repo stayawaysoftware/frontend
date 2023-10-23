@@ -7,4 +7,9 @@ run:
 delete:
 	docker stop democontainer
 	docker rm democontainer
-	
+
+test-local-e2e:
+	npx cypress run
+
+test-local-component:
+	npx cypress run --component
