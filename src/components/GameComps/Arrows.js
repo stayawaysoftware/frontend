@@ -7,18 +7,19 @@ import flecha2 from "../../assets/flechita_izq.png";
 // turn_orden = true => horario
 // turn_orden = false => antihorario
 
-const GameArrows = ({ turn_order }) => {
+const GameArrows = ({ turnOrder }) => {
     //imprimit turn_order para ver si es true o false
+  console.log("turn order: " + turnOrder)
   return (
     <div>
         <img
-            className={`flechas-image1 ${turn_order ? "horario1" : "antihorario1"}`}
-            src= {`${turn_order ? flecha2 : flecha1}`}
+            className={`flechas-image1 ${turnOrder ? "horario1" : "antihorario1"}`}
+            src= {`${turnOrder ? flecha2 : flecha1}`}
             alt="Flecha1"
         />
         <img
-            className={`flechas-image2 ${turn_order ? "horario2" : "antihorario2"}`}
-            src= {`${turn_order ? flecha2 : flecha1}`}
+            className={`flechas-image2 ${turnOrder ? "horario2" : "antihorario2"}`}
+            src= {`${turnOrder ? flecha2 : flecha1}`}
             alt="Flecha2"
         />
   </div>

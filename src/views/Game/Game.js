@@ -16,6 +16,7 @@ import { UserContext } from "../../contexts/UserContext";
 import GameChat from "../../components/Chat/GameChat";
 import { useWebSocket } from "../../contexts/WebsocketContext";
 import { IdToNameCard } from "../../utils/CardHandler";
+import { type } from "@testing-library/user-event/dist/type";
 
 const Game = () => {
   const { gameId } = useParams();
@@ -37,6 +38,7 @@ const Game = () => {
   const [showOpponentCard, setShowOpponentCard] = useState(false);
   const [defended_by, setDefendedBy] = useState([]);
   const [isSomeoneBeingDefended, setIsSomeoneBeingDefended] = useState(false);
+  const [chosen_card, setChosenCard] = useState(null);
 
   const { websocket } = useWebSocket();
   const [isLoading, setIsLoading] = useState(true);
@@ -114,7 +116,11 @@ const Game = () => {
       setCurrentTurn(json.game.current_turn);
       setTurnPhase(json.game.turn_phase);
       setTurnOrder(json.game.turn_order);
+      console.log("GAME INFO TURN ORDER: ", turn_order);
       setIsLoading(false);
+      if (json.game.finished) {
+        setFinished(true);
+      }
     } else if (json.type === "new_turn") {
       setCurrentTurn(json.current_turn);
     } else if (json.type === "draw") {
@@ -157,38 +163,21 @@ const Game = () => {
         // setPlayedDefense(json.played_defense);
         setShowPlayedCard(json.played_defense.idtype);
       }
-    } else if (json.type === "exchange_ask") {
+    } else if (json.type === "exchange") {
       setCardTarget(json.target_player);
+      setChosenCard(json.chosen_card);
+    } else if (json.type === "exchange_defense") {
+      setCardTarget(json.target_player);
+      setDefendedBy(json.defended_by);
+      setIsSomeoneBeingDefended(true);
+      setLastPlayedCard(json.played_card);
+      //setChosenCard(json.chosen_card);
     }
   }
 
   if (websocket) {
     websocket.onmessage = onGameMessage;
   }
-
-  /*   const handleDiscard = (card) => {
-    if (websocket) {
-      const messageData = JSON.stringify({
-        type: "discard",
-        last_played_card: card,
-      });
-      websocket.send(messageData);
-    }
-  }
-
-  const handleExchange = (card) => {
-    if (websocket) {
-      const messageData = JSON.stringify({
-        type: "exchange_ask",
-        target_player: 
-        current_turn: current_turn,
-        card_user
-        card_target
-
-      });
-      websocket.send(messageData);
-    }
-  } */
 
   const handleCloseOpponentCardDialog = () => {
     setShowOpponentCard(false);
@@ -270,6 +259,7 @@ const Game = () => {
               right_id={getRightId(current_turn)}
               turnDefense={card_target}
               isSomeoneBeingDefended={isSomeoneBeingDefended}
+              turnExchange={card_target}
             />
             <Box>
               <Grid
@@ -389,6 +379,9 @@ const Game = () => {
                   target_player={card_target}
                   isDefended={isSomeoneBeingDefended}
                   last_played_card={last_played_card}
+                  chosenCard={chosen_card}
+                  turnPhase={turn_phase}
+                  setIsSomeoneBeingDefended={setIsSomeoneBeingDefended}
                 />
               </div>
             </Box>

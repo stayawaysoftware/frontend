@@ -13,6 +13,9 @@ const Buttons = ({
   target_player,
   isDefended,
   last_played_card,
+  chosen_card,
+  turn_phase,
+  setIsSomeoneBeingDefended,
 }) => {
   const {
     userid,
@@ -27,17 +30,20 @@ const Buttons = ({
   const isCardTarget = target_player === targetId;
   const isTurn = current_player === userid && !isDefended;
   const isCardClicked = clickedCard !== null && !targetsEnable;
+  const exchangeEnabled = ((isTurn && isCardClicked && !isDefended) || (!isDefended && target_player === userid)) && 
+    (turn_phase === "exchange" || turn_phase === "exchange_defense");
   const playEnabled =
-    (isTurn && isCardClicked) ||
-    (isCardTarget && isCardClicked && isTurn) ||
+    (isTurn && isCardClicked && !exchangeEnabled) ||
+    (isCardTarget && isCardClicked && isTurn && !exchangeEnabled) ||
     (isDefended && target_player === userid);
+  
 
   const handlePlayCard = () => {
     if (websocket) {
       const messageData = JSON.stringify({
         type: "play",
         played_card: clickedCard.id,
-        card_target: 0,
+        card_target: current_player,
       });
       websocket.send(messageData);
     }
@@ -69,6 +75,36 @@ const Buttons = ({
     onCardClicked(null);
   };
 
+  const handleExchange = (card) => {
+    if (websocket) {
+      const messageData = JSON.stringify({
+        type: "exchange",
+        target_player: current_player,
+        chosen_card: clickedCard.id,
+      });
+      websocket.send(messageData);
+    }
+  };
+
+  const handleExchangeDefense = () => {
+    if (websocket) {
+      let messageData;
+      if (clickedCard) {
+        messageData = JSON.stringify({
+          type: "exchange_defense",
+          target_player: current_player,
+          chosen_card: clickedCard.id,
+          is_defended: true,
+        });
+      } else {
+        // habilitar intercambio
+        setIsSomeoneBeingDefended(false);
+      }
+  
+      websocket.send(messageData);
+    }
+  }
+
   return (
     <Grid>
       <Grid item xs={6} md={12}>
@@ -92,9 +128,9 @@ const Buttons = ({
               style={{
                 width: "19%",
               }}
-              disabled={true}
+              disabled={!exchangeEnabled}
+              onClick={isDefended ? handleExchangeDefense : handleExchange}
               color="success"
-              //onClick={}
             >
               Intercambiar carta
             </Button>
