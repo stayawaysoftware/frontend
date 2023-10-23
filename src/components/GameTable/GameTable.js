@@ -14,6 +14,7 @@ const GameTable = ({
   right_id,
   turnDefense,
   isSomeoneBeingDefended,
+  turnPhase,
 }) => {
   const { gameId } = useParams();
   const {
@@ -134,8 +135,20 @@ const GameTable = ({
     setTargetId(id);
   };
 
+  const handleExchange = (id) => {
+    console.log("entro 1er handle exchangeee");
+    if (websocket) {
+      const messageData = JSON.stringify({
+        type: "exchange",
+        target_player: id,
+        chosen_card: clickedCard.id,
+      });
+      websocket.send(messageData);
+    }
+  };
+
   const getUserFunction = (id) => {
-    if (targetsEnable && currentTurn === userid && !isSomeoneBeingDefended) {
+    if (targetsEnable && currentTurn === userid && !isSomeoneBeingDefended && turnPhase !== "Exchange") {
       if (CardHasTarget(clickedCard.idtype) === CntTarget.ADJACENT) {
         if (id === left_id || id === right_id) {
           return () => handlePlayCard(id);
@@ -143,6 +156,8 @@ const GameTable = ({
       } else if (CardHasTarget(clickedCard.idtype) === CntTarget.ALL) {
         return () => handlePlayCard(id);
       }
+    } else if (turnPhase === "Exchange" && currentTurn === userid) {
+      return () => handleExchange(id);
     }
 
     return null;

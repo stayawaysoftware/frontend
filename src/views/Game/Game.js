@@ -38,7 +38,8 @@ const Game = () => {
   const [showOpponentCard, setShowOpponentCard] = useState(false);
   const [defended_by, setDefendedBy] = useState([]);
   const [isSomeoneBeingDefended, setIsSomeoneBeingDefended] = useState(false);
-  const [chosen_card, setChosenCard] = useState(null);
+  const [last_chosen_card, setLastChosenCard] = useState(null);
+  const [exchange_requester, setExchangeRequester] = useState(null);
 
   const { websocket } = useWebSocket();
   const [isLoading, setIsLoading] = useState(true);
@@ -116,7 +117,6 @@ const Game = () => {
       setCurrentTurn(json.game.current_turn);
       setTurnPhase(json.game.turn_phase);
       setTurnOrder(json.game.turn_order);
-      console.log("GAME INFO TURN ORDER: ", turn_order);
       setIsLoading(false);
       if (json.game.finished) {
         setFinished(true);
@@ -165,13 +165,13 @@ const Game = () => {
       }
     } else if (json.type === "exchange") {
       setCardTarget(json.target_player);
-      setChosenCard(json.chosen_card);
+      setLastChosenCard(json.last_chosen_card);
     } else if (json.type === "exchange_defense") {
       setCardTarget(json.target_player);
       setDefendedBy(json.defended_by);
       setIsSomeoneBeingDefended(true);
-      setLastPlayedCard(json.played_card);
-      //setChosenCard(json.chosen_card);
+      setLastChosenCard(json.last_chosen_card);
+      setExchangeRequester(json.exchange_requester);
     }
   }
 
@@ -260,6 +260,7 @@ const Game = () => {
               turnDefense={card_target}
               isSomeoneBeingDefended={isSomeoneBeingDefended}
               turnExchange={card_target}
+              turnPhase={turn_phase}
             />
             <Box>
               <Grid
@@ -379,9 +380,10 @@ const Game = () => {
                   target_player={card_target}
                   isDefended={isSomeoneBeingDefended}
                   last_played_card={last_played_card}
-                  chosenCard={chosen_card}
+                  lastChosenCard={last_chosen_card}
                   turnPhase={turn_phase}
                   setIsSomeoneBeingDefended={setIsSomeoneBeingDefended}
+                  exchangeRequester={exchange_requester}
                 />
               </div>
             </Box>
