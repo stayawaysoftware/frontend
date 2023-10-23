@@ -13,3 +13,9 @@ test-local-e2e:
 
 test-local-component:
 	npx cypress run --component
+
+test-component:
+	docker run -it -v "$(CURDIR):/e2e" -w /e2e cypress/included:13.3.0 --component
+
+test-e2e:
+	docker run -it -v "$(CURDIR):/e2e" -w /e2e cypress/included:13.3.0 open
