@@ -26,6 +26,13 @@ const generatePlayersTable = (n) => {
   return playersTable;
 };
 
+const playerTableDeath = [
+  { id: 1, name: "Tester1", death: false, position: 1 },
+  { id: 2, name: "Tester2", death: true, position: 2 },
+  { id: 3, name: "Tester3", death: false, position: 3 },
+  { id: 4, name: "Tester4", death: false, position: 4 },
+];
+
 describe("<GameTable />", () => {
   beforeEach("Mount component", () => {
     cy.viewport(1000, 760);
@@ -47,13 +54,9 @@ describe("<GameTable />", () => {
 
     cy.get("div").should("be.visible");
 
-    //Tester4 should be to my left and Tester2 should be to my right
     cy.get("div").contains("Tester4").should("be.visible");
+    cy.get("div").contains("Tester3").should("be.visible");
     cy.get("div").contains("Tester2").should("be.visible");
-
-    //div should n
-
-    //avatars should be visible
   });
   it("Renders when im not the current player with 12 players", () => {
     cy.mount(
@@ -83,5 +86,54 @@ describe("<GameTable />", () => {
     cy.get("div").contains("Tester10").should("be.visible");
     cy.get("div").contains("Tester11").should("be.visible");
     cy.get("div").contains("Tester12").should("be.visible");
+  });
+
+  it("Renders death users", () => {
+    cy.mount(
+      <BrowserRouter>
+        <UserContext.Provider value={userContextValue}>
+          <GameTable
+            playersTable={playerTableDeath}
+            currentTurn={3}
+            left_id={11}
+            right_id={2}
+          />
+        </UserContext.Provider>
+      </BrowserRouter>
+    );
+
+    cy.get("div").should("be.visible");
+    cy.get("div").contains("Tester4").should("be.visible");
+    cy.get("div").contains("Tester3").should("be.visible");
+    cy.get("div").contains("Tester2").should("be.visible");
+
+    //tester2 should have a death avatar
+    cy.get("div[id=death]").should("be.visible");
+
+    //tester3 should have crown
+    cy.get("img").should("have.attr", "alt").and("include", "crown");
+  });
+
+  it("Renders crown", () => {
+    cy.mount(
+      <BrowserRouter>
+        <UserContext.Provider value={userContextValue}>
+          <GameTable
+            playersTable={playerTableDeath}
+            currentTurn={3}
+            left_id={11}
+            right_id={2}
+          />
+        </UserContext.Provider>
+      </BrowserRouter>
+    );
+
+    cy.get("div").should("be.visible");
+    cy.get("div").contains("Tester4").should("be.visible");
+    cy.get("div").contains("Tester3").should("be.visible");
+    cy.get("div").contains("Tester2").should("be.visible");
+
+    //should have crown
+    cy.get("img").should("have.attr", "alt").and("include", "crown");
   });
 });
