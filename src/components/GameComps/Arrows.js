@@ -9,7 +9,6 @@ import flecha2 from "../../assets/flechita_izq.png";
 
 const GameArrows = ({ turn_order }) => {
     //imprimit turn_order para ver si es true o false
-    console.log(turn_order)
   return (
     <div>
         <img

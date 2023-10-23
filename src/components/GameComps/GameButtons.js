@@ -6,7 +6,6 @@ import Button from "@mui/material/Button";
 import ListItem from "@mui/material/ListItem";
 //importar websocket
 import { useWebSocket } from "../../contexts/WebsocketContext";
-
 import { UserContext } from "../../contexts/UserContext";
 
 const Buttons = ({
@@ -31,14 +30,14 @@ const Buttons = ({
   const playEnabled =
     (isTurn && isCardClicked) ||
     (isCardTarget && isCardClicked && isTurn) ||
-    (isDefended && current_player !== userid);
+    (isDefended && target_player === userid);
 
   const handlePlayCard = () => {
     if (websocket) {
       const messageData = JSON.stringify({
         type: "play",
-        played_card: clickedCard,
-        card_target: null,
+        played_card: clickedCard.id,
+        card_target: 0,
       });
       websocket.send(messageData);
     }
@@ -51,17 +50,17 @@ const Buttons = ({
       if (clickedCard) {
         const messageData = JSON.stringify({
           type: "defense",
-          target_player: userid,
-          played_defense: clickedCard,
-          last_played_card: last_played_card,
+          target_player: current_player,
+          last_played_card: last_played_card.id,
+          played_defense: clickedCard.id,
         });
         websocket.send(messageData);
       } else {
         const messageData = JSON.stringify({
           type: "defense",
-          target_player: userid,
-          played_defense: null,
-          last_played_card: last_played_card,
+          target_player: current_player,
+          played_defense: 0,
+          last_played_card: last_played_card.id,
         });
         websocket.send(messageData);
       }

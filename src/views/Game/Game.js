@@ -65,6 +65,10 @@ const Game = () => {
     currentUserCardList.splice(currentUserCardList.indexOf(cardRemove), 1);
     setPlayedCard(null);
   }
+  if (new_card && players) {
+    currentUserCardList.push(new_card);
+    setNewCard(null);
+  }
 
   const positionToId = (position) => {
     let id = null;
@@ -112,26 +116,47 @@ const Game = () => {
       setTurnOrder(json.game.turn_order);
       setIsLoading(false);
     } else if (json.type === "new_turn") {
-      setIsSomeoneBeingDefended(false);
-      setCardTarget(null);
-      setDefendedBy([]);
       setCurrentTurn(json.current_turn);
     } else if (json.type === "draw") {
-      setNewCard(json.new_card.idtype);
+      setNewCard(json.new_card);
     } else if (json.type === "play") {
       setShowPlayedCard(json.played_card.idtype);
       setCardTarget(json.card_player);
     } else if (json.type === "try_defense") {
-      setLastPlayedCard(json.played_card.idtype); // seria lo mismo q el showPlayedCard
-      setCardTarget(json.target_player);
-      setDefendedBy(json.defended_by);
-      setIsSomeoneBeingDefended(true);
+      setLastPlayedCard(json.played_card);
+      if (json.target_player === 0 && last_played_card !== null ) {
+        if (last_played_card === null) {
+        const messageData = JSON.stringify({
+          type: "defense",
+          target_player: 0,
+          played_defense: 0,
+          last_played_card: 0,
+        });
+        websocket.send(messageData);
+        } else {
+          const messageData = JSON.stringify({
+            type: "defense",
+            target_player: 0,
+            played_defense: 0,
+            last_played_card: last_played_card.id,
+          });
+          websocket.send(messageData);
+        }
+      } else {
+        setCardTarget(json.target_player);
+        setDefendedBy(json.defended_by);
+        setIsSomeoneBeingDefended(true);
+      }
     } else if (json.type === "defense") {
       setIsSomeoneBeingDefended(false);
       setCardTarget(null);
       setDefendedBy([]);
-      // setPlayedDefense(json.played_defense);
-      setShowPlayedCard(json.played_defense.idtype);
+      if (json.target_player === 0 || json.played_defense === 0) {
+        setShowPlayedCard(json.last_played_card.idtype);
+      } else {
+        // setPlayedDefense(json.played_defense);
+        setShowPlayedCard(json.played_defense.idtype);
+      }
     } else if (json.type === "exchange_ask") {
       setCardTarget(json.target_player);
     }
