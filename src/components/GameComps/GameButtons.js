@@ -60,7 +60,7 @@ const Buttons = ({
     if (websocket) {
       const messageData = JSON.stringify({
         type: "discard",
-        played_card: clickedCard.id,
+        played_card: clickedCard.idtype,
       });
       websocket.send(messageData);
     }
