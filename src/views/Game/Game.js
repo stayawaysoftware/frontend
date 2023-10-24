@@ -20,7 +20,7 @@ import { type } from "@testing-library/user-event/dist/type";
 
 const Game = () => {
   const { gameId } = useParams();
-  const { userid, playedCard, setPlayedCard, targetId } =
+  const { userid, playedCard, setPlayedCard, targetId, setClickedCard } =
     useContext(UserContext);
 
   //game data
@@ -40,6 +40,9 @@ const Game = () => {
   const [isSomeoneBeingDefended, setIsSomeoneBeingDefended] = useState(false);
   const [last_chosen_card, setLastChosenCard] = useState(null);
   const [exchange_requester, setExchangeRequester] = useState(null);
+  const [carsToShow, setCarsToShow] = useState([]);
+  const [player_name, setPlayerName] = useState(null);
+  const [winner, setWinner] = useState(null);
 
   const { websocket } = useWebSocket();
   const [isLoading, setIsLoading] = useState(true);
@@ -118,8 +121,15 @@ const Game = () => {
       setTurnPhase(json.game.turn_phase);
       setTurnOrder(json.game.turn_order);
       setIsLoading(false);
-      if (json.game.finished) {
+      if (json.game.status === "Finished") {
         setFinished(true);
+        setWinner(json.game.winners);
+        if (websocket) {
+          const messageData = JSON.stringify({
+            type: "finished",
+          });
+          websocket.send(messageData);
+        }
       }
     } else if (json.type === "new_turn") {
       setCurrentTurn(json.current_turn);
@@ -128,6 +138,9 @@ const Game = () => {
     } else if (json.type === "play") {
       setShowPlayedCard(json.played_card.idtype);
       setCardTarget(json.card_player);
+    } else if (json.type === "discard") {
+      setShowPlayedCard(json.played_card.idtype);
+      setTurnPhase(json.turn_phase);
     } else if (json.type === "try_defense") {
       setLastPlayedCard(json.played_card);
       if (json.target_player === 0 && last_played_card !== null) {
@@ -172,6 +185,24 @@ const Game = () => {
       setIsSomeoneBeingDefended(true);
       setLastChosenCard(json.last_chosen_card);
       setExchangeRequester(json.exchange_requester);
+    } else if (json.type === "exchange_end") {
+      setClickedCard(null);
+      setPlayedCard(null);
+      setIsSomeoneBeingDefended(false);
+      setCardTarget(null);
+      setDefendedBy([]);
+      setLastChosenCard(null);
+      setExchangeRequester(null);
+    } else if (json.type === "show_card") {
+      const targetArray = json.target;
+
+      for (const target of targetArray) {
+        if (target === userid) {
+          setShowOpponentCard(true);
+          setCarsToShow(json.cards);
+          setPlayerName(json.player_name);
+        }
+      }
     }
   }
 
@@ -206,7 +237,23 @@ const Game = () => {
           overflow: "hidden",
         }}
       >
-        {userid === positionToId(current_turn) && (
+        {finished && (
+          <Grid
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              position: "absolute",
+              top: "5%",
+              left: "2%",
+            }}
+          >
+            <FinishedAlert winner={winner} gameId={gameId} />
+          </Grid>
+        )}
+
+        {userid === positionToId(current_turn) && !finished && (
           <Alert
             severity="success"
             style={{
@@ -218,7 +265,7 @@ const Game = () => {
             Es tu turno, {players.find((player) => player.id === userid).name}!
           </Alert>
         )}
-        {userid === card_target && turn_phase !== "Exchange" && (
+        {userid === card_target && turn_phase !== "Exchange" && !finished && (
           <Alert
             severity="warning"
             style={{
@@ -231,7 +278,7 @@ const Game = () => {
             {players.find((player) => player.id === userid).name}!!
           </Alert>
         )}
-        {userid === card_target && turn_phase === "Exchange" && (
+        {userid === card_target && turn_phase === "Exchange" && !finished && (
           <Alert
             severity="warning"
             style={{
@@ -250,7 +297,7 @@ const Game = () => {
         ) : (
           // Mostrar los datos del juego si loading es false
           <>
-            {true === checkIfDead() ? (
+            {true === checkIfDead() && !finished ? (
               <Alert
                 severity="error"
                 style={{
@@ -325,10 +372,8 @@ const Game = () => {
               <OpponentHandDialog
                 open={showOpponentCard}
                 onClose={handleCloseOpponentCardDialog}
-                cardList={currentUserCardList}
-                opponentName={
-                  players?.find((player) => player.id === userid).name
-                }
+                cardList={carsToShow}
+                opponentName={player_name}
               />
             </>
 
@@ -368,7 +413,11 @@ const Game = () => {
                   <Chip
                     color="success"
                     variant="outlined"
-                    label={players.find((player) => player.id === userid).name}
+                    label={
+                      players.find((player) => player.id === userid).name +
+                      " - " +
+                      players.find((player) => player.id === userid).role
+                    }
                     sx={{
                       fontSize: "1rem",
                       fontWeight: "bold",
@@ -397,26 +446,9 @@ const Game = () => {
                   turnPhase={turn_phase}
                   setIsSomeoneBeingDefended={setIsSomeoneBeingDefended}
                   exchangeRequester={exchange_requester}
-                  setCardTarget={setCardTarget}
-                  setDefendedBy={setDefendedBy}
                 />
               </div>
             </Box>
-            {finished && (
-              <Grid
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  position: "absolute",
-                  top: "5%",
-                  left: "2%",
-                }}
-              >
-                <FinishedAlert playersName={players[0]?.name} gameId={gameId} />
-              </Grid>
-            )}
           </>
         )}
       </div>

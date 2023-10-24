@@ -17,8 +17,6 @@ const Buttons = ({
   turnPhase,
   setIsSomeoneBeingDefended,
   exchangeRequester,
-  setCardTarget,
-  setDefendedBy,
 }) => {
   const {
     userid,
@@ -45,15 +43,24 @@ const Buttons = ({
   const playEnabledDisc =
     isTurn && isCardClicked && !isDefended && !exchangeEnabled;
 
-  console.log("exchangeEnabled: ", exchangeEnabled);
-  console.log("isDefendedd: ", isDefended);
-
   const handlePlayCard = () => {
     if (websocket) {
       const messageData = JSON.stringify({
         type: "play",
         played_card: clickedCard.id,
         card_target: current_player,
+      });
+      websocket.send(messageData);
+    }
+    setPlayedCard(clickedCard);
+    onCardClicked(null);
+  };
+
+  const handleDiscardCard = () => {
+    if (websocket) {
+      const messageData = JSON.stringify({
+        type: "discard",
+        played_card: clickedCard.idtype,
       });
       websocket.send(messageData);
     }
@@ -87,7 +94,7 @@ const Buttons = ({
 
   const handleExchangeDefense = () => {
     if (websocket) {
-      if (clickedCard) {
+      if (clickedCard && !isDefended) {
         let messageData;
         console.log("hacer intercambio");
         messageData = JSON.stringify({
@@ -99,6 +106,20 @@ const Buttons = ({
         });
         console.log("SE ENVIA EXCHANGE ESTO: ", messageData);
         websocket.send(messageData);
+        onCardClicked(null);
+      } else if (clickedCard && isDefended) {
+        let messageData;
+        messageData = JSON.stringify({
+          type: "exchange_defense",
+          chosen_card: clickedCard.id,
+          last_chose: lastChosenCard.id,
+          exchange_requester_id: exchangeRequester,
+          is_defense: true,
+        });
+        console.log("SE ENVIA DEFENSA EXCHANGE ESTO: ", messageData);
+        websocket.send(messageData);
+        setPlayedCard(clickedCard);
+        onCardClicked(null);
       } else {
         // habilitar intercambio
         console.log("habilitar intercambio, cerrar exchange defense");
@@ -150,7 +171,7 @@ const Buttons = ({
                 width: "19%",
               }}
               disabled={!playEnabledDisc}
-              onClick={handlePlayCard}
+              onClick={handleDiscardCard}
               color="success"
             >
               Descartar carta
