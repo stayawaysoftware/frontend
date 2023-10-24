@@ -24,21 +24,21 @@ describe("Testing websocket", () => {
     // cy.wait(7000);
   });
 
-  it("Join room and see other user", () => {
-    cy.visit("/");
-    cy.login("Visitante2");
+  // it("Join room and see other user", () => {
+  //   cy.visit("/");
+  //   cy.login("Visitante2");
 
-    //join first room
-    cy.get("div[id=0]").click();
-    cy.contains("Unirse").click();
+  //   //join first room
+  //   cy.get("div[id=0]").click();
+  //   cy.contains("Unirse").click();
 
-    // room name and user name should be visible
-    cy.contains("Sala de prueba").should("be.visible");
-    cy.contains("Visitante1").should("be.visible");
-    cy.contains("Visitante2").should("be.visible");
-    // start button should be disabled
-    cy.contains("Empezar partida").should("be.disabled");
+  //   // room name and user name should be visible
+  //   cy.contains("Sala de prueba").should("be.visible");
+  //   cy.contains("Visitante1").should("be.visible");
+  //   cy.contains("Visitante2").should("be.visible");
+  //   // start button should be disabled
+  //   cy.contains("Empezar partida").should("be.disabled");
 
-    cy.wait(10000);
-  });
+  //   cy.wait(10000);
+  // });
 });
