@@ -16,10 +16,11 @@ import { UserContext } from "../../contexts/UserContext";
 import GameChat from "../../components/Chat/GameChat";
 import { useWebSocket } from "../../contexts/WebsocketContext";
 import { IdToNameCard } from "../../utils/CardHandler";
+import { type } from "@testing-library/user-event/dist/type";
 
 const Game = () => {
   const { gameId } = useParams();
-  const { userid, playedCard, setPlayedCard, targetId } =
+  const { userid, playedCard, setPlayedCard, targetId, setClickedCard } =
     useContext(UserContext);
 
   //game data
@@ -37,6 +38,10 @@ const Game = () => {
   const [showOpponentCard, setShowOpponentCard] = useState(false);
   const [defended_by, setDefendedBy] = useState([]);
   const [isSomeoneBeingDefended, setIsSomeoneBeingDefended] = useState(false);
+  const [last_chosen_card, setLastChosenCard] = useState(null);
+  const [exchange_requester, setExchangeRequester] = useState(null);
+  const [carsToShow, setCarsToShow] = useState([]);
+  const [player_name, setPlayerName] = useState(null);
 
   const { websocket } = useWebSocket();
   const [isLoading, setIsLoading] = useState(true);
@@ -115,6 +120,9 @@ const Game = () => {
       setTurnPhase(json.game.turn_phase);
       setTurnOrder(json.game.turn_order);
       setIsLoading(false);
+      if (json.game.finished) {
+        setFinished(true);
+      }
     } else if (json.type === "new_turn") {
       setCurrentTurn(json.current_turn);
     } else if (json.type === "draw") {
@@ -124,15 +132,15 @@ const Game = () => {
       setCardTarget(json.card_player);
     } else if (json.type === "try_defense") {
       setLastPlayedCard(json.played_card);
-      if (json.target_player === 0 && last_played_card !== null ) {
+      if (json.target_player === 0 && last_played_card !== null) {
         if (last_played_card === null) {
-        const messageData = JSON.stringify({
-          type: "defense",
-          target_player: 0,
-          played_defense: 0,
-          last_played_card: 0,
-        });
-        websocket.send(messageData);
+          const messageData = JSON.stringify({
+            type: "defense",
+            target_player: 0,
+            played_defense: 0,
+            last_played_card: 0,
+          });
+          websocket.send(messageData);
         } else {
           const messageData = JSON.stringify({
             type: "defense",
@@ -157,38 +165,39 @@ const Game = () => {
         // setPlayedDefense(json.played_defense);
         setShowPlayedCard(json.played_defense.idtype);
       }
-    } else if (json.type === "exchange_ask") {
+    } else if (json.type === "exchange") {
       setCardTarget(json.target_player);
+      setLastChosenCard(json.last_chosen_card);
+    } else if (json.type === "exchange_defense") {
+      setCardTarget(json.target_player);
+      setDefendedBy(json.defended_by);
+      setIsSomeoneBeingDefended(true);
+      setLastChosenCard(json.last_chosen_card);
+      setExchangeRequester(json.exchange_requester);
+    } else if (json.type === "exchange_end") {
+      setClickedCard(null);
+      setPlayedCard(null);
+      setIsSomeoneBeingDefended(false);
+      setCardTarget(null);
+      setDefendedBy([]);
+      setLastChosenCard(null);
+      setExchangeRequester(null);
+    } else if (json.type === "show_card") {
+      const targetArray = json.target;
+
+      for (const target of targetArray) {
+        if (target === userid) {
+          setShowOpponentCard(true);
+          setCarsToShow(json.cards);
+          setPlayerName(json.player_name);
+        }
+      }
     }
   }
 
   if (websocket) {
     websocket.onmessage = onGameMessage;
   }
-
-  /*   const handleDiscard = (card) => {
-    if (websocket) {
-      const messageData = JSON.stringify({
-        type: "discard",
-        last_played_card: card,
-      });
-      websocket.send(messageData);
-    }
-  }
-
-  const handleExchange = (card) => {
-    if (websocket) {
-      const messageData = JSON.stringify({
-        type: "exchange_ask",
-        target_player: 
-        current_turn: current_turn,
-        card_user
-        card_target
-
-      });
-      websocket.send(messageData);
-    }
-  } */
 
   const handleCloseOpponentCardDialog = () => {
     setShowOpponentCard(false);
@@ -229,7 +238,7 @@ const Game = () => {
             Es tu turno, {players.find((player) => player.id === userid).name}!
           </Alert>
         )}
-        {userid === card_target && (
+        {userid === card_target && turn_phase !== "Exchange" && (
           <Alert
             severity="warning"
             style={{
@@ -239,6 +248,19 @@ const Game = () => {
             }}
           >
             Te han atacado con {IdToNameCard(last_played_card)},{" "}
+            {players.find((player) => player.id === userid).name}!!
+          </Alert>
+        )}
+        {userid === card_target && turn_phase === "Exchange" && (
+          <Alert
+            severity="warning"
+            style={{
+              position: "absolute",
+              top: "5%",
+              left: "2%",
+            }}
+          >
+            El jugador {exchange_requester} te ha solicitado intercambiar,{" "}
             {players.find((player) => player.id === userid).name}!!
           </Alert>
         )}
@@ -270,6 +292,8 @@ const Game = () => {
               right_id={getRightId(current_turn)}
               turnDefense={card_target}
               isSomeoneBeingDefended={isSomeoneBeingDefended}
+              turnExchange={card_target}
+              turnPhase={turn_phase}
             />
             <Box>
               <Grid
@@ -321,10 +345,8 @@ const Game = () => {
               <OpponentHandDialog
                 open={showOpponentCard}
                 onClose={handleCloseOpponentCardDialog}
-                cardList={currentUserCardList}
-                opponentName={
-                  players?.find((player) => player.id === userid).name
-                }
+                cardList={carsToShow}
+                opponentName={player_name}
               />
             </>
 
@@ -364,7 +386,11 @@ const Game = () => {
                   <Chip
                     color="success"
                     variant="outlined"
-                    label={players.find((player) => player.id === userid).name}
+                    label={
+                      players.find((player) => player.id === userid).name +
+                      " - " +
+                      players.find((player) => player.id === userid).role
+                    }
                     sx={{
                       fontSize: "1rem",
                       fontWeight: "bold",
@@ -389,6 +415,10 @@ const Game = () => {
                   target_player={card_target}
                   isDefended={isSomeoneBeingDefended}
                   last_played_card={last_played_card}
+                  lastChosenCard={last_chosen_card}
+                  turnPhase={turn_phase}
+                  setIsSomeoneBeingDefended={setIsSomeoneBeingDefended}
+                  exchangeRequester={exchange_requester}
                 />
               </div>
             </Box>

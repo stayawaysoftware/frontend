@@ -54,7 +54,7 @@ const Hand = ({
               key={`card-hand-${id}`}
               id={`card-hand-${index}`}
               sx={[
-                clickedCard?.id === id &&
+                clickedCard?.id === id && clickedCard?.idtype !== 1 &&
                   (isSomeoneBeingDefended
                     ? isDefended && isDefenseCard
                       ? highlightedCardStyle
