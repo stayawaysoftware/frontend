@@ -121,9 +121,15 @@ const Game = () => {
       setTurnPhase(json.game.turn_phase);
       setTurnOrder(json.game.turn_order);
       setIsLoading(false);
-      if (json.game.status === "finished") {
+      if (json.game.status === "Finished") {
         setFinished(true);
-        setWinner(json.game.winner);
+        setWinner(json.game.winners);
+        if (websocket) {
+          const messageData = JSON.stringify({
+            type: "finished",
+          });
+          websocket.send(messageData);
+        }
       }
     } else if (json.type === "new_turn") {
       setCurrentTurn(json.current_turn);
@@ -228,7 +234,23 @@ const Game = () => {
           overflow: "hidden",
         }}
       >
-        {userid === positionToId(current_turn) && (
+        {finished && (
+          <Grid
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              position: "absolute",
+              top: "5%",
+              left: "2%",
+            }}
+          >
+            <FinishedAlert winner={winner} gameId={gameId} />
+          </Grid>
+        )}
+
+        {userid === positionToId(current_turn) && !finished && (
           <Alert
             severity="success"
             style={{
@@ -240,7 +262,7 @@ const Game = () => {
             Es tu turno, {players.find((player) => player.id === userid).name}!
           </Alert>
         )}
-        {userid === card_target && turn_phase !== "Exchange" && (
+        {userid === card_target && turn_phase !== "Exchange" && !finished && (
           <Alert
             severity="warning"
             style={{
@@ -253,7 +275,7 @@ const Game = () => {
             {players.find((player) => player.id === userid).name}!!
           </Alert>
         )}
-        {userid === card_target && turn_phase === "Exchange" && (
+        {userid === card_target && turn_phase === "Exchange" && !finished && (
           <Alert
             severity="warning"
             style={{
@@ -272,7 +294,7 @@ const Game = () => {
         ) : (
           // Mostrar los datos del juego si loading es false
           <>
-            {true === checkIfDead() ? (
+            {true === checkIfDead() && !finished ? (
               <Alert
                 severity="error"
                 style={{
@@ -424,21 +446,6 @@ const Game = () => {
                 />
               </div>
             </Box>
-            {finished && (
-              <Grid
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  position: "absolute",
-                  top: "5%",
-                  left: "2%",
-                }}
-              >
-                <FinishedAlert winner={winner} gameId={gameId} />
-              </Grid>
-            )}
           </>
         )}
       </div>

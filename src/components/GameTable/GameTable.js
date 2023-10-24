@@ -153,11 +153,17 @@ const GameTable = ({
       !isSomeoneBeingDefended &&
       turnPhase !== "Exchange"
     ) {
-      if (CardHasTarget(clickedCard.idtype) === CntTarget.ADJACENT) {
+      if (
+        clickedCard &&
+        CardHasTarget(clickedCard.idtype) === CntTarget.ADJACENT
+      ) {
         if (id === left_id || id === right_id) {
           return () => handlePlayCard(id);
         }
-      } else if (CardHasTarget(clickedCard.idtype) === CntTarget.ALL) {
+      } else if (
+        clickedCard &&
+        CardHasTarget(clickedCard.idtype) === CntTarget.ALL
+      ) {
         return () => handlePlayCard(id);
       }
     } else if (

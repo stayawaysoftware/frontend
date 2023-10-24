@@ -9,17 +9,7 @@ const FinishedAlert = ({ winner, gameId }) => {
 
   const navigate = useNavigate();
   const navigateToRoom = () => {
-    try {
-      if (websocket) {
-        const messageData = JSON.stringify({
-          type: "finished",
-        });
-        websocket.send(messageData);
-      }
-      navigate(`/room/${gameId}`);
-    } catch (error) {
-      console.error("Error al eliminar el juego:", error);
-    }
+    navigate(`/room/${gameId}`);
   };
 
   return (
@@ -35,11 +25,11 @@ const FinishedAlert = ({ winner, gameId }) => {
         variant="filled"
         action={
           <Button color="inherit" size="small" onClick={navigateToRoom}>
-            Accept
+            Aceptar
           </Button>
         }
       >
-        Game has finished!!
+        La partida ha finalizado!!
       </Alert>
     </>
   );
