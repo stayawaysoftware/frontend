@@ -27,13 +27,22 @@ const cardListLength5 = [
   { id: 5, idtype: 5 },
 ];
 
+const defense = [];
+const target_player = 3;
+const isSomeoneBeingDefended = false;
+
 describe("<Hand />", () => {
   beforeEach("Mount component", () => {});
   it("Renders with LaCosa asset", () => {
     cy.mount(
       <BrowserRouter>
         <UserContext.Provider value={userContextValue}>
-          <Hand cardList={cardListWithLaCosa} />
+          <Hand
+            cardList={cardListWithLaCosa}
+            defense={defense}
+            target_player={target_player}
+            isSomeoneBeingDefended={isSomeoneBeingDefended}
+          />
         </UserContext.Provider>
       </BrowserRouter>
     );
@@ -49,7 +58,12 @@ describe("<Hand />", () => {
     cy.mount(
       <BrowserRouter>
         <UserContext.Provider value={userContextValue}>
-          <Hand cardList={cardListLength5} />
+          <Hand
+            cardList={cardListLength5}
+            defense={defense}
+            target_player={target_player}
+            isSomeoneBeingDefended={isSomeoneBeingDefended}
+          />
         </UserContext.Provider>
       </BrowserRouter>
     );
@@ -75,7 +89,12 @@ describe("<Hand />", () => {
     cy.mount(
       <BrowserRouter>
         <UserContext.Provider value={userContextValue}>
-          <Hand cardList={cardListWithLaCosa} />
+          <Hand
+            cardList={cardListWithLaCosa}
+            defense={defense}
+            target_player={target_player}
+            isSomeoneBeingDefended={isSomeoneBeingDefended}
+          />
         </UserContext.Provider>
       </BrowserRouter>
     );

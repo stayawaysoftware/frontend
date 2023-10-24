@@ -18,7 +18,7 @@ describe("<GameArrows />", () => {
     cy.mount(
       <BrowserRouter>
         <UserContext.Provider value={userContextValue}>
-          <GameArrows turn_order={true} />
+          <GameArrows turnOrder={true} />
         </UserContext.Provider>
       </BrowserRouter>
     );
@@ -35,7 +35,7 @@ describe("<GameArrows />", () => {
     cy.mount(
       <BrowserRouter>
         <UserContext.Provider value={userContextValue}>
-          <GameArrows turn_order={false} />
+          <GameArrows turnOrder={false} />
         </UserContext.Provider>
       </BrowserRouter>
     );
