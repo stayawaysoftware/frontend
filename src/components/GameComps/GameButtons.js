@@ -56,6 +56,18 @@ const Buttons = ({
     onCardClicked(null);
   };
 
+  const handleDiscardCard = () => {
+    if (websocket) {
+      const messageData = JSON.stringify({
+        type: "discard",
+        played_card: clickedCard.idtype,
+      });
+      websocket.send(messageData);
+    }
+    setPlayedCard(clickedCard);
+    onCardClicked(null);
+  };
+
   const handleDefense = () => {
     if (websocket) {
       if (clickedCard) {
@@ -159,7 +171,7 @@ const Buttons = ({
                 width: "19%",
               }}
               disabled={!playEnabledDisc}
-              onClick={handlePlayCard}
+              onClick={handleDiscardCard}
               color="success"
             >
               Descartar carta

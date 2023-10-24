@@ -138,6 +138,9 @@ const Game = () => {
     } else if (json.type === "play") {
       setShowPlayedCard(json.played_card.idtype);
       setCardTarget(json.card_player);
+    } else if (json.type === "discard") {
+      setShowPlayedCard(json.played_card.idtype);
+      setTurnPhase(json.turn_phase);
     } else if (json.type === "try_defense") {
       setLastPlayedCard(json.played_card);
       if (json.target_player === 0 && last_played_card !== null) {
