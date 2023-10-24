@@ -183,16 +183,16 @@ const Game = () => {
       setLastChosenCard(null);
       setExchangeRequester(null);
     } else if (json.type === "show_card") {
-        const targetArray = json.target; 
-      
-        for (const target of targetArray) {
-          if (target === userid) {
-            setShowOpponentCard(true);
-            setCarsToShow(json.cards);
-            setPlayerName(json.player_name);
-          }
+      const targetArray = json.target;
+
+      for (const target of targetArray) {
+        if (target === userid) {
+          setShowOpponentCard(true);
+          setCarsToShow(json.cards);
+          setPlayerName(json.player_name);
         }
       }
+    }
   }
 
   if (websocket) {
@@ -386,7 +386,11 @@ const Game = () => {
                   <Chip
                     color="success"
                     variant="outlined"
-                    label={players.find((player) => player.id === userid).name}
+                    label={
+                      players.find((player) => player.id === userid).name +
+                      " - " +
+                      players.find((player) => player.id === userid).role
+                    }
                     sx={{
                       fontSize: "1rem",
                       fontWeight: "bold",
