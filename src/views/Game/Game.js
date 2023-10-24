@@ -20,7 +20,7 @@ import { type } from "@testing-library/user-event/dist/type";
 
 const Game = () => {
   const { gameId } = useParams();
-  const { userid, playedCard, setPlayedCard, targetId } =
+  const { userid, playedCard, setPlayedCard, targetId, setClickedCard } =
     useContext(UserContext);
 
   //game data
@@ -40,6 +40,7 @@ const Game = () => {
   const [isSomeoneBeingDefended, setIsSomeoneBeingDefended] = useState(false);
   const [last_chosen_card, setLastChosenCard] = useState(null);
   const [exchange_requester, setExchangeRequester] = useState(null);
+  const [carsToShow, setCarsToShow] = useState([]);
 
   const { websocket } = useWebSocket();
   const [isLoading, setIsLoading] = useState(true);
@@ -172,6 +173,17 @@ const Game = () => {
       setIsSomeoneBeingDefended(true);
       setLastChosenCard(json.last_chosen_card);
       setExchangeRequester(json.exchange_requester);
+    } else if (json.type === "exchange_end") {
+      setClickedCard(null);
+      setPlayedCard(null);
+      setIsSomeoneBeingDefended(false);
+      setCardTarget(null);
+      setDefendedBy([]);
+      setLastChosenCard(null);
+      setExchangeRequester(null);
+    } else if (json.type === "show_card") {
+      setShowOpponentCard(true);
+      setCarsToShow(json.cards);
     }
   }
 
@@ -325,7 +337,7 @@ const Game = () => {
               <OpponentHandDialog
                 open={showOpponentCard}
                 onClose={handleCloseOpponentCardDialog}
-                cardList={currentUserCardList}
+                cardList={carsToShow}
                 opponentName={
                   players?.find((player) => player.id === userid).name
                 }
@@ -397,8 +409,6 @@ const Game = () => {
                   turnPhase={turn_phase}
                   setIsSomeoneBeingDefended={setIsSomeoneBeingDefended}
                   exchangeRequester={exchange_requester}
-                  setCardTarget={setCardTarget}
-                  setDefendedBy={setDefendedBy}
                 />
               </div>
             </Box>

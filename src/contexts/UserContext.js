@@ -43,6 +43,7 @@ export const UserProvider = ({ children }) => {
         userid,
         setUserId,
         clickedCard,
+        setClickedCard,
         onCardClicked,
         targetsEnable,
         playedCard,
