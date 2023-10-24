@@ -9,7 +9,7 @@ const FinishedAlert = ({ winner, gameId }) => {
 
   const navigate = useNavigate();
   const navigateToRoom = () => {
-    navigate(`/room/${gameId}`);
+    navigate(`/`);
   };
 
   return (
