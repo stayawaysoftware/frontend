@@ -130,15 +130,15 @@ const Game = () => {
       setCardTarget(json.card_player);
     } else if (json.type === "try_defense") {
       setLastPlayedCard(json.played_card);
-      if (json.target_player === 0 && last_played_card !== null ) {
+      if (json.target_player === 0 && last_played_card !== null) {
         if (last_played_card === null) {
-        const messageData = JSON.stringify({
-          type: "defense",
-          target_player: 0,
-          played_defense: 0,
-          last_played_card: 0,
-        });
-        websocket.send(messageData);
+          const messageData = JSON.stringify({
+            type: "defense",
+            target_player: 0,
+            played_defense: 0,
+            last_played_card: 0,
+          });
+          websocket.send(messageData);
         } else {
           const messageData = JSON.stringify({
             type: "defense",
@@ -218,7 +218,7 @@ const Game = () => {
             Es tu turno, {players.find((player) => player.id === userid).name}!
           </Alert>
         )}
-        {userid === card_target && (
+        {userid === card_target && turn_phase !== "Exchange" && (
           <Alert
             severity="warning"
             style={{
@@ -228,6 +228,19 @@ const Game = () => {
             }}
           >
             Te han atacado con {IdToNameCard(last_played_card)},{" "}
+            {players.find((player) => player.id === userid).name}!!
+          </Alert>
+        )}
+        {userid === card_target && turn_phase === "Exchange" && (
+          <Alert
+            severity="warning"
+            style={{
+              position: "absolute",
+              top: "5%",
+              left: "2%",
+            }}
+          >
+            El jugador {exchange_requester} te ha solicitado intercambiar,{" "}
             {players.find((player) => player.id === userid).name}!!
           </Alert>
         )}
@@ -384,6 +397,8 @@ const Game = () => {
                   turnPhase={turn_phase}
                   setIsSomeoneBeingDefended={setIsSomeoneBeingDefended}
                   exchangeRequester={exchange_requester}
+                  setCardTarget={setCardTarget}
+                  setDefendedBy={setDefendedBy}
                 />
               </div>
             </Box>
