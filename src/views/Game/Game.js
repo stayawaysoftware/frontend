@@ -42,6 +42,7 @@ const Game = () => {
   const [exchange_requester, setExchangeRequester] = useState(null);
   const [carsToShow, setCarsToShow] = useState([]);
   const [player_name, setPlayerName] = useState(null);
+  const [winner, setWinner] = useState(null);
 
   const { websocket } = useWebSocket();
   const [isLoading, setIsLoading] = useState(true);
@@ -120,8 +121,9 @@ const Game = () => {
       setTurnPhase(json.game.turn_phase);
       setTurnOrder(json.game.turn_order);
       setIsLoading(false);
-      if (json.game.finished) {
+      if (json.game.status === "finished") {
         setFinished(true);
+        setWinner(json.game.winner);
       }
     } else if (json.type === "new_turn") {
       setCurrentTurn(json.current_turn);
@@ -434,7 +436,7 @@ const Game = () => {
                   left: "2%",
                 }}
               >
-                <FinishedAlert playersName={players[0]?.name} gameId={gameId} />
+                <FinishedAlert winner={winner} gameId={gameId} />
               </Grid>
             )}
           </>

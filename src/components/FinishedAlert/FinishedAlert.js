@@ -2,14 +2,20 @@ import React from "react";
 import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useWebSocket } from "../../contexts/WebsocketContext";
 
-const FinishedAlert = ({ gamePlayersName, gameId }) => {
+const FinishedAlert = ({ winner, gameId }) => {
+  const { websocket } = useWebSocket();
+
   const navigate = useNavigate();
   const navigateToRoom = () => {
     try {
-      const response = axios.delete(`http://localhost:8000/game/${gameId}`);
-      console.log(response);
+      if (websocket) {
+        const messageData = JSON.stringify({
+          type: "finished",
+        });
+        websocket.send(messageData);
+      }
       navigate(`/room/${gameId}`);
     } catch (error) {
       console.error("Error al eliminar el juego:", error);
@@ -22,7 +28,7 @@ const FinishedAlert = ({ gamePlayersName, gameId }) => {
         variant="filled"
         style={{ marginBottom: "20px", marginTop: "50px" }}
       >
-        El ganador de la partida es ... {gamePlayersName}!!
+        El ganador de la partida es ... {winner}!!
       </Alert>
       <Alert
         severity="info"
