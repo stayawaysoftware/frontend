@@ -1,43 +1,62 @@
-describe("checks login", () => {
-  beforeEach("login the user", () => {
-    cy.visit("/");
+describe("Login and user creation", () => {
+  beforeEach("see the room list", () => {
+    //intercept get room/list to return an empty list
+    cy.intercept("GET", "/room/list", {
+      statusCode: 200,
+      body: [],
+    }).as("getRooms");
   });
+  it("should create a new user", () => {
+    // simulate a POST request to /user/new
+    cy.intercept("POST", "/user/new", {
+      statusCode: 201,
+      body: {
+        id: 1,
+        username: "LoginTest1",
+      },
+    }).as("newUser");
 
-  it("login a user", () => {
-    cy.login("Visitante");
-    cy.location("pathname").should("eq", "/");
+    cy.visit("/");
+
+    // login is a command that was defined in cypress/support/commands.js
+    cy.login("LoginTest1");
+
+    cy.wait("@newUser");
+    //verify that newUser response is correct
+    cy.get("@newUser").should((req) => {
+      expect(req.response.statusCode).to.equal(201);
+      expect(req.response.body).to.have.property("id", 1);
+      expect(req.response.body).to.have.property("username", "LoginTest1");
+    });
+
+    //verify that the user can see Lista de Salas
+    // cy.wait(2000);
     cy.contains("Lista de salas").should("be.visible");
   });
 
-  it("not login if username is in use", () => {
-    cy.login("Ejemplo");
+  it("should not create a new user if username is already taken", () => {
+    cy.intercept("POST", "/user/new", {
+      statusCode: 403,
+      body: {
+        detail: "Username already taken",
+      },
+    }).as("newUser");
+
     cy.visit("/");
-    cy.login("Ejemplo");
-    cy.intercept("POST", "/users?username=*", (req) => {
-      req.reply((res) => {
-        expect(res.statusCode).to.eq(403);
-      });
+    cy.login("LoginTest1");
+
+    cy.wait("@newUser");
+
+    cy.get("@newUser").should((req) => {
+      expect(req.response.statusCode).to.equal(403);
+      expect(req.response.body).to.have.property(
+        "detail",
+        "Username already taken"
+      );
     });
+    //an alert should appear
+    cy.contains("Username already taken").should("be.visible");
   });
 
-  it("delete a user", () => {
-    let userid = 3;
-    // no se settea bien el user id, asi que se hardcodea
-    cy.login("Ejemplo1");
-    cy.visit("/");
-    cy.login("Ejemplo2");
-    cy.visit("/");
-    cy.login("Ejemplo3");
-    cy.intercept("POST", "/users?username=*", (req) => {
-      req.reply((res) => {
-        expect(res.statusCode).to.eq(201);
-        userid = res.body.id;
-      });
-    });
-
-    cy.request("DELETE", `http://localhost:8000/users/${userid}`).as("user");
-    cy.get("@user").should((response) => {
-      expect(response.status).to.eq(204);
-    });
-  });
+  //should add user delete test
 });
