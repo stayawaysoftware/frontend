@@ -41,6 +41,7 @@ const Game = () => {
   const [last_chosen_card, setLastChosenCard] = useState(null);
   const [exchange_requester, setExchangeRequester] = useState(null);
   const [carsToShow, setCarsToShow] = useState([]);
+  const [player_name, setPlayerName] = useState(null);
 
   const { websocket } = useWebSocket();
   const [isLoading, setIsLoading] = useState(true);
@@ -182,9 +183,16 @@ const Game = () => {
       setLastChosenCard(null);
       setExchangeRequester(null);
     } else if (json.type === "show_card") {
-      setShowOpponentCard(true);
-      setCarsToShow(json.cards);
-    }
+        const targetArray = json.target; 
+      
+        for (const target of targetArray) {
+          if (target === userid) {
+            setShowOpponentCard(true);
+            setCarsToShow(json.cards);
+            setPlayerName(json.player_name);
+          }
+        }
+      }
   }
 
   if (websocket) {
@@ -338,9 +346,7 @@ const Game = () => {
                 open={showOpponentCard}
                 onClose={handleCloseOpponentCardDialog}
                 cardList={carsToShow}
-                opponentName={
-                  players?.find((player) => player.id === userid).name
-                }
+                opponentName={player_name}
               />
             </>
 
