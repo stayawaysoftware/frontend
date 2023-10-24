@@ -9,7 +9,9 @@ export const UserProvider = ({ children }) => {
   const [roomid, setRoomId] = useState(null);
   const [userid, setUserId] = useState(null);
   const [clickedCard, setClickedCard] = useState(null);
+  const [playedCard, setPlayedCard] = useState(null);
   const [targetsEnable, setTargetsEnable] = useState(null);
+  const [targetId, setTargetId] = useState(null);
 
   const onCardClicked = useCallback(
     (card) => {
@@ -41,8 +43,13 @@ export const UserProvider = ({ children }) => {
         userid,
         setUserId,
         clickedCard,
+        setClickedCard,
         onCardClicked,
         targetsEnable,
+        playedCard,
+        setPlayedCard,
+        targetId,
+        setTargetId,
       }}
     >
       {children}

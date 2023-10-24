@@ -1,4 +1,4 @@
-import axios from "axios";
+/* import axios from "axios";
 
 import { useQuery } from "@tanstack/react-query";
 
@@ -17,4 +17,4 @@ const fetchGame = async (gameId) => {
 export const useGame = (gameId) =>
   useQuery(["game", gameId], () => fetchGame(gameId), {
     refetchInterval: 1000,
-  });
+  }); */

@@ -6,8 +6,16 @@ import CloseIcon from "@mui/icons-material/Close";
 import { green, pink } from "@mui/material/colors";
 import "./UserAvatar.css";
 import crown from "../../assets/crown.png";
+import sword from "../../assets/sword.png";
 
-export const UserAvatar = ({ name, css, death, turn, onClick }) => (
+export const UserAvatar = ({
+  name,
+  css,
+  death,
+  turn,
+  onClick,
+  turnDefense,
+}) => (
   <Stack
     direction="column"
     spacing={1}
@@ -57,6 +65,12 @@ export const UserAvatar = ({ name, css, death, turn, onClick }) => (
         {turn && (
           <div className="turn">
             <img src={crown} alt="crown" className="img" />
+          </div>
+        )}
+
+        {turnDefense && (
+          <div className="turn">
+            <img src={sword} alt="sword" className="img" />
           </div>
         )}
 
