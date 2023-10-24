@@ -47,33 +47,35 @@ const Room = () => {
     createWebSocket(roomId);
   }, []);
 
-  useEffect(() => {
-    if (websocket) {
-      websocket.onmessage = (event) => {
-        const json = JSON.parse(event.data);
-        console.log("Mensaje recibido: ", json);
-        const room_data = json.room;
+  function onRoomMessage(event) {
+    const json = JSON.parse(event.data);
+    console.log("Mensaje recibido: ", json);
+    const room_data = json.room;
 
-        if (json.type === "info") {
-          setRoomData(room_data);
-          setRoomName(room_data.name);
-          setHostId(room_data.host_id);
-          setUsers(room_data.users.names);
-          setMinUsers(room_data.users.min);
-          setMaxUsers(room_data.users.max);
-        } else if (json.type === "join" || json.type === "leave") {
-          setUsers(room_data.users.names);
-        } else if (json.type === "start") {
-          navigate(`/game/${roomId}`);
-        }
-      };
-
-      websocket.onclose = (event) => {
-        console.log("Websocket cerrado");
-        navigate(`/`);
-      };
+    if (json.type === "info") {
+      setRoomData(room_data);
+      setRoomName(room_data.name);
+      setHostId(room_data.host_id);
+      setUsers(room_data.users.names);
+      setMinUsers(room_data.users.min);
+      setMaxUsers(room_data.users.max);
+    } else if (json.type === "join" || json.type === "leave") {
+      setUsers(room_data.users.names);
+    } else if (json.type === "start") {
+      navigate(`/game/${roomId}`);
     }
-  }, [roomId, websocket]);
+  }
+
+  if (websocket) {
+    websocket.onclose = (event) => {
+      console.log("Websocket cerrado");
+      // navigate(`/`);
+    };
+  }
+
+  if (websocket) {
+    websocket.onmessage = onRoomMessage;
+  }
 
   //esta constante se encarga de enviar el mensaje de start al websocket
   const startGame = () => {
@@ -95,7 +97,7 @@ const Room = () => {
       });
       websocket.send(messageData);
       console.log("Mensaje enviado: ", messageData);
-      // navigate(`/`);
+      navigate(`/`);
       // se navega en el onclose
     }
   };
