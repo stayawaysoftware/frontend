@@ -11,6 +11,8 @@ import IconButton from "@mui/material/IconButton";
 import CasinoIcon from "@mui/icons-material/Casino";
 import Button from "@mui/material/Button";
 import axios from "axios";
+import { API_ENDPOINT_USER_NEW } from "../../utils/ApiTypes";
+import { Alert } from "@mui/material";
 
 const defaultTheme = createTheme();
 
@@ -24,6 +26,7 @@ const centerStyle = {
 
 export default function LogIn() {
   const [username, setUserNameLocal] = useState(undefined);
+  const [error, setError] = useState(null);
 
   const { setUserName, setUserId } = useContext(UserContext);
 
@@ -33,13 +36,13 @@ export default function LogIn() {
 
   const loginHandler = async (e) => {
     e.preventDefault();
-    const url = "http://localhost:8000/users";
-    //build de url with the params
-    const params = "?username=" + username;
-    const urlFinal = url + params;
+    const url = API_ENDPOINT_USER_NEW;
+    const parameters = {
+      username: username,
+    };
 
     await axios
-      .post(urlFinal)
+      .post(url, parameters)
       .then((response) => {
         console.log("Solicitud POST exitosa", response.data);
         setUserId(response.data.id);
@@ -47,9 +50,7 @@ export default function LogIn() {
       })
       .catch((error) => {
         console.error("Error en la solicitud POST", error);
-        if (error.response.status === 500) {
-          alert(error.response.data.detail);
-        }
+        setError(error.response.data.detail);
       });
   };
 
@@ -74,6 +75,11 @@ export default function LogIn() {
                 alignItems: "center",
                 width: 400,
               }}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  loginHandler();
+                }
+              }}
             >
               <IconButton sx={{ p: "10px" }} aria-label="random name">
                 <CasinoIcon />
@@ -95,11 +101,16 @@ export default function LogIn() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Play
+              Jugar
             </Button>
           </Box>
         </Container>
       </div>
+      {!!error && (
+        <Alert severity="error" onClose={() => setError(null)}>
+          {error}
+        </Alert>
+      )}
     </ThemeProvider>
   );
 }

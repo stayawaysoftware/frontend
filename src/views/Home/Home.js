@@ -1,12 +1,12 @@
 import GameList from "../../components/GameList/GameList";
 import ButtonList from "../../components/ButtonList/ButtonList";
-import image from '../Background/Hex2324.svg';
+import image from "../Background/Hex2324.svg";
 
-import * as React from "react";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
+import React, { useState } from "react";
+import { Box, Grid, Alert } from "@mui/material";
 
 const Home = () => {
+  const [error, setError] = useState(null);
   return (
     <div
       style={{
@@ -19,7 +19,7 @@ const Home = () => {
         overflow: "hidden",
       }}
     >
-      <h1 style={{color: "rgba(255,255,255,1)"}}>Room List</h1>
+      <h1 style={{ color: "rgba(255,255,255,1)" }}>Lista de salas</h1>
       <div
         style={{
           display: "flex",
@@ -30,13 +30,26 @@ const Home = () => {
         <Box sx={{ flexGrow: 1, maxWidth: 800 }}>
           <Grid container spacing={2}>
             <Grid item xs={6} md={8}>
-              <GameList />
+              <GameList setError={setError} />
             </Grid>
             <Grid item xs={6} md={4}>
-              <ButtonList />
+              <ButtonList setError={setError} />
             </Grid>
           </Grid>
         </Box>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {!!error && (
+          <Alert severity="error" onClose={() => setError(null)}>
+            {error}
+          </Alert>
+        )}
       </div>
     </div>
   );

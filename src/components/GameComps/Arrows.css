@@ -1,0 +1,38 @@
+.flechas-image1 {
+    width: 30%; /* El ancho de la imagen es el 10% del contenedor */
+    height: auto; /* Altura ajustada automáticamente */
+}
+
+.horario1 {
+    transform: rotate(180deg);
+    position: relative;
+    bottom: 265px; /* Posición relativa al 10% del contenedor */
+    right: 15%; /* Posición relativa al 5% del contenedor */
+}
+
+.antihorario1 {
+    transform: rotate(0deg);
+    position: relative;
+    bottom: 60px; /* Posición relativa al 2% del contenedor */
+    right: 18%; /* Posición relativa al 5% del contenedor */
+}
+
+.flechas-image2 {
+    width: 30%; /* El ancho de la imagen es el 10% del contenedor */
+    height: auto; /* Altura ajustada automáticamente */
+}
+
+.horario2 {
+    transform: rotate(0deg);
+    position: relative;
+    bottom: 60px; /* Posición relativa al 2% del contenedor */
+    right: -15%; /* Posición relativa al -5% del contenedor */
+}
+
+.antihorario2 {
+    transform: rotate(180deg);
+    position: relative;
+    bottom: 265px; /* Posición relativa al 10% del contenedor */
+    right: -15%; /* Posición relativa al -5% del contenedor */
+}
+

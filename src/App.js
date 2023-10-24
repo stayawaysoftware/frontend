@@ -1,13 +1,19 @@
 import "./App.css";
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { UserContext } from "./contexts/UserContext";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import Home from "./views/Home/Home";
 import Register from "./views/Register/Register";
 import PageNotFound from "./views/PageNotFound/PageNotFound";
 import Room from "./views/Room/Room";
 import Game from "./views/Game/Game";
+import axios from "axios";
+import { API_ENDPOINT_USER_DELETE } from "./utils/ApiTypes";
+
+const defaultTheme = createTheme();
 
 const routes = createBrowserRouter([
   {
@@ -30,6 +36,7 @@ const routes = createBrowserRouter([
 
 function App() {
   const { username, userid } = useContext(UserContext);
+  const [queryClient] = useState(new QueryClient());
 
   useEffect(() => {
     window.addEventListener("beforeunload", alertUser);
@@ -41,16 +48,29 @@ function App() {
   const alertUser = (event) => {
     event.preventDefault();
     //con axios no funciona, no se porque xdnt
-    fetch(`http://localhost:8000/users/${userid}`, {
-      method: "DELETE",
-    });
+    const url = API_ENDPOINT_USER_DELETE;
+    let parameters = new FormData();
+    parameters.append("id", userid);
+    axios
+      .post(url, parameters)
+      .then((response) => {
+        console.log("Solicitud POST exitosa", response.data);
+      })
+      .catch((error) => {
+        console.error("Error en la solicitud POST", error);
+      });
+
     event.returnValue = "";
   };
 
   return (
-    <div className="App">
-      {!!username ? <RouterProvider router={routes} /> : <Register />}
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={defaultTheme}>
+        <div className="App">
+          {!!username ? <RouterProvider router={routes} /> : <Register />}
+        </div>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
 

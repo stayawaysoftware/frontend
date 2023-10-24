@@ -1,52 +1,38 @@
-import React, { useEffect, useState, useContext } from "react";
+import { useState, useContext } from "react";
+
+import { Box } from "@mui/material";
+
 import { UserContext } from "../../contexts/UserContext";
 import { IdToAsset } from "../../utils/CardHandler";
 
-const Hand = (props) => {
-  const [selectedCard, setSelectedCard] = useState(null);
-  const [hoveredCard, setHoveredCard] = useState(null);
-  const { clickedCard, setClickedCard } = useContext(UserContext);
+const Hand = ({
+  cardList = [],
+  defense,
+  target_player,
+  isSomeoneBeingDefended,
+}) => {
+  const { clickedCard, onCardClicked, userid } = useContext(UserContext);
+
+  const isDefended = target_player === userid;
+
 
   const baseCardStyle = {
     width: "10%",
     height: "auto",
     position: "relative",
-    top: "170px",
     userSelect: "none",
     cursor: "pointer",
     border: "none",
-    transition: "width 0.2s, height 0.2s", // Add transition for smooth animation
   };
 
   const highlightedCardStyle = {
     border: "1px groove",
+    borderRadius: "15px",
+    transform: "scale(1.1)",
   };
 
-  const hoverCardStyle = {
-    border: "1px groove",
-  };
-
-  const enlargedCardStyle = {
-    width: "11%", // Adjust the width to enlarge the card
-    height: "auto", // Maintain the aspect ratio
-  };
-
-  const handleCardClick = (cardId) => {
-    if (selectedCard === cardId) {
-      setSelectedCard(null);
-      setClickedCard(null);
-    } else {
-      setSelectedCard(cardId);
-      setClickedCard(cardId);
-    }
-  };
-
-  const handleCardHover = (cardId) => {
-    setHoveredCard(cardId);
-  };
-
-  const handleCardLeave = () => {
-    setHoveredCard(null);
+  const auraStyle = {
+    boxShadow: "2px 2px 4px #FFFFF",
   };
 
   return (
@@ -57,29 +43,53 @@ const Hand = (props) => {
           justifyContent: "center",
           alignItems: "center",
         }}
+        id="hand"
       >
-        {props.cardList.map((cardId, index) => (
-          <img
-            key={index}
-            src={IdToAsset(cardId)}
-            alt={`${cardId + 1}`}
-            style={{
-              ...baseCardStyle,
-              ...(selectedCard === `card${index + 1}`
-                ? { ...highlightedCardStyle, ...enlargedCardStyle } // Enlarge selected card
-                : {}),
-              ...(hoveredCard === `card${index + 1}` ? hoverCardStyle : {}), // Apply hover style if card is hovered
-              right: `${10 + index * 30}px`,
-            }}
-            onClick={() => handleCardClick(`${cardId}`)}
-            onMouseEnter={() => handleCardHover(`card${index + 1}`)} // Handle mouse enter
-            onMouseLeave={handleCardLeave} // Handle mouse leave
-          />
-        ))}
+        {cardList?.map(({ id, idtype }, index) => {
+          const isDefenseCard = defense.some(
+            (elem) => isDefended && elem === idtype
+          );
+          return (
+            <Box
+              key={`card-hand-${id}`}
+              id={`card-hand-${index}`}
+              sx={[
+                clickedCard?.id === id && clickedCard?.idtype !== 1 &&
+                  (isSomeoneBeingDefended
+                    ? isDefended && isDefenseCard
+                      ? highlightedCardStyle
+                      : false
+                    : highlightedCardStyle),
+                {
+                  ...baseCardStyle,
+                  right: `${10 + index * 30}px`,
+                  "&:hover": {
+                    ...(isSomeoneBeingDefended
+                      ? isDefended && isDefenseCard
+                        ? highlightedCardStyle
+                        : {}
+                      : highlightedCardStyle),
+                    ...(isDefenseCard && auraStyle),
+                  },
+                  ...(isDefenseCard && auraStyle),
+                },
+              ]}
+              onClick={() => onCardClicked({ id, idtype })}
+            >
+              <img
+                src={IdToAsset(idtype)}
+                alt={`${idtype + 1}`}
+                style={{
+                  width: "100%",
+                  height: "auto",
+                }}
+              />
+            </Box>
+          );
+        })}
       </div>
     </div>
   );
 };
 
 export default Hand;
-

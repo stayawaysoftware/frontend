@@ -1,4 +1,3 @@
-// import * as React from "react";
 import React, { useState, useContext } from "react";
 import { UserContext } from "../../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
@@ -12,11 +11,13 @@ import LoginIcon from "@mui/icons-material/Login";
 import CreateRoomDialog from "../LobbyConfig/LobbyConfigDialog";
 import axios from "axios";
 
-export default function ButtonList({ joinRoom }) {
+import { API_ENDPOINT_ROOM_JOIN } from "../../utils/ApiTypes";
+
+export default function ButtonList({ setError }) {
   const [isCreateRoomDialogOpen, setCreateRoomDialogOpen] = useState(false);
   const { roomid } = useContext(UserContext);
   const navigate = useNavigate();
-  const {userid} = React.useContext(UserContext);    
+  const { userid } = React.useContext(UserContext);
 
   const handleCreateRoomClick = () => {
     setCreateRoomDialogOpen(true);
@@ -27,20 +28,23 @@ export default function ButtonList({ joinRoom }) {
   };
 
   const handleJoinRoom = async () => {
-    navigate("/room/" + roomid);
-    
-    const url = "http://localhost:8000/rooms" + "/" + roomid + "/join";
-    const params = "?user_id=" + userid;
-    const urlFinal = url + params;
+    const url = API_ENDPOINT_ROOM_JOIN;
+    const parameters = {
+      room_id: roomid,
+      user_id: userid,
+      password: "",
+    };
 
-    await axios.put(urlFinal)
-    .then((response) => {
-      console.log('Solicitud POST exitosa', response.data);
-    })
-    .catch((error) => {
-      console.error('Error en la solicitud POST', error);
-    });
-
+    await axios
+      .put(url, parameters)
+      .then((response) => {
+        console.log("Solicitud POST exitosa", response.data);
+        navigate("/room/" + roomid);
+      })
+      .catch((error) => {
+        console.error("Error en la solicitud POST", error);
+        setError(error.response.data.detail);
+      });
   };
 
   return (
@@ -56,7 +60,7 @@ export default function ButtonList({ joinRoom }) {
               }}
               color="success"
             >
-              Refresh
+              Actualizar
             </Button>
           </ListItem>
           <ListItem>
@@ -69,21 +73,21 @@ export default function ButtonList({ joinRoom }) {
               color="success"
               onClick={handleCreateRoomClick}
             >
-              Create Room
+              Crear Sala
             </Button>
           </ListItem>
           <ListItem>
             <Button
               variant="contained"
-              disabled={roomid === null }
+              disabled={roomid === null}
               startIcon={<LoginIcon />}
-              style={{ 
+              style={{
                 width: "180px",
               }}
               color="success"
               onClick={handleJoinRoom}
             >
-              Join Room
+              Unirse
             </Button>
           </ListItem>
         </List>
@@ -91,6 +95,7 @@ export default function ButtonList({ joinRoom }) {
       <CreateRoomDialog
         open={isCreateRoomDialogOpen}
         onClose={handleCloseCreateRoomDialog}
+        setError={setError}
       />
     </Grid>
   );

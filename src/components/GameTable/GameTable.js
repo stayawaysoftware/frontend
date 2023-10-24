@@ -1,112 +1,196 @@
-import UserAvatar from "../UserAvatar/UserAvatar";
-import "./GameTable.css";
+import { useEffect, useState, useContext, useCallback } from "react";
+import { useParams } from "react-router-dom";
+
+import { CntTarget, CardHasTarget } from "../../utils/CardHandler";
+import { UserAvatar } from "../UserAvatar";
 import { UserContext } from "../../contexts/UserContext";
+import "./GameTable.css";
+import { useWebSocket } from "../../contexts/WebsocketContext";
 
-import React, { useEffect, useState, useContext } from "react";
+const GameTable = ({
+  playersTable,
+  currentTurn,
+  left_id,
+  right_id,
+  turnDefense,
+  isSomeoneBeingDefended,
+  turnPhase,
+}) => {
+  const { gameId } = useParams();
+  const {
+    userid,
+    targetsEnable,
+    clickedCard,
+    onCardClicked,
+    setPlayedCard,
+    setTargetId,
+  } = useContext(UserContext);
+  const [players, setPlayers] = useState([]);
+  const { websocket } = useWebSocket();
 
-const GameTable = ({ players_example, currentTurn, forceRender, forceRenderAlive }) => {
-  const { userid } = useContext(UserContext);
-  const [players, setPLayers] = useState([]);
+  const buildCircle = useCallback(
+    (players) => {
+      const num = players.length; //Number of Square to be generate
+      const type = 1;
+      let radius = "415"; //distance from center
+      let start = 169; //shift start from 0
+      let slice;
 
-  const buildCircle = (players) => {
-    const num = players.length; //Number of Square to be generate
-    const type = 1;
-    let radius = "415"; //distance from center
-    let start = 169; //shift start from 0
-    let slice;
+      switch (num) {
+        case 3:
+          slice = (200 * type) / num;
+          start = 203;
+          break;
+        case 4:
+          slice = (185 * type) / num;
+          start = 200;
+          break;
+        case 5:
+          slice = (200 * type) / num;
+          start = 190;
+          break;
+        case 6:
+          slice = (239 * type) / num;
+          break;
+        case 7:
+          slice = (236 * type) / num;
+          break;
+        case 8:
+          slice = (230 * type) / num;
+          break;
+        case 9:
+          slice = (227 * type) / num;
+          break;
+        case 10:
+          slice = (224 * type) / num;
+          break;
+        case 11:
+          slice = (222 * type) / num;
+          break;
+        default:
+          slice = (220 * type) / num;
+          break;
+      }
 
-    switch (num) {
-      case 3:
-        slice = (200 * type) / num;
-        start = 203;
-        break;
-      case 4:
-        slice = (185 * type) / num;
-        start = 200;
-        break;
-      case 5:
-        slice = (200 * type) / num;
-        start = 190;
-        break;
-      case 6:
-        slice = (239 * type) / num;
-        break;
-      case 7:
-        slice = (236 * type) / num;
-        break;
-      case 8:
-        slice = (230 * type) / num;
-        break;
-      case 9:
-        slice = (227 * type) / num;
-        break;
-      case 10:
-        slice = (224 * type) / num;
-        break;
-      case 11:
-        slice = (222 * type) / num;
-        break;
-      default:
-        slice = (220 * type) / num;
-        break;
-    }
+      let items = [];
+      let i;
+      for (i = 0; i < num; i++) {
+        let rotate = slice * i + start;
+        let rotateReverse = rotate * -1;
 
-    let items = [];
-    let i;
-    for (i = 0; i < num; i++) {
-      let rotate = slice * i + start;
-      let rotateReverse = rotate * -1;
-
-      items.push({
-        radius: radius,
-        rotate: rotate,
-        rotateReverse: rotateReverse,
-        name: players[i].name,
-        death: players[i].death,
-        turn: players[i].position === currentTurn, // si es el turno del usuario
-      });
-    }
-    setPLayers(items);
-  };
+        items.push({
+          style: {
+            radius: radius,
+            rotate: rotate,
+            rotateReverse: rotateReverse,
+          },
+          id: players[i].id,
+          name: players[i].name,
+          death: players[i].death,
+          turn: players[i].position === currentTurn, // si es el turno del usuario
+        });
+      }
+      setPlayers(items);
+    },
+    [currentTurn]
+  );
 
   useEffect(() => {
     const sortPlayers = () => {
       let sorted_players = [];
       let i;
-      players_example.sort((a, b) => {
+      playersTable.sort((a, b) => {
         return a.position - b.position;
       });
-      for (i = 0; i < players_example.length; i++) {
-        if (players_example[i].id === userid) {
-          // sorted_players.push(players_example[i]);
+      for (i = 0; i < playersTable.length; i++) {
+        if (playersTable[i].id === userid) {
+          // sorted_players.push(playersTable[i]);
           break;
         }
       }
       for (let j = i - 1; j >= 0; --j) {
-        if (players_example[j] === undefined) console.log("undefined " + j);
-        sorted_players.push(players_example[j]);
+        if (playersTable[j] === undefined) console.log("undefined " + j);
+        sorted_players.push(playersTable[j]);
       }
-      for (let j = players_example.length - 1; j > i; --j) {
-        if (players_example[j] === undefined) console.log("undefined " + j);
-        sorted_players.push(players_example[j]);
+      for (let j = playersTable.length - 1; j > i; --j) {
+        if (playersTable[j] === undefined) console.log("undefined " + j);
+        sorted_players.push(playersTable[j]);
       }
       buildCircle(sorted_players);
     };
     sortPlayers();
-  }, [forceRender, players_example, currentTurn, forceRenderAlive]);
+  }, [buildCircle, playersTable, userid]);
+
+  const handlePlayCard = (id) => {
+    if (websocket) {
+      const messageData = JSON.stringify({
+        type: "play",
+        played_card: clickedCard.id,
+        card_target: id,
+      });
+      websocket.send(messageData);
+    }
+    setPlayedCard(clickedCard);
+    onCardClicked(null);
+    setTargetId(id);
+  };
+
+  const handleExchange = (id) => {
+    if (websocket) {
+      const messageData = JSON.stringify({
+        type: "exchange",
+        target_player: id,
+        chosen_card: clickedCard.id,
+      });
+      websocket.send(messageData);
+    }
+  };
+
+  const getUserFunction = (id) => {
+    if (
+      targetsEnable &&
+      currentTurn === userid &&
+      !isSomeoneBeingDefended &&
+      turnPhase !== "Exchange"
+    ) {
+      if (
+        clickedCard &&
+        CardHasTarget(clickedCard.idtype) === CntTarget.ADJACENT
+      ) {
+        if (id === left_id || id === right_id) {
+          return () => handlePlayCard(id);
+        }
+      } else if (
+        clickedCard &&
+        CardHasTarget(clickedCard.idtype) === CntTarget.ALL
+      ) {
+        return () => handlePlayCard(id);
+      }
+    } else if (
+      turnPhase === "Exchange" &&
+      currentTurn === userid &&
+      clickedCard
+    ) {
+      return () => handleExchange(id);
+    }
+
+    return null;
+  };
 
   return (
     <div className="circle">
       {players.length ? (
         <div className="circle-hold">
-          {players.map(function (value, index) {
+          {players.map(({ id, name, death, turn, style }, index) => {
             return (
               <UserAvatar
-                css={value}
-                name={value.name}
-                key={index}
-                death={value.death}
-                turn={value.turn}
+                key={id}
+                css={{ ...style }}
+                name={name}
+                death={death}
+                turn={currentTurn === id}
+                onClick={getUserFunction(id)}
+                turnDefense={turnDefense === id}
               />
             );
           })}

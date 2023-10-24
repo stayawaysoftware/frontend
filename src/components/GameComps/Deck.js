@@ -7,6 +7,7 @@ const Deck= () => {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    perspective: "1000px",
   };
   
   return (
@@ -16,14 +17,15 @@ const Deck= () => {
           src={mazo}
           alt="mazo"
           style={{
-            width: "25%",
+            width: "24%",
             height: "auto",
             position: "relative",
             userSelect: "none",
             cursor: "pointer",
             border: "none",
             right: "20%",
-            bottom: "170px",
+            bottom: "310px",
+            transform: "rotateX(25deg)",
           }}
         />
       </div>
