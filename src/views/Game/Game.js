@@ -17,6 +17,7 @@ import GameChat from "../../components/Chat/GameChat";
 import { useWebSocket } from "../../contexts/WebsocketContext";
 import { IdToNameCard } from "../../utils/CardHandler";
 import { type } from "@testing-library/user-event/dist/type";
+import { ActionLog } from "../../components/ActionLog/ActionLog";
 
 const Game = () => {
   const { gameId } = useParams();
@@ -453,6 +454,7 @@ const Game = () => {
         )}
       </div>
       <GameChat />
+      <ActionLog />
     </div>
   );
 };
