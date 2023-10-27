@@ -18,6 +18,8 @@ const listOfActions = [
   { name1: "Player", action: "exchange", name2: "Jugador2" },
   { name1: "Jugador1", action: "new_turn", name2: "Jugador2" },
   { name1: "Jugador1", action: "discard", name2: null },
+  { name1: "Ignacho", action: 20, name2: "agustina morales" },
+  { name1: "mbappe", action: 14, name2: null },
 ];
 
 // function generateRandomString() {
@@ -62,7 +64,7 @@ function actionToDiv(action) {
         {/* text should be alligned at the center */}
         <Typography variant="h4" textAlign="center">
           {" "}
-          -- Nuevo turno --
+          ——— Nuevo turno ———
         </Typography>
       </Box>
     );
@@ -144,15 +146,28 @@ export function ActionLog() {
       ></Fab>
 
       <Drawer
-        // className={classes.drawer}
         variant="persistent"
         anchor="left"
         open={open}
+        PaperProps={{
+          sx: {
+            width: "fit-content",
+            height: "fit-page",
+            backgroundColor: "rgba(255, 255, 255, 0.5)",
+            backdropFilter: "blur(10px)",
+            overflowY: "auto",
+          },
+        }}
       >
         <h1> Historial de acciones </h1>
         <Button onClick={toggleDrawer}>Cerrar</Button>
 
-        <Box sx={{ flexGrow: 1, overflow: "auto", p: 2 }}>
+        <Box
+          sx={{
+            p: 2,
+            borderRadius: "8px",
+          }}
+        >
           {actionList.map((action, index) => (
             <Box
               key={index}
@@ -163,11 +178,10 @@ export function ActionLog() {
                 backgroundColor: "rgba(255, 255, 255, 0.5)",
                 marginLeft: "0",
                 wordWrap: "break-word",
-                width: "fit-content",
+                // width: "fit-content",
+                // flexGrow: 1,
               }}
             >
-              {/* {action.name1} {action.action} {action.name2}
-               */}
               {actionToDiv(action)}
             </Box>
           ))}
