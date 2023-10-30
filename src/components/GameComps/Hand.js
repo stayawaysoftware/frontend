@@ -15,7 +15,6 @@ const Hand = ({
 
   const isDefended = target_player === userid;
 
-
   const baseCardStyle = {
     width: "10%",
     height: "auto",
@@ -35,6 +34,18 @@ const Hand = ({
     boxShadow: "2px 2px 4px #FFFFF",
   };
 
+  const onClickedCard = ({ id, idtype, isDefenseCard }) => {
+    if (isSomeoneBeingDefended) {
+      if (isDefended && isDefenseCard) {
+        onCardClicked({ id, idtype });
+      } else {
+        onCardClicked(null);
+      }
+    } else {
+      onCardClicked({ id, idtype });
+    }
+  };
+
   return (
     <div>
       <div
@@ -49,12 +60,14 @@ const Hand = ({
           const isDefenseCard = defense.some(
             (elem) => isDefended && elem === idtype
           );
+          console.log(isDefenseCard);
           return (
             <Box
               key={`card-hand-${id}`}
               id={`card-hand-${index}`}
               sx={[
-                clickedCard?.id === id && clickedCard?.idtype !== 1 &&
+                clickedCard?.id === id &&
+                  clickedCard?.idtype !== 1 &&
                   (isSomeoneBeingDefended
                     ? isDefended && isDefenseCard
                       ? highlightedCardStyle
@@ -74,7 +87,7 @@ const Hand = ({
                   ...(isDefenseCard && auraStyle),
                 },
               ]}
-              onClick={() => onCardClicked({ id, idtype })}
+              onClick={() => onClickedCard({ id, idtype, isDefenseCard })}
             >
               <img
                 src={IdToAsset(idtype)}
