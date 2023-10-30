@@ -14,38 +14,15 @@ import { IdToAsset } from "../../utils/CardHandler";
 //listOfActions es un arreglo de tuplas {Nombre, Carta, Nombre}
 const listOfActions = [
   { name1: "Jugador1", action: 3, name2: "Jugador2" },
-  { name1: "Jugador1", action: 8, name2: null },
+  { name1: "gere", action: 3, name2: "Jugador2" },
+  { name1: "Benja", action: 8, name2: null },
   { name1: "Player", action: "exchange", name2: "Jugador2" },
   { name1: "Jugador1", action: "new_turn", name2: "Jugador2" },
   { name1: "Jugador1", action: "discard", name2: null },
   { name1: "Ignacho", action: 20, name2: "agustina morales" },
-  { name1: "mbappe", action: 14, name2: null },
+  { name1: "messi", action: 14, name2: null },
+  { name1: "omg", action: 5, name2: "nt" },
 ];
-
-// function generateRandomString() {
-//   const length = Math.floor(Math.random() * 9) + 4; // Genera una longitud aleatoria entre 4 y 12 caracteres
-//   const characters = "abcdefghijklmnopqrstuvwxyz";
-//   let result = "";
-//   const charactersLength = characters.length;
-
-//   for (let i = 0; i < length; i++) {
-//     const randomIndex = Math.floor(Math.random() * charactersLength);
-//     result += characters.charAt(randomIndex);
-//   }
-
-//   return result;
-// }
-
-// function newRandomAction() {
-//   const randomUser1 = generateRandomString();
-//   const randomUser2 = generateRandomString();
-//   const randomAction = Math.floor(Math.random() * 31) + 1;
-//   return {
-//     name1: randomUser1,
-//     action: actionToImg(randomAction),
-//     name2: randomUser2,
-//   };
-// }
 
 function actionToDiv(action) {
   //las acciones son de la siguiente manera:
@@ -62,9 +39,12 @@ function actionToDiv(action) {
     return (
       <Box display="flex" alignItems="center" justifyContent="center">
         {/* text should be alligned at the center */}
-        <Typography variant="h4" textAlign="center">
-          {" "}
-          ——— Nuevo turno ———
+        <Typography
+          variant="h4"
+          textAlign="center"
+          style={{ color: "#455c28" }}
+        >
+          —— Nuevo turno ——
         </Typography>
       </Box>
     );
@@ -79,7 +59,6 @@ function actionToDiv(action) {
   } else if (action.action >= 1 && action.action <= 31) {
     //action is a card
     name1 = action.name1;
-    // name2 = action.name2 if is not null
     name2 = action.name2;
 
     middleImage = (
@@ -87,8 +66,9 @@ function actionToDiv(action) {
         src={IdToAsset(action.action)}
         alt={`${action.action + 1}`}
         style={{
-          width: "100px",
+          width: "80px",
           height: "auto",
+          margin: "0 16px",
         }}
       />
     );
@@ -96,9 +76,9 @@ function actionToDiv(action) {
 
   return (
     <Box display="flex" alignItems="center" justifyContent="center">
-      <Typography variant="h4">{name1}</Typography>
+      <Typography variant="h5">{name1}</Typography>
       {middleImage}
-      <Typography variant="h4">{name2}</Typography>
+      <Typography variant="h5">{name2}</Typography>
     </Box>
   );
 }
@@ -134,17 +114,6 @@ export function ActionLog() {
       >
         <FormatListBulletedIcon />
       </Fab>
-      {/* fab for calling addNewAction */}
-      <Fab
-        color="success"
-        style={{
-          position: "fixed",
-          right: "16px",
-          bottom: "50%",
-        }}
-        // onClick={() => addNewAction(newRandomAction())}
-      ></Fab>
-
       <Drawer
         variant="persistent"
         anchor="left"
@@ -152,20 +121,28 @@ export function ActionLog() {
         PaperProps={{
           sx: {
             width: "fit-content",
-            height: "fit-page",
+            // height: "fit-page",
             backgroundColor: "rgba(255, 255, 255, 0.5)",
             backdropFilter: "blur(10px)",
-            overflowY: "auto",
+            // overflowY: "auto",
           },
         }}
       >
         <h1> Historial de acciones </h1>
-        <Button onClick={toggleDrawer}>Cerrar</Button>
-
+        <Button
+          variant="contained"
+          size="small"
+          color="success"
+          onClick={toggleDrawer}
+        >
+          Cerrar
+        </Button>
         <Box
           sx={{
             p: 2,
             borderRadius: "8px",
+            height: "fit-page",
+            overflowY: "auto",
           }}
         >
           {actionList.map((action, index) => (
@@ -178,8 +155,6 @@ export function ActionLog() {
                 backgroundColor: "rgba(255, 255, 255, 0.5)",
                 marginLeft: "0",
                 wordWrap: "break-word",
-                // width: "fit-content",
-                // flexGrow: 1,
               }}
             >
               {actionToDiv(action)}
