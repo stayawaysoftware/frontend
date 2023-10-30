@@ -1,10 +1,8 @@
-// import * as React from "react";
 import { useContext } from "react";
 import List from "@mui/material/List";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import ListItem from "@mui/material/ListItem";
-//importar websocket
 import { useWebSocket } from "../../contexts/WebsocketContext";
 import { UserContext } from "../../contexts/UserContext";
 
@@ -32,8 +30,9 @@ const Buttons = ({
   const isTurn = current_player === userid && !isDefended;
   const isCardClicked = clickedCard !== null && !targetsEnable;
   const exchangeEnabled =
-    ((isTurn && isCardClicked) || target_player === userid) &&
-    (turnPhase === "Exchange" || turnPhase === "Exchange_defense");
+    turnPhase === "Exchange" || turnPhase === "Exchange_defense";
+  const exchangeEnabledDefense =
+    target_player === userid && !isDefended && exchangeEnabled && clickedCard;
 
   const playEnabled =
     (isTurn && isCardClicked && !exchangeEnabled) ||
@@ -148,7 +147,11 @@ const Buttons = ({
               }
               color="success"
             >
-              Jugar Carta
+              {isDefended
+                ? clickedCard
+                  ? "Defender"
+                  : "No defenderte"
+                : "Jugar Carta"}
             </Button>
           </ListItem>
           <ListItem>
@@ -157,7 +160,7 @@ const Buttons = ({
               style={{
                 width: "19%",
               }}
-              disabled={!exchangeEnabled}
+              disabled={!exchangeEnabledDefense}
               onClick={handleExchangeDefense}
               color="success"
             >
