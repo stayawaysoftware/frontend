@@ -1,6 +1,5 @@
 import { useContext, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
-//import { useGame } from "../../hooks/useGame";
 import Hand from "../../components/GameComps/Hand";
 import Buttons from "../../components/GameComps/GameButtons";
 import image from "../Background/xd.svg";
@@ -16,7 +15,6 @@ import { UserContext } from "../../contexts/UserContext";
 import GameChat from "../../components/Chat/GameChat";
 import { useWebSocket } from "../../contexts/WebsocketContext";
 import { IdToNameCard } from "../../utils/CardHandler";
-import { type } from "@testing-library/user-event/dist/type";
 
 const Game = () => {
   const { gameId } = useParams();
@@ -253,18 +251,37 @@ const Game = () => {
           </Grid>
         )}
 
-        {userid === positionToId(current_turn) && !finished && (
-          <Alert
-            severity="success"
-            style={{
-              position: "absolute",
-              top: "5%",
-              left: "2%",
-            }}
-          >
-            Es tu turno, {players.find((player) => player.id === userid).name}!
-          </Alert>
-        )}
+        {userid === positionToId(current_turn) &&
+          !finished &&
+          turn_phase != "Exchange" && (
+            <Alert
+              severity="success"
+              style={{
+                position: "absolute",
+                top: "5%",
+                left: "2%",
+              }}
+            >
+              Es tu turno, {players.find((player) => player.id === userid).name}
+              !
+            </Alert>
+          )}
+
+        {userid === positionToId(current_turn) &&
+          !finished &&
+          turn_phase === "Exchange" && (
+            <Alert
+              severity="success"
+              style={{
+                position: "absolute",
+                top: "5%",
+                left: "2%",
+              }}
+            >
+              Fase de intercambio,{" "}
+              {players.find((player) => player.id === userid).name}!
+            </Alert>
+          )}
         {userid === card_target && turn_phase !== "Exchange" && !finished && (
           <Alert
             severity="warning"
@@ -287,7 +304,9 @@ const Game = () => {
               left: "2%",
             }}
           >
-            El jugador {exchange_requester} te ha solicitado intercambiar,{" "}
+            El jugador{" "}
+            {players.find((player) => player.id === exchange_requester).name} te
+            ha solicitado intercambiar,{" "}
             {players.find((player) => player.id === userid).name}!!
           </Alert>
         )}
