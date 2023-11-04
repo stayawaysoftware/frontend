@@ -1,6 +1,9 @@
 const puppeteer = require("puppeteer");
 const PAGE_URL = "http://localhost:3000";
 
+const args = process.argv.slice(2);
+const numTabs = args[0] || 3;
+
 (async () => {
   const browser = await puppeteer.launch({
     headless: false,
@@ -30,7 +33,7 @@ const PAGE_URL = "http://localhost:3000";
 
   // abrir 3 pestañas más
 
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < numTabs; i++) {
     const newPage = await browser.newPage();
     await newPage.goto(PAGE_URL);
 
