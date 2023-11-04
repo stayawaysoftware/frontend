@@ -72,6 +72,7 @@ export default function ButtonList({ setError }) {
               }}
               color="success"
               onClick={handleCreateRoomClick}
+              id="createGame"
             >
               Crear Sala
             </Button>
@@ -86,6 +87,7 @@ export default function ButtonList({ setError }) {
               }}
               color="success"
               onClick={handleJoinRoom}
+              id="joinRoom"
             >
               Unirse
             </Button>
