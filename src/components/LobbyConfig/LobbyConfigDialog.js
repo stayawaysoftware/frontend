@@ -124,7 +124,7 @@ export default function CreateRoomDialog({ open, onClose, setError }) {
             >
               <Box sx={{ display: "flex", alignItems: "flex-end" }}>
                 <TextField
-                  id="outlined-basic"
+                  id="roomName"
                   label="Nombre de la sala"
                   variant="standard"
                   color="success"
@@ -170,6 +170,7 @@ export default function CreateRoomDialog({ open, onClose, setError }) {
           disabled={!ValidForm(name)}
           color="success"
           variant="contained"
+          id="createRoom"
         >
           Crear Sala
         </Button>

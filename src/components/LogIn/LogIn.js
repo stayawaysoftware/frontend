@@ -89,6 +89,7 @@ export default function LogIn() {
                 placeholder="Username"
                 onChange={usernameHandler}
                 inputProps={{ "aria-label": "username" }}
+                id="username"
               />
             </Paper>
             <Button
