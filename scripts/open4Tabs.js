@@ -2,7 +2,8 @@ const puppeteer = require("puppeteer");
 const PAGE_URL = "http://localhost:3000";
 
 const args = process.argv.slice(2);
-const numTabs = args[0] || 3;
+// numtabs is max 12
+const numTabs = Math.min(args[0], 12) || 4;
 
 (async () => {
   const browser = await puppeteer.launch({
@@ -33,12 +34,12 @@ const numTabs = args[0] || 3;
 
   // abrir 3 pestañas más
 
-  for (let i = 0; i < numTabs; i++) {
+  for (let i = 0; i < numTabs - 1; i++) {
     const newPage = await browser.newPage();
     await newPage.goto(PAGE_URL);
 
     // Rellenar el formulario
-    await newPage.type("#username", "Parásito" + i); // Reemplaza con el ID o selector del campo de usuario
+    await newPage.type("#username", "Parásito" + (i + 2)); // Reemplaza con el ID o selector del campo de usuario
 
     // Hacer clic en un botón type sumbit
     await newPage.click("button[type=submit]"); // Reemplaza con el ID o selector del botón de submit
