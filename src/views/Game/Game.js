@@ -19,8 +19,14 @@ import { ActionLog } from "../../components/ActionLog/ActionLog";
 
 const Game = () => {
   const { gameId } = useParams();
-  const { userid, playedCard, setPlayedCard, targetId, setClickedCard } =
-    useContext(UserContext);
+  const {
+    userid,
+    playedCard,
+    setPlayedCard,
+    targetId,
+    setClickedCard,
+    setIsExchangePhase,
+  } = useContext(UserContext);
 
   //game data
   const [finished, setFinished] = useState(false);
@@ -120,6 +126,11 @@ const Game = () => {
       setTurnPhase(json.game.turn_phase);
       setTurnOrder(json.game.turn_order);
       setIsLoading(false);
+      if (json.game.turn_phase === "Exchange") {
+        setIsExchangePhase(true);
+        console.log("es fase de intercambio");
+      }
+
       if (json.game.status === "Finished") {
         setFinished(true);
         setWinner(json.game.winners);
@@ -192,6 +203,7 @@ const Game = () => {
       setDefendedBy([]);
       setLastChosenCard(null);
       setExchangeRequester(null);
+      setIsExchangePhase(false);
     } else if (json.type === "show_card") {
       const targetArray = json.target;
 
@@ -423,6 +435,7 @@ const Game = () => {
                     defense={defended_by}
                     target_player={card_target}
                     isSomeoneBeingDefended={isSomeoneBeingDefended}
+                    role={players.find((player) => player.id === userid).role}
                   />
                 </Grid>
                 <Box

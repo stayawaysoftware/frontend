@@ -1,19 +1,24 @@
-import { useState, useContext } from "react";
+import { useContext } from "react";
 
 import { Box } from "@mui/material";
 
 import { UserContext } from "../../contexts/UserContext";
-import { IdToAsset } from "../../utils/CardHandler";
+import { IdToAsset, isCardPlaylable } from "../../utils/CardHandler";
 
 const Hand = ({
   cardList = [],
   defense,
   target_player,
   isSomeoneBeingDefended,
+  role,
 }) => {
-  const { clickedCard, onCardClicked, userid } = useContext(UserContext);
+  const { clickedCard, onCardClicked, userid, isExchangePhase } =
+    useContext(UserContext);
 
   const isDefended = target_player === userid;
+  const isDefensePhase = isSomeoneBeingDefended && isDefended;
+  let canExchangeInfected = false; // si el rol es infectado, tiene q tener al menos de cartas de Infected
+  let infectedCards = 0;
 
   const baseCardStyle = {
     width: "10%",
@@ -35,14 +40,27 @@ const Hand = ({
   };
 
   const onClickedCard = ({ id, idtype, isDefenseCard }) => {
-    if (isSomeoneBeingDefended) {
-      if (isDefended && isDefenseCard) {
-        onCardClicked({ id, idtype });
-      } else {
-        onCardClicked(null);
-      }
+    console.log("isExchangePhase: ", isExchangePhase);
+    if (
+      !isCardPlaylable(
+        idtype,
+        isExchangePhase,
+        role,
+        isDefensePhase,
+        canExchangeInfected
+      )
+    ) {
+      onCardClicked(null);
     } else {
-      onCardClicked({ id, idtype });
+      if (isSomeoneBeingDefended) {
+        if (isDefended && isDefenseCard) {
+          onCardClicked({ id, idtype });
+        } else {
+          onCardClicked(null);
+        }
+      } else {
+        onCardClicked({ id, idtype });
+      }
     }
   };
 
@@ -60,14 +78,23 @@ const Hand = ({
           const isDefenseCard = defense.some(
             (elem) => isDefended && elem === idtype
           );
-          console.log(isDefenseCard);
+          if (role === "Infected") {
+            if (idtype === 2) infectedCards++;
+            if (infectedCards >= 2) canExchangeInfected = true;
+          }
           return (
             <Box
               key={`card-hand-${id}`}
               id={`card-hand-${index}`}
               sx={[
                 clickedCard?.id === id &&
-                  clickedCard?.idtype !== 1 &&
+                  !isCardPlaylable(
+                    idtype,
+                    isExchangePhase,
+                    role,
+                    isDefensePhase,
+                    canExchangeInfected
+                  ) &&
                   (isSomeoneBeingDefended
                     ? isDefended && isDefenseCard
                       ? highlightedCardStyle
@@ -77,7 +104,15 @@ const Hand = ({
                   ...baseCardStyle,
                   right: `${10 + index * 30}px`,
                   "&:hover": {
-                    ...(isSomeoneBeingDefended
+                    ...(!isCardPlaylable(
+                      idtype,
+                      isExchangePhase,
+                      role,
+                      isDefensePhase,
+                      canExchangeInfected
+                    )
+                      ? {}
+                      : isSomeoneBeingDefended
                       ? isDefended && isDefenseCard
                         ? highlightedCardStyle
                         : {}

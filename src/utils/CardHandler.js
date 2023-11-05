@@ -166,3 +166,52 @@ export function CardHasTarget(id) {
   // console.log("la id es", id);
   return cardTargets[id];
 }
+
+export function isCardPlaylable(
+  idtype,
+  isExchangePhase,
+  role,
+  isDefensePhase,
+  canExchangeInfected
+) {
+  let isPlaylable = false;
+  const cardAssets = {
+    1: false,
+    2:
+      isExchangePhase &&
+      (role === "The Thing" || (role === "Infected" && canExchangeInfected)),
+    3: true,
+    4: true,
+    5: true,
+    6: true,
+    7: true,
+    8: true,
+    9: true,
+    10: true,
+    11: true,
+    12: true,
+    13: isDefensePhase || isExchangePhase,
+    14: isDefensePhase || isExchangePhase,
+    15: isDefensePhase || isExchangePhase,
+    16: isDefensePhase || isExchangePhase,
+    17: isDefensePhase || isExchangePhase,
+    18: true,
+    19: true,
+    20: true,
+    21: true,
+    22: true,
+    23: true,
+    24: true,
+    25: true,
+    26: true,
+    27: true,
+    28: true,
+    29: true,
+    30: true,
+    31: true,
+  };
+
+  isPlaylable = cardAssets[idtype];
+
+  return isPlaylable;
+}
