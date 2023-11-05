@@ -11,6 +11,8 @@ const Hand = ({
   target_player,
   isSomeoneBeingDefended,
   role,
+  isPlayPhase,
+  cardTargetRole,
 }) => {
   const { clickedCard, onCardClicked, userid, isExchangePhase } =
     useContext(UserContext);
@@ -19,6 +21,7 @@ const Hand = ({
   const isDefensePhase = isSomeoneBeingDefended && isDefended;
   let canExchangeInfected = false; // si el rol es infectado, tiene q tener al menos de cartas de Infected
   let infectedCards = 0;
+  console.log("isPlayPhase", isPlayPhase);
 
   const baseCardStyle = {
     width: "10%",
@@ -40,14 +43,14 @@ const Hand = ({
   };
 
   const onClickedCard = ({ id, idtype, isDefenseCard }) => {
-    console.log("isExchangePhase: ", isExchangePhase);
     if (
       !isCardPlaylable(
         idtype,
         isExchangePhase,
         role,
         isDefensePhase,
-        canExchangeInfected
+        canExchangeInfected,
+        isPlayPhase
       )
     ) {
       onCardClicked(null);
@@ -80,7 +83,13 @@ const Hand = ({
           );
           if (role === "Infected") {
             if (idtype === 2) infectedCards++;
-            if (infectedCards >= 2) canExchangeInfected = true;
+            if (infectedCards >= 2) {
+              if (cardTargetRole === "The Thing" && isDefended) {
+                canExchangeInfected = true;
+              } else if (!isDefended) {
+                canExchangeInfected = true;
+              }
+            }
           }
           return (
             <Box
@@ -93,7 +102,8 @@ const Hand = ({
                     isExchangePhase,
                     role,
                     isDefensePhase,
-                    canExchangeInfected
+                    canExchangeInfected,
+                    isPlayPhase
                   ) &&
                   (isSomeoneBeingDefended
                     ? isDefended && isDefenseCard
@@ -109,7 +119,8 @@ const Hand = ({
                       isExchangePhase,
                       role,
                       isDefensePhase,
-                      canExchangeInfected
+                      canExchangeInfected,
+                      isPlayPhase
                     )
                       ? {}
                       : isSomeoneBeingDefended

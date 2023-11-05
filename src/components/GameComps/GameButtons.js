@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import ListItem from "@mui/material/ListItem";
 import { useWebSocket } from "../../contexts/WebsocketContext";
 import { UserContext } from "../../contexts/UserContext";
+import { isCardPlaylable } from "../../utils/CardHandler";
 
 const Buttons = ({
   current_player,
@@ -33,10 +34,22 @@ const Buttons = ({
     turnPhase === "Exchange" || turnPhase === "Exchange_defense";
   const exchangeEnabledDefense =
     target_player === userid && !isDefended && exchangeEnabled && clickedCard;
-
+  if (clickedCard) {
+    console.log(
+      "isCardPlaylable",
+      isCardPlaylable(clickedCard.idtype, false, "", false, false, false)
+    );
+  }
   const playEnabled =
-    (isTurn && isCardClicked && !exchangeEnabled) ||
-    (isCardTarget && isCardClicked && isTurn && !exchangeEnabled) ||
+    (isTurn &&
+      isCardClicked &&
+      !exchangeEnabled &&
+      isCardPlaylable(clickedCard.idtype, false, "", false, false, false)) ||
+    (isCardTarget &&
+      isCardClicked &&
+      isTurn &&
+      !exchangeEnabled &&
+      isCardPlaylable(clickedCard.idtype, false, "", false, false, false)) ||
     (isDefended && target_player === userid);
 
   const playEnabledDisc =

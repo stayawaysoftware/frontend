@@ -124,11 +124,12 @@ export const CntTarget = Object.freeze({
   NONE: 0,
   ADJACENT: 1,
   ALL: 2,
+  THE_THING: 3,
 });
 
 const cardTargets = {
   1: CntTarget.NONE,
-  2: CntTarget.NONE,
+  2: CntTarget.THE_THING,
   3: CntTarget.ADJACENT,
   4: CntTarget.ADJACENT,
   5: CntTarget.ADJACENT, // hacha: a vos mismo o adjacente
@@ -172,14 +173,17 @@ export function isCardPlaylable(
   isExchangePhase,
   role,
   isDefensePhase,
-  canExchangeInfected
+  canExchangeInfected,
+  isPlayPhase
 ) {
   let isPlaylable = false;
   const cardAssets = {
     1: false,
     2:
-      isExchangePhase &&
-      (role === "The Thing" || (role === "Infected" && canExchangeInfected)),
+      (isExchangePhase &&
+        (role === "The Thing" ||
+          (role === "Infected" && canExchangeInfected))) ||
+      isPlayPhase,
     3: true,
     4: true,
     5: true,
@@ -190,11 +194,11 @@ export function isCardPlaylable(
     10: true,
     11: true,
     12: true,
-    13: isDefensePhase || isExchangePhase,
-    14: isDefensePhase || isExchangePhase,
-    15: isDefensePhase || isExchangePhase,
-    16: isDefensePhase || isExchangePhase,
-    17: isDefensePhase || isExchangePhase,
+    13: isDefensePhase || isExchangePhase || isPlayPhase,
+    14: isDefensePhase || isExchangePhase || isPlayPhase,
+    15: isDefensePhase || isExchangePhase || isPlayPhase,
+    16: isDefensePhase || isExchangePhase || isPlayPhase,
+    17: isDefensePhase || isExchangePhase || isPlayPhase,
     18: true,
     19: true,
     20: true,

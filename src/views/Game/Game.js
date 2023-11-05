@@ -48,6 +48,7 @@ const Game = () => {
   const [carsToShow, setCarsToShow] = useState([]);
   const [player_name, setPlayerName] = useState(null);
   const [winner, setWinner] = useState(null);
+  const [isPlayPhase, setIsPlayPhase] = useState(false);
 
   const { websocket } = useWebSocket();
   const [isLoading, setIsLoading] = useState(true);
@@ -129,6 +130,8 @@ const Game = () => {
       if (json.game.turn_phase === "Exchange") {
         setIsExchangePhase(true);
         console.log("es fase de intercambio");
+      } else {
+        setIsPlayPhase(true);
       }
 
       if (json.game.status === "Finished") {
@@ -153,6 +156,7 @@ const Game = () => {
       setTurnPhase(json.turn_phase);
     } else if (json.type === "try_defense") {
       setLastPlayedCard(json.played_card);
+      setIsPlayPhase(false);
       if (json.target_player === 0 && last_played_card !== null) {
         if (last_played_card === null) {
           const messageData = JSON.stringify({
@@ -180,6 +184,7 @@ const Game = () => {
       setIsSomeoneBeingDefended(false);
       setCardTarget(null);
       setDefendedBy([]);
+      setIsPlayPhase(false);
       if (json.target_player === 0 || json.played_defense === 0) {
         setShowPlayedCard(json.last_played_card.idtype);
       } else {
@@ -353,6 +358,9 @@ const Game = () => {
               isSomeoneBeingDefended={isSomeoneBeingDefended}
               turnExchange={card_target}
               turnPhase={turn_phase}
+              the_thing_id={
+                players.find((player) => player.role === "The Thing").id
+              }
             />
             <Box>
               <Grid
@@ -436,6 +444,17 @@ const Game = () => {
                     target_player={card_target}
                     isSomeoneBeingDefended={isSomeoneBeingDefended}
                     role={players.find((player) => player.id === userid).role}
+                    isPlayPhase={isPlayPhase}
+                    cardTargetRole={
+                      card_target !== null && exchange_requester !== null
+                        ? card_target !== userid
+                          ? players.find((player) => player.id === card_target)
+                              .role
+                          : players.find(
+                              (player) => player.id === exchange_requester
+                            ).role
+                        : null
+                    }
                   />
                 </Grid>
                 <Box
