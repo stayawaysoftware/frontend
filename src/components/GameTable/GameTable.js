@@ -15,6 +15,7 @@ const GameTable = ({
   turnDefense,
   isSomeoneBeingDefended,
   turnPhase,
+  the_thing_id,
 }) => {
   const { gameId } = useParams();
   const {
@@ -165,6 +166,16 @@ const GameTable = ({
         CardHasTarget(clickedCard.idtype) === CntTarget.ALL
       ) {
         return () => handlePlayCard(id);
+      }
+    } else if (
+      turnPhase === "Exchange" &&
+      currentTurn === userid &&
+      the_thing_id !== userid &&
+      clickedCard &&
+      clickedCard.idtype === 2
+    ) {
+      if (id === the_thing_id) {
+        return () => handleExchange(id);
       }
     } else if (
       turnPhase === "Exchange" &&
