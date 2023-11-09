@@ -7,3 +7,25 @@ img {
   background-color: transparent;
   width: 30px;
 }
+
+.soga1 {
+  background: transparent;
+  background-color: transparent;
+  width: 115px;
+  z-index: 3;
+  position: relative;
+  top: 76px;
+  left: 52px;
+  transform: rotate(45deg);
+}
+
+.soga2 {
+  background: transparent;
+  background-color: transparent;
+  width: 115px;
+  z-index: 2;
+  position: relative;
+  top: 70px;
+  right: 57px;
+  transform: rotate(135deg);
+}

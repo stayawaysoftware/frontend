@@ -202,6 +202,7 @@ const GameTable = ({
                 turn={currentTurn === id}
                 onClick={getUserFunction(id)}
                 turnDefense={turnDefense === id}
+                quarentine={false}
               />
             );
           })}

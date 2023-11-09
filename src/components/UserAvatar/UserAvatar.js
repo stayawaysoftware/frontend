@@ -7,6 +7,7 @@ import { green, pink } from "@mui/material/colors";
 import "./UserAvatar.css";
 import crown from "../../assets/crown.png";
 import sword from "../../assets/sword.png";
+import soga from "../../assets/soga.png";
 
 export const UserAvatar = ({
   name,
@@ -15,6 +16,7 @@ export const UserAvatar = ({
   turn,
   onClick,
   turnDefense,
+  quarentine,
 }) => (
   <Stack
     direction="column"
@@ -63,14 +65,21 @@ export const UserAvatar = ({
         }}
       >
         {turn && (
-          <div className="turn">
+          <div style={quarentine ? { marginBottom: -70 } : {}}>
             <img src={crown} alt="crown" className="img" />
           </div>
         )}
 
         {turnDefense && (
-          <div className="turn">
+          <div style={quarentine ? { marginBottom: -70 } : {}}>
             <img src={sword} alt="sword" className="img" />
+          </div>
+        )}
+
+        {quarentine && (
+          <div className="cuarentine">
+            <img src={soga} alt="soga1" className="soga1" />
+            <img src={soga} alt="soga2" className="soga2" />
           </div>
         )}
 
