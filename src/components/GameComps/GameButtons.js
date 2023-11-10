@@ -30,6 +30,7 @@ const Buttons = ({
   const isCardTarget = target_player === targetId;
   const isTurn = current_player === userid && !isDefended;
   const isCardClicked = clickedCard !== null && !targetsEnable;
+  const isCardWithTargetClicked = clickedCard !== null && targetsEnable;
   const exchangeEnabled =
     turnPhase === "Exchange" || turnPhase === "Exchange_defense";
   const exchangeEnabledDefense =
@@ -52,8 +53,15 @@ const Buttons = ({
       isCardPlaylable(clickedCard.idtype, false, "", false, false, false)) ||
     (isDefended && target_player === userid);
 
-  const playEnabledDisc =
-    isTurn && isCardClicked && !isDefended && !exchangeEnabled;
+    const playEnabledDisc =
+    (isTurn &&
+      isCardClicked &&
+      !isDefended &&
+      !exchangeEnabled) ||
+    (isTurn &&
+      isCardWithTargetClicked &&
+      !isDefended &&
+      !exchangeEnabled);
 
   const handlePlayCard = () => {
     if (websocket) {
