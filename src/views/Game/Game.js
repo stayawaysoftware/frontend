@@ -200,6 +200,15 @@ const Game = () => {
     } else if (json.type === "discard") {
       setShowPlayedCard(json.played_card.idtype);
       setTurnPhase(json.turn_phase);
+
+      setActionList((actionList) => [
+        ...actionList,
+        createAction(
+          positionToName(current_turn),
+          "discard",
+          null //should be null
+        ),
+      ]);
     } else if (json.type === "try_defense") {
       setLastPlayedCard(json.played_card);
       setIsPlayPhase(false);
