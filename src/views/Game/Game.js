@@ -152,7 +152,6 @@ const Game = () => {
 
       // un nuevo turno se da cuando la fase de turn es Draw
       if (json.game.turn_phase === "Draw") {
-        // if (!actionList) {
         setActionList((actionList) => [
           ...actionList,
           createAction(
@@ -162,7 +161,6 @@ const Game = () => {
           ),
         ]);
         console.log(actionList);
-        // }
       }
 
       if (json.game.turn_phase === "Exchange") {

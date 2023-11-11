@@ -57,11 +57,11 @@ function actionToDiv(action) {
     );
   } else if (action.action === "exchange") {
     name1 = action.name1;
-    middleImage = <CompareArrowsIcon sx={{ fontSize: "100px" }} />;
+    middleImage = <CompareArrowsIcon sx={{ fontSize: "80px" }} />;
     name2 = action.name2;
   } else if (action.action === "discard") {
     name1 = action.name1;
-    middleImage = <DeleteIcon sx={{ fontSize: "100px" }} />;
+    middleImage = <DeleteIcon sx={{ fontSize: "80px" }} />;
     name2 = null;
   } else if (action.action >= 1 && action.action <= 31) {
     //action is a card
@@ -73,7 +73,7 @@ function actionToDiv(action) {
         src={IdToAsset(action.action)}
         alt={`${action.action + 1}`}
         style={{
-          width: "80px",
+          width: "70px",
           height: "auto",
           margin: "0 16px",
         }}
