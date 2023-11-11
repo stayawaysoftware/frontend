@@ -25,6 +25,9 @@ import { IdToAsset } from "../../utils/CardHandler";
 // ];
 
 export function createAction(name1, action, name2) {
+  if (name1 === name2) {
+    name2 = null;
+  }
   return { name1: name1, action: action, name2: name2 };
 }
 
