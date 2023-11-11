@@ -8,6 +8,47 @@ img {
   width: 30px;
 }
 
+.image {
+  background: transparent;
+  background-color: transparent;
+  width: 40px;
+}
+
+.cuarentena {
+  background: transparent;
+  background-color: transparent;
+  width: 98px;
+  height: 98px;
+  transform: rotate(45deg);
+}
+
+.row {
+  content: "";
+  clear: both;
+  display: table;
+  display: flex;
+}
+
+.column {
+  float: left;
+  padding: 7px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.column2 {
+  float: left;
+  padding: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lock {
+  font-size: 20;
+}
+
 .soga1 {
   background: transparent;
   background-color: transparent;
