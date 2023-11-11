@@ -16,7 +16,6 @@ import GameChat from "../../components/Chat/GameChat";
 import { useWebSocket } from "../../contexts/WebsocketContext";
 import { IdToNameCard } from "../../utils/CardHandler";
 import { ActionLog, createAction } from "../../components/ActionLog/ActionLog";
-import { act } from "react-dom/test-utils";
 
 const Game = () => {
   const { gameId } = useParams();

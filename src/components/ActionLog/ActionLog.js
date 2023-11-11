@@ -102,10 +102,6 @@ export function ActionLog({ listOfActions }) {
     setOpen(!open);
   };
 
-  // const addNewAction = (newAction) => {
-  //   setActionList([...actionList, newAction]);
-  // };
-
   return (
     <div>
       <Fab
