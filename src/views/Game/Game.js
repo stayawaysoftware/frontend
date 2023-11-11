@@ -15,7 +15,7 @@ import { UserContext } from "../../contexts/UserContext";
 import GameChat from "../../components/Chat/GameChat";
 import { useWebSocket } from "../../contexts/WebsocketContext";
 import { IdToNameCard } from "../../utils/CardHandler";
-import { ActionLog } from "../../components/ActionLog/ActionLog";
+import { ActionLog, createAction } from "../../components/ActionLog/ActionLog";
 
 const Game = () => {
   const { gameId } = useParams();
@@ -52,6 +52,7 @@ const Game = () => {
 
   const { websocket } = useWebSocket();
   const [isLoading, setIsLoading] = useState(true);
+  const [actionList, setActionList] = useState([]);
 
   const tableData = players
     ? players.map((player) => ({
@@ -118,6 +119,26 @@ const Game = () => {
     }
   };
 
+  const userIdToName = (id) => {
+    let name = null;
+    players?.forEach((player) => {
+      if (player.id === id) {
+        name = player.name;
+      }
+    });
+    return name;
+  };
+
+  const positionToName = (position) => {
+    let name = null;
+    players?.forEach((player) => {
+      if (player.round_position === position) {
+        name = player.name;
+      }
+    });
+    return name;
+  };
+
   function onGameMessage(event) {
     const json = JSON.parse(event.data);
     console.log("Mensaje recibido en game: ", json);
@@ -151,6 +172,16 @@ const Game = () => {
     } else if (json.type === "play") {
       setShowPlayedCard(json.played_card.idtype);
       setCardTarget(json.card_player);
+
+      setActionList((actionList) => [
+        ...actionList,
+        createAction(
+          positionToName(current_turn),
+          json.played_card.idtype,
+          userIdToName(json.card_target)
+        ),
+      ]);
+      console.log("actionList: ", actionList);
     } else if (json.type === "discard") {
       setShowPlayedCard(json.played_card.idtype);
       setTurnPhase(json.turn_phase);
@@ -505,7 +536,7 @@ const Game = () => {
         )}
       </div>
       <GameChat />
-      <ActionLog />
+      <ActionLog listOfActions={actionList} />
     </div>
   );
 };
