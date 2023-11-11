@@ -48,7 +48,7 @@ function actionToDiv(action) {
           textAlign="center"
           style={{ color: "#455c28" }}
         >
-          —— Nuevo turno ——
+          Turno de {action.name1}
         </Typography>
       </Box>
     );

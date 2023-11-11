@@ -153,8 +153,13 @@ const Game = () => {
       if (json.game.turn_phase === "Draw") {
         setActionList((actionList) => [
           ...actionList,
-          createAction(positionToName(current_turn), "new_turn", null),
+          createAction(
+            positionToName(json.game.current_turn), //current player
+            "new_turn",
+            null //siempre debe ser null
+          ),
         ]);
+        console.log(actionList);
       }
 
       if (json.game.turn_phase === "Exchange") {
@@ -190,6 +195,7 @@ const Game = () => {
           userIdToName(json.card_target)
         ),
       ]);
+      console.log(actionList);
     } else if (json.type === "discard") {
       setShowPlayedCard(json.played_card.idtype);
       setTurnPhase(json.turn_phase);
