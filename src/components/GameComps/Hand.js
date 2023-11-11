@@ -35,10 +35,6 @@ const Hand = ({
     transform: "scale(1.1)",
   };
 
-  const auraStyle = {
-    boxShadow: "2px 2px 4px #FFFFF",
-  };
-
   const onClickedCard = ({ id, idtype, isDefenseCard }) => {
     if (
       !isCardPlaylable(
@@ -65,7 +61,9 @@ const Hand = ({
   };
 
   const isCardPlayableOnHover = ({ id, idtype, isDefenseCard }) => {
-    return (
+    return ((
+      !isDefended &&
+      !isDefenseCard &&
       isCardPlaylable(
         idtype,
         isExchangePhase,
@@ -73,7 +71,7 @@ const Hand = ({
         isDefensePhase,
         canExchangeInfected,
         isPlayPhase
-      ) ||
+      )) ||
       (isSomeoneBeingDefended &&
         isDefended &&
         isDefenseCard &&
@@ -124,10 +122,8 @@ const Hand = ({
                 right: `${10 + index * 30}px`,
                 "&:hover": {
                   ...(isCardPlayableOnHover({ id, idtype, isDefenseCard }) && highlightedCardStyle),
-                  ...(isSomeoneBeingDefended && isDefended && isDefenseCard && auraStyle),
                 },
                 ...(isClicked && highlightedCardStyle),
-                ...(isDefenseCard && auraStyle),
               }}
               onClick={() => onClickedCard({ id, idtype, isDefenseCard })}
             >
