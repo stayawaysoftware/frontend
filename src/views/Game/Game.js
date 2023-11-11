@@ -16,6 +16,7 @@ import GameChat from "../../components/Chat/GameChat";
 import { useWebSocket } from "../../contexts/WebsocketContext";
 import { IdToNameCard } from "../../utils/CardHandler";
 import { ActionLog, createAction } from "../../components/ActionLog/ActionLog";
+import { act } from "react-dom/test-utils";
 
 const Game = () => {
   const { gameId } = useParams();
@@ -244,6 +245,15 @@ const Game = () => {
       } else {
         // setPlayedDefense(json.played_defense);
         setShowPlayedCard(json.played_defense.idtype);
+
+        setActionList((actionList) => [
+          ...actionList,
+          createAction(
+            userIdToName(json.target_player), //el que defendio esta su id
+            json.played_defense.idtype,
+            positionToName(current_turn) // el atacante es el current turn
+          ),
+        ]);
       }
     } else if (json.type === "exchange") {
       setCardTarget(json.target_player);
@@ -255,6 +265,16 @@ const Game = () => {
       setLastChosenCard(json.last_chosen_card);
       setExchangeRequester(json.exchange_requester);
     } else if (json.type === "exchange_end") {
+      //add the action after the exchange
+      setActionList((actionList) => [
+        ...actionList,
+        createAction(
+          userIdToName(exchange_requester),
+          "exchange",
+          userIdToName(card_target)
+        ),
+      ]);
+
       setClickedCard(null);
       setPlayedCard(null);
       setIsSomeoneBeingDefended(false);
