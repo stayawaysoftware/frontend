@@ -148,6 +148,15 @@ const Game = () => {
       setTurnPhase(json.game.turn_phase);
       setTurnOrder(json.game.turn_order);
       setIsLoading(false);
+
+      // un nuevo turno se da cuando la fase de turn es Draw
+      if (json.game.turn_phase === "Draw") {
+        setActionList((actionList) => [
+          ...actionList,
+          createAction(positionToName(current_turn), "new_turn", null),
+        ]);
+      }
+
       if (json.game.turn_phase === "Exchange") {
         setIsExchangePhase(true);
         console.log("es fase de intercambio");
@@ -181,7 +190,6 @@ const Game = () => {
           userIdToName(json.card_target)
         ),
       ]);
-      console.log("actionList: ", actionList);
     } else if (json.type === "discard") {
       setShowPlayedCard(json.played_card.idtype);
       setTurnPhase(json.turn_phase);
@@ -204,6 +212,15 @@ const Game = () => {
             played_defense: 0,
             last_played_card: last_played_card.id,
           });
+          setActionList((actionList) => [
+            ...actionList,
+            createAction(
+              positionToName(current_turn),
+              json.played_card.idtype,
+              userIdToName(json.card_target)
+            ),
+          ]);
+
           websocket.send(messageData);
         }
       } else {
