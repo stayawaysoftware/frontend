@@ -9,6 +9,9 @@ import DescPile from "../../components/GameComps/DescPile";
 import FinishedAlert from "../../components/FinishedAlert/FinishedAlert";
 import Arrows from "../../components/GameComps/Arrows";
 import OpponentHandDialog from "../../components/OpponentHandDialog/OpponentHandDialog";
+import left_door from "../../assets/left_door.png";
+import right_door from "../../assets/right_door.png";
+import double_door from "../../assets/double_door.png";
 
 import { Box, Grid, Alert, Chip } from "@mui/material";
 import { UserContext } from "../../contexts/UserContext";
@@ -49,6 +52,7 @@ const Game = () => {
   const [player_name, setPlayerName] = useState(null);
   const [winner, setWinner] = useState(null);
   const [isPlayPhase, setIsPlayPhase] = useState(false);
+  const [door_locked, setDoorLocked] = useState(null);
 
   const { websocket } = useWebSocket();
   const [isLoading, setIsLoading] = useState(true);
@@ -438,6 +442,59 @@ const Game = () => {
                     marginTop: "-280px",
                   }}
                 >
+                  <div>
+                    {door_locked === -1 ? (
+                      <img
+                        src={left_door}
+                        alt="door"
+                        style={{
+                          background: "transparent",
+                          backgroundColor: "transparent",
+                          width: 40,
+                          marginBottom: 5,
+                          marginLeft: -620,
+                        }}
+                      />
+                    ) : door_locked === 1 ? (
+                      <img
+                        src={right_door}
+                        alt="door"
+                        style={{
+                          background: "transparent",
+                          backgroundColor: "transparent",
+                          width: 40,
+                          marginBottom: 5,
+                          marginRight: -400,
+                        }}
+                      />
+                    ) : door_locked === 2 ? (
+                      <>
+                        <img
+                          src={left_door}
+                          alt="door"
+                          style={{
+                            background: "transparent",
+                            backgroundColor: "transparent",
+                            width: 40,
+                            marginBottom: 5,
+                            marginRight: 500,
+                          }}
+                        />
+                        <img
+                          src={right_door}
+                          alt="door"
+                          style={{
+                            background: "transparent",
+                            backgroundColor: "transparent",
+                            width: 40,
+                            marginBottom: 5,
+                            marginRight: 120,
+                          }}
+                        />
+                      </>
+                    ) : null}
+                  </div>
+
                   <Hand
                     cardList={currentUserCardList}
                     defense={defended_by}
