@@ -28,6 +28,7 @@ const Game = () => {
     setPlayedCard,
     targetId,
     setClickedCard,
+    onCardClicked,
     setIsExchangePhase,
   } = useContext(UserContext);
 
@@ -53,6 +54,7 @@ const Game = () => {
   const [winner, setWinner] = useState(null);
   const [isPlayPhase, setIsPlayPhase] = useState(false);
   const [door_locked, setDoorLocked] = useState(null);
+  const [panicCard, setPanicCard] = useState(null);
 
   const { websocket } = useWebSocket();
   const [isLoading, setIsLoading] = useState(true);
@@ -512,6 +514,7 @@ const Game = () => {
                             ).role
                         : null
                     }
+                    panicCard={panicCard}
                   />
                 </Grid>
                 <Box

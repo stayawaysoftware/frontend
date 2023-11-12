@@ -13,6 +13,7 @@ const Hand = ({
   role,
   isPlayPhase,
   cardTargetRole,
+  panicCard,
 }) => {
   const { clickedCard, onCardClicked, userid, isExchangePhase } =
     useContext(UserContext);
@@ -21,7 +22,6 @@ const Hand = ({
   const isDefensePhase = isSomeoneBeingDefended && isDefended;
   let canExchangeInfected = false; // si el rol es infectado, tiene q tener al menos de cartas de Infected
   let infectedCards = 0;
-  console.log("isPlayPhase", isPlayPhase);
 
   const baseCardStyle = {
     width: "10%",
@@ -43,26 +43,32 @@ const Hand = ({
   };
 
   const onClickedCard = ({ id, idtype, isDefenseCard }) => {
-    if (
-      !isCardPlaylable(
-        idtype,
-        isExchangePhase,
-        role,
-        isDefensePhase,
-        canExchangeInfected,
-        isPlayPhase
-      )
-    ) {
-      onCardClicked(null);
-    } else {
-      if (isSomeoneBeingDefended) {
-        if (isDefended && isDefenseCard) {
-          onCardClicked({ id, idtype });
-        } else {
-          onCardClicked(null);
-        }
+    if (panicCard === null) {
+      if (
+        !isCardPlaylable(
+          idtype,
+          isExchangePhase,
+          role,
+          isDefensePhase,
+          canExchangeInfected,
+          isPlayPhase
+        )
+      ) {
+        onCardClicked(null);
       } else {
-        onCardClicked({ id, idtype });
+        if (isSomeoneBeingDefended) {
+          if (isDefended && isDefenseCard) {
+            onCardClicked({ id, idtype });
+          } else {
+            onCardClicked(null);
+          }
+        } else {
+          onCardClicked({ id, idtype });
+        }
+      }
+    } else {
+      if (panicCard.id !== id) {
+        onCardClicked(null);
       }
     }
   };
@@ -97,6 +103,7 @@ const Hand = ({
               id={`card-hand-${index}`}
               sx={[
                 clickedCard?.id === id &&
+                  panicCard === null &&
                   !isCardPlaylable(
                     idtype,
                     isExchangePhase,
@@ -114,20 +121,24 @@ const Hand = ({
                   ...baseCardStyle,
                   right: `${10 + index * 30}px`,
                   "&:hover": {
-                    ...(!isCardPlaylable(
-                      idtype,
-                      isExchangePhase,
-                      role,
-                      isDefensePhase,
-                      canExchangeInfected,
-                      isPlayPhase
-                    )
-                      ? {}
-                      : isSomeoneBeingDefended
-                      ? isDefended && isDefenseCard
-                        ? highlightedCardStyle
-                        : {}
-                      : highlightedCardStyle),
+                    ...(panicCard === null
+                      ? !isCardPlaylable(
+                          idtype,
+                          isExchangePhase,
+                          role,
+                          isDefensePhase,
+                          canExchangeInfected,
+                          isPlayPhase
+                        )
+                        ? {}
+                        : isSomeoneBeingDefended
+                        ? isDefended && isDefenseCard
+                          ? highlightedCardStyle
+                          : {}
+                        : highlightedCardStyle
+                      : panicCard.id === id
+                      ? highlightedCardStyle
+                      : {}),
                     ...(isDefenseCard && auraStyle),
                   },
                   ...(isDefenseCard && auraStyle),
