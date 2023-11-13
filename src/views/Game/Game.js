@@ -188,10 +188,16 @@ const Game = () => {
     } else if (json.type === "new_turn") {
       setCurrentTurn(json.current_turn);
     } else if (json.type === "draw") {
+      if (json.card_type === "Panic") {
+        setPanicCard(json.new_card);
+      } else {
+        setPanicCard(null);
+      }
       setNewCard(json.new_card);
     } else if (json.type === "play") {
       setShowPlayedCard(json.played_card.idtype);
       setCardTarget(json.card_player);
+      setPanicCard(null);
 
       setActionList((actionList) => [
         ...actionList,
@@ -254,6 +260,7 @@ const Game = () => {
       setCardTarget(null);
       setDefendedBy([]);
       setIsPlayPhase(false);
+      setPanicCard(null);
       if (json.target_player === 0 || json.played_defense === 0) {
         setShowPlayedCard(json.last_played_card.idtype);
       } else {
@@ -291,6 +298,7 @@ const Game = () => {
 
       setClickedCard(null);
       setPlayedCard(null);
+      setPanicCard(null);
       setIsSomeoneBeingDefended(false);
       setCardTarget(null);
       setDefendedBy([]);
