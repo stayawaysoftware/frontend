@@ -216,6 +216,7 @@ const Room = () => {
               </List>
               {/* leave button */}
               <Button
+                id="leaveButton"
                 variant="contained"
                 size="small"
                 color="error"
