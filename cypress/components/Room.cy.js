@@ -4,8 +4,6 @@ import { UserContext, UserProvider } from "../../src/contexts/UserContext";
 import { WebsocketContextProvider } from "../../src/contexts/WebsocketContext";
 import { BrowserRouter } from "react-router-dom";
 
-const sinon = require("sinon");
-
 const userContextValue = {
   username: "Tester",
   // setUserName: jest.fn(),
