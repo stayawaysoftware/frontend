@@ -61,8 +61,6 @@ const Game = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [actionList, setActionList] = useState([]);
 
-  console.log("door locked: ", door_locked);
-
   const tableData = players
     ? players.map((player) => ({
         id: player.id,
@@ -194,22 +192,18 @@ const Game = () => {
               json.game.locked_doors[i - 1] === 1 &&
               json.game.locked_doors[i] === 1
             ) {
-              console.log("a");
               setDoorLocked(2);
             } else if (
               json.game.locked_doors[i - 1] === 1 &&
               json.game.locked_doors[i] === 0
             ) {
-              console.log("B");
               setDoorLocked(-1);
             } else if (
               json.game.locked_doors[i - 1] === 0 &&
               json.game.locked_doors[i] === 1
             ) {
-              console.log("C");
               setDoorLocked(1);
             } else {
-              console.log("D");
               setDoorLocked(false);
             }
           }

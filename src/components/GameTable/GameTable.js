@@ -108,8 +108,6 @@ const GameTable = ({
           }
         }
 
-        console.log(cnt_door_locked);
-
         items.push({
           style: {
             radius: radius,
@@ -126,7 +124,7 @@ const GameTable = ({
       }
       setPlayers(items);
     },
-    [currentTurn]
+    [currentTurn, door_locked]
   );
 
   useEffect(() => {
@@ -164,6 +162,9 @@ const GameTable = ({
       });
       websocket.send(messageData);
     }
+    console.log("card played", clickedCard);
+    console.log("target", id);
+
     setPlayedCard(clickedCard);
     onCardClicked(null);
     setTargetId(id);
