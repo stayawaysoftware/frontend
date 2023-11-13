@@ -174,7 +174,6 @@ describe("<ActionLog />", () => {
     cy.get("#actionLogDrawer").should("exist");
     cy.get("#actionLogBox").should("exist").children().should("have.length", 2);
 
-    //names "Cambio1" and "Cambio2" should be visible
     cy.get("#actionLogBox").should("contain", "Jugador1");
 
     //look for data-testid="DeleteIcon", Delete Icon
