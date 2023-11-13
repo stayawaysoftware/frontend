@@ -16,6 +16,7 @@ const GameTable = ({
   isSomeoneBeingDefended,
   turnPhase,
   the_thing_id,
+  door_locked,
 }) => {
   const { gameId } = useParams();
   const {
@@ -79,6 +80,36 @@ const GameTable = ({
         let rotate = slice * i + start;
         let rotateReverse = rotate * -1;
 
+        let cnt_door_locked = 0;
+
+        for (let j = 1; j <= door_locked.length; j++) {
+          if (j === players[i].position) {
+            if (j === door_locked.length) {
+              if (door_locked[j - 1] === 1 && door_locked[0] === 1) {
+                cnt_door_locked = 2;
+              } else if (door_locked[j - 1] === 1 && door_locked[0] === 0) {
+                cnt_door_locked = 1;
+              } else if (door_locked[j - 1] === 0 && door_locked[0] === 1) {
+                cnt_door_locked = -1;
+              } else {
+                cnt_door_locked = 0;
+              }
+            } else {
+              if (door_locked[j - 1] === 1 && door_locked[j] === 1) {
+                cnt_door_locked = 2;
+              } else if (door_locked[j - 1] === 1 && door_locked[j] === 0) {
+                cnt_door_locked = 1;
+              } else if (door_locked[j - 1] === 0 && door_locked[j] === 1) {
+                cnt_door_locked = -1;
+              } else {
+                cnt_door_locked = 0;
+              }
+            }
+          }
+        }
+
+        console.log(cnt_door_locked);
+
         items.push({
           style: {
             radius: radius,
@@ -89,6 +120,8 @@ const GameTable = ({
           name: players[i].name,
           death: players[i].death,
           turn: players[i].position === currentTurn, // si es el turno del usuario
+          quarentine: players[i].quarentine,
+          cnt_door_locked: cnt_door_locked,
         });
       }
       setPlayers(items);
@@ -120,7 +153,7 @@ const GameTable = ({
       buildCircle(sorted_players);
     };
     sortPlayers();
-  }, [buildCircle, playersTable, userid]);
+  }, [buildCircle, playersTable, userid, door_locked]);
 
   const handlePlayCard = (id) => {
     if (websocket) {
@@ -192,21 +225,26 @@ const GameTable = ({
     <div className="circle">
       {players.length ? (
         <div className="circle-hold">
-          {players.map(({ id, name, death, turn, style }, index) => {
-            return (
-              <UserAvatar
-                key={id}
-                css={{ ...style }}
-                name={name}
-                death={death}
-                turn={currentTurn === id}
-                onClick={getUserFunction(id)}
-                turnDefense={turnDefense === id}
-                quarentine={false}
-                door_locked={0} // if -1 left door, if 1 right door, if 2 double door, if 0 or false no door
-              />
-            );
-          })}
+          {players.map(
+            (
+              { id, name, death, turn, quarentine, cnt_door_locked, style },
+              index
+            ) => {
+              return (
+                <UserAvatar
+                  key={id}
+                  css={{ ...style }}
+                  name={name}
+                  death={death}
+                  turn={currentTurn === id}
+                  onClick={getUserFunction(id)}
+                  turnDefense={turnDefense === id}
+                  quarentine={quarentine}
+                  door_locked={cnt_door_locked} // if -1 left door, if 1 right door, if 2 double door, if 0 or false no door
+                />
+              );
+            }
+          )}
         </div>
       ) : null}
     </div>
