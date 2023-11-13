@@ -23,7 +23,6 @@ const cardListLength4 = [
 
 describe("<OpponentHandDialog />", () => {
   it("renders with only la cosa", () => {
-    // see: https://on.cypress.io/mounting-react
     cy.mount(
       <BrowserRouter>
         <UserContext.Provider value={userContextValue}>
