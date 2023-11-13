@@ -102,6 +102,18 @@ const Room = () => {
     }
   };
 
+  useEffect(() => {
+    window.onRoomMessage = onRoomMessage;
+    window.leaveRoom = leaveRoom;
+    window.startGame = startGame;
+
+    return () => {
+      window.onRoomMessage = null;
+      window.leaveRoom = null;
+      window.startGame = null;
+    };
+  }, []);
+
   return (
     <div
       style={{
@@ -204,6 +216,7 @@ const Room = () => {
               </List>
               {/* leave button */}
               <Button
+                id="leaveButton"
                 variant="contained"
                 size="small"
                 color="error"

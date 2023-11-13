@@ -102,7 +102,15 @@ export const UserAvatar = ({
                         ? double_door
                         : null
                     }
-                    alt="door"
+                    alt={
+                      door_locked === -1
+                        ? "left_door"
+                        : door_locked === 1
+                        ? "right_door"
+                        : door_locked === 2
+                        ? "double_door"
+                        : null
+                    }
                     className="image"
                   />
                 </div>
@@ -140,7 +148,15 @@ export const UserAvatar = ({
                         ? double_door
                         : null
                     }
-                    alt="double_door"
+                    alt={
+                      door_locked === -1
+                        ? "left_door"
+                        : door_locked === 1
+                        ? "right_door"
+                        : door_locked === 2
+                        ? "double_door"
+                        : null
+                    }
                     className="image"
                   />
                 </div>
