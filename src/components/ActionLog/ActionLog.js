@@ -144,6 +144,7 @@ export function ActionLog({ listOfActions }) {
           Cerrar
         </Button>
         <Box
+          id="actionLogBox"
           sx={{
             p: 2,
             borderRadius: "8px",
