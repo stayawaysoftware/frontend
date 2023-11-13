@@ -11,6 +11,7 @@ const Hand = ({
   role,
   isPlayPhase,
   cardTargetRole,
+  panicCard,
 }) => {
   const { clickedCard, onCardClicked, userid, isExchangePhase } =
     useContext(UserContext);
@@ -36,26 +37,32 @@ const Hand = ({
   };
 
   const onClickedCard = ({ id, idtype, isDefenseCard }) => {
-    if (
-      !isCardPlaylable(
-        idtype,
-        isExchangePhase,
-        role,
-        isDefensePhase,
-        canExchangeInfected,
-        isPlayPhase
-      )
-    ) {
-      onCardClicked(null);
-    } else {
-      if (isSomeoneBeingDefended) {
-        if (isDefended && isDefenseCard) {
-          onCardClicked({ id, idtype });
-        } else {
-          onCardClicked(null);
-        }
+    if (panicCard === null) {
+      if (
+        !isCardPlaylable(
+          idtype,
+          isExchangePhase,
+          role,
+          isDefensePhase,
+          canExchangeInfected,
+          isPlayPhase
+        )
+      ) {
+        onCardClicked(null);
       } else {
-        onCardClicked({ id, idtype });
+        if (isSomeoneBeingDefended) {
+          if (isDefended && isDefenseCard) {
+            onCardClicked({ id, idtype });
+          } else {
+            onCardClicked(null);
+          }
+        } else {
+          onCardClicked({ id, idtype });
+        }
+      }
+    } else {
+      if (panicCard.id !== id) {
+        onCardClicked(null);
       }
     }
   };
@@ -121,7 +128,11 @@ const Hand = ({
                 ...baseCardStyle,
                 right: `${10 + index * 30}px`,
                 "&:hover": {
-                  ...(isCardPlayableOnHover({ id, idtype, isDefenseCard }) && highlightedCardStyle),
+                  ...(panicCard === null 
+                  ? isCardPlayableOnHover({ id, idtype, isDefenseCard }) && highlightedCardStyle 
+                  : panicCard.id === id 
+                  ? highlightedCardStyle
+                  : {}),
                 },
                 ...(isClicked && highlightedCardStyle),
               }}

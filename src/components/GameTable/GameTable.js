@@ -202,6 +202,8 @@ const GameTable = ({
                 turn={currentTurn === id}
                 onClick={getUserFunction(id)}
                 turnDefense={turnDefense === id}
+                quarentine={false}
+                door_locked={0} // if -1 left door, if 1 right door, if 2 double door, if 0 or false no door
               />
             );
           })}
