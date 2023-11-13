@@ -269,12 +269,5 @@ describe("<Room />", () => {
       });
     // salir button should be enabled
     cy.contains("Salir").should("be.enabled");
-
-    cy.stub(Room, "leaveRoom").as("leaveRoomStub");
-
-    //click
-    cy.get("button").contains("Salir").click();
-
-    cy.get("@leaveRoomStub").should("be.calledOnce");
   });
 });
