@@ -513,6 +513,7 @@ const Game = () => {
                 players.find((player) => player.role === "The Thing").id
               }
               door_locked={door_locked_array}
+              currentUserDoorLocked={door_locked}
             />
             <Box>
               <Grid

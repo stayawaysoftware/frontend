@@ -17,6 +17,7 @@ const GameTable = ({
   turnPhase,
   the_thing_id,
   door_locked,
+  currentUserDoorLocked,
 }) => {
   const { gameId } = useParams();
   const {
@@ -192,14 +193,34 @@ const GameTable = ({
         clickedCard &&
         CardHasTarget(clickedCard.idtype) === CntTarget.ADJACENT
       ) {
-        if (id === left_id || id === right_id) {
-          return () => handlePlayCard(id);
+        if (clickedCard.idtype === 5) {
+          if (
+            (id === left_id && currentUserDoorLocked === -1) ||
+            (id === right_id && currentUserDoorLocked === 1)
+          ) {
+            return () => handlePlayCard(id);
+          }
+        } else {
+          if (
+            ((id === left_id && currentUserDoorLocked !== -1) ||
+              (id === right_id && currentUserDoorLocked !== 1)) &&
+            currentUserDoorLocked !== 2
+          ) {
+            return () => handlePlayCard(id);
+          }
         }
       } else if (
         clickedCard &&
         CardHasTarget(clickedCard.idtype) === CntTarget.ALL
       ) {
-        return () => handlePlayCard(id);
+        if (
+          (id === left_id && currentUserDoorLocked === -1) ||
+          (id === right_id && currentUserDoorLocked === 1)
+        ) {
+          return null;
+        } else {
+          return () => handlePlayCard(id);
+        }
       }
     } else if (
       turnPhase === "Exchange" &&
@@ -209,14 +230,28 @@ const GameTable = ({
       clickedCard.idtype === 2
     ) {
       if (id === the_thing_id) {
-        return () => handleExchange(id);
+        if (
+          (id === left_id && currentUserDoorLocked === -1) ||
+          (id === right_id && currentUserDoorLocked === 1)
+        ) {
+          return null;
+        } else {
+          return () => handleExchange(id);
+        }
       }
     } else if (
       turnPhase === "Exchange" &&
       currentTurn === userid &&
       clickedCard
     ) {
-      return () => handleExchange(id);
+      if (
+        (id === left_id && currentUserDoorLocked === -1) ||
+        (id === right_id && currentUserDoorLocked === 1)
+      ) {
+        return null;
+      } else {
+        return () => handleExchange(id);
+      }
     }
 
     return null;
