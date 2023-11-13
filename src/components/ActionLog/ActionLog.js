@@ -113,11 +113,13 @@ export function ActionLog({ listOfActions }) {
           bottom: "16px",
           zIndex: 100,
         }}
+        id="actionLogButton"
         onClick={toggleDrawer}
       >
         <FormatListBulletedIcon />
       </Fab>
       <Drawer
+        id="actionLogDrawer"
         variant="persistent"
         anchor="left"
         open={open}
@@ -133,6 +135,7 @@ export function ActionLog({ listOfActions }) {
       >
         <h1> Historial de acciones </h1>
         <Button
+          id="closeActionLog"
           variant="contained"
           size="small"
           color="success"
@@ -141,6 +144,7 @@ export function ActionLog({ listOfActions }) {
           Cerrar
         </Button>
         <Box
+          id="actionLogBox"
           sx={{
             p: 2,
             borderRadius: "8px",
