@@ -43,6 +43,14 @@ function actionToDiv(action) {
 
   if (action.action === "new_turn") {
     //new_turn es el unico caso sin imagen
+
+    let middleText;
+    if (action.name1 === null) {
+      middleText = "Inicio del juego";
+    } else {
+      middleText = "Turno de " + action.name1;
+    }
+
     return (
       <Box display="flex" alignItems="center" justifyContent="center">
         {/* text should be alligned at the center */}
@@ -51,7 +59,7 @@ function actionToDiv(action) {
           textAlign="center"
           style={{ color: "#455c28" }}
         >
-          Turno de {action.name1}
+          {middleText}
         </Typography>
       </Box>
     );

@@ -643,11 +643,11 @@ const Game = () => {
                 />
               </div>
             </Box>
+            <ActionLog listOfActions={actionList} />
           </>
         )}
       </div>
       <GameChat />
-      <ActionLog listOfActions={actionList} />
     </div>
   );
 };
