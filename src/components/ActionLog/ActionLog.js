@@ -12,17 +12,24 @@ import { IdToAsset } from "../../utils/CardHandler";
 // a este modulo le llega una lista de acciones y las muestra en un drawer
 
 //listOfActions es un arreglo de tuplas {Nombre, Carta, Nombre}
-const listOfActions = [
-  { name1: "Jugador1", action: 3, name2: "Jugador2" },
-  { name1: "gere", action: 3, name2: "Jugador2" },
-  { name1: "Benja", action: 8, name2: null },
-  { name1: "Player", action: "exchange", name2: "Jugador2" },
-  { name1: "Jugador1", action: "new_turn", name2: "Jugador2" },
-  { name1: "Jugador1", action: "discard", name2: null },
-  { name1: "Ignacho", action: 20, name2: "agustina morales" },
-  { name1: "messi", action: 14, name2: null },
-  { name1: "omg", action: 5, name2: "nt" },
-];
+// const listOfActions = [
+//   { name1: "Jugador1", action: 3, name2: "Jugador2" },
+//   { name1: "gere", action: 3, name2: "Jugador2" },
+//   { name1: "Benja", action: 8, name2: null },
+//   { name1: "Player", action: "exchange", name2: "Jugador2" },
+//   { name1: "Jugador1", action: "new_turn", name2: "Jugador2" },
+//   { name1: "Jugador1", action: "discard", name2: null },
+//   { name1: "Ignacho", action: 20, name2: "agustina morales" },
+//   { name1: "messi", action: 14, name2: null },
+//   { name1: "omg", action: 5, name2: "nt" },
+// ];
+
+export function createAction(name1, action, name2) {
+  if (name1 === name2) {
+    name2 = null;
+  }
+  return { name1: name1, action: action, name2: name2 };
+}
 
 function actionToDiv(action) {
   //las acciones son de la siguiente manera:
@@ -44,17 +51,17 @@ function actionToDiv(action) {
           textAlign="center"
           style={{ color: "#455c28" }}
         >
-          —— Nuevo turno ——
+          Turno de {action.name1}
         </Typography>
       </Box>
     );
   } else if (action.action === "exchange") {
     name1 = action.name1;
-    middleImage = <CompareArrowsIcon sx={{ fontSize: "100px" }} />;
+    middleImage = <CompareArrowsIcon sx={{ fontSize: "80px" }} />;
     name2 = action.name2;
   } else if (action.action === "discard") {
     name1 = action.name1;
-    middleImage = <DeleteIcon sx={{ fontSize: "100px" }} />;
+    middleImage = <DeleteIcon sx={{ fontSize: "80px" }} />;
     name2 = null;
   } else if (action.action >= 1 && action.action <= 31) {
     //action is a card
@@ -66,7 +73,7 @@ function actionToDiv(action) {
         src={IdToAsset(action.action)}
         alt={`${action.action + 1}`}
         style={{
-          width: "80px",
+          width: "70px",
           height: "auto",
           margin: "0 16px",
         }}
@@ -83,7 +90,7 @@ function actionToDiv(action) {
   );
 }
 
-export function ActionLog() {
+export function ActionLog({ listOfActions }) {
   const [open, setOpen] = React.useState(false);
   const [actionList, setActionList] = React.useState([]);
 
@@ -94,10 +101,6 @@ export function ActionLog() {
   const toggleDrawer = () => {
     setOpen(!open);
   };
-
-  // const addNewAction = (newAction) => {
-  //   setActionList([...actionList, newAction]);
-  // };
 
   return (
     <div>
@@ -145,21 +148,22 @@ export function ActionLog() {
             overflowY: "auto",
           }}
         >
-          {actionList.map((action, index) => (
-            <Box
-              key={index}
-              sx={{
-                p: 2,
-                my: 1,
-                borderRadius: "8px",
-                backgroundColor: "rgba(255, 255, 255, 0.5)",
-                marginLeft: "0",
-                wordWrap: "break-word",
-              }}
-            >
-              {actionToDiv(action)}
-            </Box>
-          ))}
+          {actionList &&
+            actionList.map((action, index) => (
+              <Box
+                key={index}
+                sx={{
+                  p: 2,
+                  my: 1,
+                  borderRadius: "8px",
+                  backgroundColor: "rgba(255, 255, 255, 0.5)",
+                  marginLeft: "0",
+                  wordWrap: "break-word",
+                }}
+              >
+                {actionToDiv(action)}
+              </Box>
+            ))}
         </Box>
       </Drawer>
     </div>

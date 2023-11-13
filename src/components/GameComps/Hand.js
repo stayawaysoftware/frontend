@@ -1,7 +1,5 @@
 import { useContext } from "react";
-
 import { Box } from "@mui/material";
-
 import { UserContext } from "../../contexts/UserContext";
 import { IdToAsset, isCardPlaylable } from "../../utils/CardHandler";
 
@@ -20,7 +18,7 @@ const Hand = ({
 
   const isDefended = target_player === userid;
   const isDefensePhase = isSomeoneBeingDefended && isDefended;
-  let canExchangeInfected = false; // si el rol es infectado, tiene q tener al menos de cartas de Infected
+  let canExchangeInfected = false;
   let infectedCards = 0;
 
   const baseCardStyle = {
@@ -36,10 +34,6 @@ const Hand = ({
     border: "1px groove",
     borderRadius: "15px",
     transform: "scale(1.1)",
-  };
-
-  const auraStyle = {
-    boxShadow: "2px 2px 4px #FFFFF",
   };
 
   const onClickedCard = ({ id, idtype, isDefenseCard }) => {
@@ -73,6 +67,32 @@ const Hand = ({
     }
   };
 
+  const isCardPlayableOnHover = ({ id, idtype, isDefenseCard }) => {
+    return ((
+      !isDefended &&
+      !isDefenseCard &&
+      isCardPlaylable(
+        idtype,
+        isExchangePhase,
+        role,
+        isDefensePhase,
+        canExchangeInfected,
+        isPlayPhase
+      )) ||
+      (isSomeoneBeingDefended &&
+        isDefended &&
+        isDefenseCard &&
+        isCardPlaylable(
+          idtype,
+          isExchangePhase,
+          role,
+          isDefensePhase,
+          canExchangeInfected,
+          isPlayPhase
+        ))
+    );
+  };
+
   return (
     <div>
       <div
@@ -84,9 +104,11 @@ const Hand = ({
         id="hand"
       >
         {cardList?.map(({ id, idtype }, index) => {
+          const isClicked = clickedCard?.id === id;
           const isDefenseCard = defense.some(
             (elem) => isDefended && elem === idtype
           );
+
           if (role === "Infected") {
             if (idtype === 2) infectedCards++;
             if (infectedCards >= 2) {
@@ -97,53 +119,23 @@ const Hand = ({
               }
             }
           }
+
           return (
             <Box
               key={`card-hand-${id}`}
               id={`card-hand-${index}`}
-              sx={[
-                clickedCard?.id === id &&
-                  panicCard === null &&
-                  !isCardPlaylable(
-                    idtype,
-                    isExchangePhase,
-                    role,
-                    isDefensePhase,
-                    canExchangeInfected,
-                    isPlayPhase
-                  ) &&
-                  (isSomeoneBeingDefended
-                    ? isDefended && isDefenseCard
-                      ? highlightedCardStyle
-                      : false
-                    : highlightedCardStyle),
-                {
-                  ...baseCardStyle,
-                  right: `${10 + index * 30}px`,
-                  "&:hover": {
-                    ...(panicCard === null
-                      ? !isCardPlaylable(
-                          idtype,
-                          isExchangePhase,
-                          role,
-                          isDefensePhase,
-                          canExchangeInfected,
-                          isPlayPhase
-                        )
-                        ? {}
-                        : isSomeoneBeingDefended
-                        ? isDefended && isDefenseCard
-                          ? highlightedCardStyle
-                          : {}
-                        : highlightedCardStyle
-                      : panicCard.id === id
-                      ? highlightedCardStyle
-                      : {}),
-                    ...(isDefenseCard && auraStyle),
-                  },
-                  ...(isDefenseCard && auraStyle),
+              sx={{
+                ...baseCardStyle,
+                right: `${10 + index * 30}px`,
+                "&:hover": {
+                  ...(panicCard === null 
+                  ? isCardPlayableOnHover({ id, idtype, isDefenseCard }) && highlightedCardStyle 
+                  : panicCard.id === id 
+                  ? highlightedCardStyle
+                  : {}),
                 },
-              ]}
+                ...(isClicked && highlightedCardStyle),
+              }}
               onClick={() => onClickedCard({ id, idtype, isDefenseCard })}
             >
               <img
