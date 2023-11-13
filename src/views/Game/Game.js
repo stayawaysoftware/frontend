@@ -188,8 +188,11 @@ const Game = () => {
     } else if (json.type === "new_turn") {
       setCurrentTurn(json.current_turn);
     } else if (json.type === "draw") {
-      if (json.card_type === "Panic") {
+      console.log("draw");
+      if (json.card_type === "PANIC") {
+        console.log("PANICOOOOO");
         setPanicCard(json.new_card);
+        onCardClicked(json.new_card);
       } else {
         setPanicCard(null);
       }
@@ -298,7 +301,6 @@ const Game = () => {
 
       setClickedCard(null);
       setPlayedCard(null);
-      setPanicCard(null);
       setIsSomeoneBeingDefended(false);
       setCardTarget(null);
       setDefendedBy([]);
@@ -648,6 +650,7 @@ const Game = () => {
                   turnPhase={turn_phase}
                   setIsSomeoneBeingDefended={setIsSomeoneBeingDefended}
                   exchangeRequester={exchange_requester}
+                  isNotPanicCard={panicCard === null}
                 />
               </div>
             </Box>
