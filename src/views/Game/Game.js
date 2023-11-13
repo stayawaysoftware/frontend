@@ -15,7 +15,7 @@ import { UserContext } from "../../contexts/UserContext";
 import GameChat from "../../components/Chat/GameChat";
 import { useWebSocket } from "../../contexts/WebsocketContext";
 import { IdToNameCard } from "../../utils/CardHandler";
-import { ActionLog } from "../../components/ActionLog/ActionLog";
+import { ActionLog, createAction } from "../../components/ActionLog/ActionLog";
 
 const Game = () => {
   const { gameId } = useParams();
@@ -52,6 +52,7 @@ const Game = () => {
 
   const { websocket } = useWebSocket();
   const [isLoading, setIsLoading] = useState(true);
+  const [actionList, setActionList] = useState([]);
 
   const tableData = players
     ? players.map((player) => ({
@@ -118,6 +119,26 @@ const Game = () => {
     }
   };
 
+  const userIdToName = (id) => {
+    let name = null;
+    players?.forEach((player) => {
+      if (player.id === id) {
+        name = player.name;
+      }
+    });
+    return name;
+  };
+
+  const positionToName = (position) => {
+    let name = null;
+    players?.forEach((player) => {
+      if (player.round_position === position) {
+        name = player.name;
+      }
+    });
+    return name;
+  };
+
   function onGameMessage(event) {
     const json = JSON.parse(event.data);
     console.log("Mensaje recibido en game: ", json);
@@ -127,6 +148,20 @@ const Game = () => {
       setTurnPhase(json.game.turn_phase);
       setTurnOrder(json.game.turn_order);
       setIsLoading(false);
+
+      // un nuevo turno se da cuando la fase de turn es Draw
+      if (json.game.turn_phase === "Draw") {
+        setActionList((actionList) => [
+          ...actionList,
+          createAction(
+            positionToName(json.game.current_turn), //current player
+            "new_turn",
+            null //siempre debe ser null
+          ),
+        ]);
+        console.log(actionList);
+      }
+
       if (json.game.turn_phase === "Exchange") {
         setIsExchangePhase(true);
         console.log("es fase de intercambio");
@@ -151,9 +186,28 @@ const Game = () => {
     } else if (json.type === "play") {
       setShowPlayedCard(json.played_card.idtype);
       setCardTarget(json.card_player);
+
+      setActionList((actionList) => [
+        ...actionList,
+        createAction(
+          positionToName(current_turn),
+          json.played_card.idtype,
+          userIdToName(json.card_target)
+        ),
+      ]);
+      console.log(actionList);
     } else if (json.type === "discard") {
       setShowPlayedCard(json.played_card.idtype);
       setTurnPhase(json.turn_phase);
+
+      setActionList((actionList) => [
+        ...actionList,
+        createAction(
+          positionToName(current_turn),
+          "discard",
+          null //should be null
+        ),
+      ]);
     } else if (json.type === "try_defense") {
       setLastPlayedCard(json.played_card);
       setIsPlayPhase(false);
@@ -173,6 +227,15 @@ const Game = () => {
             played_defense: 0,
             last_played_card: last_played_card.id,
           });
+          setActionList((actionList) => [
+            ...actionList,
+            createAction(
+              positionToName(current_turn),
+              json.played_card.idtype,
+              userIdToName(json.card_target)
+            ),
+          ]);
+
           websocket.send(messageData);
         }
       } else {
@@ -190,6 +253,15 @@ const Game = () => {
       } else {
         // setPlayedDefense(json.played_defense);
         setShowPlayedCard(json.played_defense.idtype);
+
+        setActionList((actionList) => [
+          ...actionList,
+          createAction(
+            userIdToName(json.target_player), //el que defendio esta su id
+            json.played_defense.idtype,
+            positionToName(current_turn) // el atacante es el current turn
+          ),
+        ]);
       }
     } else if (json.type === "exchange") {
       setCardTarget(json.target_player);
@@ -201,6 +273,16 @@ const Game = () => {
       setLastChosenCard(json.last_chosen_card);
       setExchangeRequester(json.exchange_requester);
     } else if (json.type === "exchange_end") {
+      //add the action after the exchange
+      setActionList((actionList) => [
+        ...actionList,
+        createAction(
+          userIdToName(exchange_requester),
+          "exchange",
+          userIdToName(card_target)
+        ),
+      ]);
+
       setClickedCard(null);
       setPlayedCard(null);
       setIsSomeoneBeingDefended(false);
@@ -505,7 +587,7 @@ const Game = () => {
         )}
       </div>
       <GameChat />
-      <ActionLog />
+      <ActionLog listOfActions={actionList} />
     </div>
   );
 };
