@@ -19,6 +19,7 @@ const Buttons = ({
   turnPhase,
   setIsSomeoneBeingDefended,
   exchangeRequester,
+  isNotPanicCard,
 }) => {
   const {
     userid,
@@ -42,6 +43,7 @@ const Buttons = ({
       isCardPlaylable(clickedCard.idtype, false, "", false, false, false)
     );
   }
+
   const playEnabled =
     (isTurn &&
       isCardClicked &&
@@ -55,8 +57,16 @@ const Buttons = ({
     (isDefended && target_player === userid);
 
   const playEnabledDisc =
-    (isTurn && isCardClicked && !isDefended && !exchangeEnabled) ||
-    (isTurn && isCardWithTargetClicked && !isDefended && !exchangeEnabled);
+    (isTurn &&
+      isCardClicked &&
+      !isDefended &&
+      !exchangeEnabled &&
+      isNotPanicCard) ||
+    (isTurn &&
+      isCardWithTargetClicked &&
+      !isDefended &&
+      !exchangeEnabled &&
+      isNotPanicCard);
 
   const handlePlayCard = () => {
     if (websocket) {
