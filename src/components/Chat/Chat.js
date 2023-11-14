@@ -20,7 +20,6 @@ export const Chat = ({ inGame }) => {
       });
 
       websocket.send(messageData);
-      console.log("Mensaje enviado: ", messageData);
       setInput("");
     }
   };

@@ -1,4 +1,4 @@
-import { useContext, useState, useMemo } from "react";
+import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import Hand from "../../components/GameComps/Hand";
 import Buttons from "../../components/GameComps/GameButtons";
@@ -11,7 +11,6 @@ import Arrows from "../../components/GameComps/Arrows";
 import OpponentHandDialog from "../../components/OpponentHandDialog/OpponentHandDialog";
 import left_door from "../../assets/left_door.png";
 import right_door from "../../assets/right_door.png";
-import double_door from "../../assets/double_door.png";
 
 import { Box, Grid, Alert, Chip } from "@mui/material";
 import { UserContext } from "../../contexts/UserContext";
@@ -26,7 +25,6 @@ const Game = () => {
     userid,
     playedCard,
     setPlayedCard,
-    targetId,
     setClickedCard,
     onCardClicked,
     setIsExchangePhase,
@@ -37,8 +35,6 @@ const Game = () => {
   const [last_played_card, setLastPlayedCard] = useState(null);
   const [card_target, setCardTarget] = useState(null);
   const [new_card, setNewCard] = useState(null);
-  const [played_defense, setPlayedDefense] = useState(null);
-  const [defended_card, setDefendedCard] = useState(null);
   const [turn_order, setTurnOrder] = useState(null);
   const [turn_phase, setTurnPhase] = useState(null);
   const [current_turn, setCurrentTurn] = useState(null);
@@ -159,7 +155,6 @@ const Game = () => {
 
   function onGameMessage(event) {
     const json = JSON.parse(event.data);
-    console.log("Mensaje recibido en game: ", json);
     setMessageType(json.type);
     if (json.type === "game_info") {
       setPlayers(json.game.players);
@@ -231,7 +226,6 @@ const Game = () => {
             null //siempre debe ser null
           ),
         ]);
-        console.log(actionList);
       }
 
       if (json.game.turn_phase === "Exchange") {
@@ -275,7 +269,6 @@ const Game = () => {
           userIdToName(json.card_target)
         ),
       ]);
-      console.log(actionList);
     } else if (json.type === "discard") {
       setShowPlayedCard(json.played_card.idtype);
       setTurnPhase(json.turn_phase);
@@ -437,7 +430,7 @@ const Game = () => {
 
         {userid === positionToId(current_turn) &&
           !finished &&
-          turn_phase != "Exchange" && (
+          turn_phase !== "Exchange" && (
             <Alert
               severity="success"
               style={{

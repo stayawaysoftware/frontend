@@ -38,11 +38,9 @@ export default function ButtonList({ setError }) {
     await axios
       .put(url, parameters)
       .then((response) => {
-        console.log("Solicitud POST exitosa", response.data);
         navigate("/room/" + roomid);
       })
       .catch((error) => {
-        console.error("Error en la solicitud POST", error);
         setError(error.response.data.detail);
       });
   };

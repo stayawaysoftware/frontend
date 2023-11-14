@@ -19,7 +19,7 @@ const DescPile = ({ lastCard }) => {
               src={IdToAsset(lastCard)}
               alt="descarte"
               style={{
-                width: "13.5%",
+                width: "23%",
                 height: "auto",
                 position: "relative",
                 border: "none",

@@ -1,5 +1,4 @@
 import { useEffect, useState, useContext, useCallback } from "react";
-import { useParams } from "react-router-dom";
 
 import { CntTarget, CardHasTarget } from "../../utils/CardHandler";
 import { UserAvatar } from "../UserAvatar";
@@ -20,7 +19,7 @@ const GameTable = ({
   currentUserDoorLocked,
   lastCardPlayed,
 }) => {
-  const { gameId } = useParams();
+
   const {
     userid,
     targetsEnable,
@@ -143,11 +142,9 @@ const GameTable = ({
         }
       }
       for (let j = i - 1; j >= 0; --j) {
-        if (playersTable[j] === undefined) console.log("undefined " + j);
         sorted_players.push(playersTable[j]);
       }
       for (let j = playersTable.length - 1; j > i; --j) {
-        if (playersTable[j] === undefined) console.log("undefined " + j);
         sorted_players.push(playersTable[j]);
       }
       buildCircle(sorted_players);
@@ -164,8 +161,6 @@ const GameTable = ({
       });
       websocket.send(messageData);
     }
-    console.log("card played", clickedCard);
-    console.log("target", id);
 
     setPlayedCard(clickedCard);
     onCardClicked(null);
