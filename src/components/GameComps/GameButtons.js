@@ -6,7 +6,6 @@ import ListItem from "@mui/material/ListItem";
 import { useWebSocket } from "../../contexts/WebsocketContext";
 import { UserContext } from "../../contexts/UserContext";
 import { isCardPlaylable } from "../../utils/CardHandler";
-import { click } from "@testing-library/user-event/dist/click";
 
 const Buttons = ({
   current_player,
@@ -66,8 +65,6 @@ const Buttons = ({
       !exchangeEnabled &&
       isNotPanicCard);
 
-  console.log("isExchangeTarget: ", isExchangeTarget);
-
   const handlePlayCard = () => {
     if (websocket) {
       const messageData = JSON.stringify({
@@ -118,13 +115,11 @@ const Buttons = ({
   };
 
   const handleExchange = () => {
-    console.log("handleExchange");
     if (
       (turnOrder === true && currentUserDoorLocked === -1) ||
       (turnOrder === false && currentUserDoorLocked === 1)
     ) {
       if (websocket) {
-        console.log("cannot_exchange");
         const messageData = JSON.stringify({
           type: "cannot_exchange",
         });
@@ -143,12 +138,10 @@ const Buttons = ({
   };
 
   const handleExchangeDefense = () => {
-    console.log({ clickedCard, isDefended, lastChosenCard });
     if (websocket) {
       if (clickedCard) {
         if (!isDefended) {
           let messageData;
-          console.log("hacer intercambio");
           messageData = JSON.stringify({
             type: "exchange_defense",
             chosen_card: clickedCard.id,
@@ -156,7 +149,6 @@ const Buttons = ({
             exchange_requester_id: exchangeRequester,
             is_defense: false,
           });
-          console.log("SE ENVIA EXCHANGE ESTO: ", messageData);
           websocket.send(messageData);
           onCardClicked(null);
         } else {
@@ -168,14 +160,12 @@ const Buttons = ({
             exchange_requester_id: exchangeRequester,
             is_defense: true,
           });
-          console.log("SE ENVIA DEFENSA EXCHANGE ESTO: ", messageData);
           websocket.send(messageData);
           setPlayedCard(clickedCard);
           onCardClicked(null);
         }
       }
       // habilitar intercambio
-      console.log("habilitar intercambio, cerrar exchange defense");
       setIsSomeoneBeingDefended(false);
     }
   };

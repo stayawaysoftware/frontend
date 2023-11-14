@@ -46,7 +46,6 @@ export default function PasswordDialog({
     await axios
       .put(url, parameters)
       .then((response) => {
-        console.log("Solicitud POST exitosa", response.data);
         navigate("/room/" + roomid);
         setPassword("");
         setDialogError(null);

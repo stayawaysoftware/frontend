@@ -6,15 +6,12 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import image from "../Background/Hex.svg";
 
-import { TextField } from "@mui/material";
 import List from "@mui/material/List";
 import PeopleIcon from "@mui/icons-material/People";
 
-import { useParams, useNavigate, Form } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { UserContext } from "../../contexts/UserContext";
-import axios from "axios";
 import { Chat } from "../../components/Chat/Chat";
-import { API_ENDPOINT_ROOM_START } from "../../utils/ApiTypes";
 import { useWebSocket } from "../../contexts/WebsocketContext";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -45,11 +42,10 @@ const Room = () => {
   useEffect(() => {
     // esto se ejecuta cuando se monta el componente y crea el websocket
     createWebSocket(roomId);
-  }, []);
+  });
 
   function onRoomMessage(event) {
     const json = JSON.parse(event.data);
-    console.log("Mensaje recibido: ", json);
     const room_data = json.room;
 
     if (json.type === "info") {
@@ -69,7 +65,6 @@ const Room = () => {
   if (websocket) {
     websocket.onclose = (event) => {
       console.log("Websocket cerrado");
-      // navigate(`/`);
     };
   }
 
@@ -86,7 +81,6 @@ const Room = () => {
         host_id: userid,
       });
       websocket.send(messageData);
-      console.log("Mensaje enviado: ", messageData);
     }
   };
 
@@ -96,7 +90,6 @@ const Room = () => {
         type: "leave",
       });
       websocket.send(messageData);
-      console.log("Mensaje enviado: ", messageData);
       navigate(`/`);
       // se navega en el onclose
     }
@@ -112,7 +105,7 @@ const Room = () => {
       window.leaveRoom = null;
       window.startGame = null;
     };
-  }, []);
+  });
 
   return (
     <div

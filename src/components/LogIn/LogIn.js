@@ -44,7 +44,6 @@ export default function LogIn() {
     await axios
       .post(url, parameters)
       .then((response) => {
-        console.log("Solicitud POST exitosa", response.data);
         setUserId(response.data.id);
         setUserName(username);
       })

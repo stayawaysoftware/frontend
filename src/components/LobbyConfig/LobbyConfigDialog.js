@@ -98,7 +98,6 @@ export default function CreateRoomDialog({ open, onClose, setError }) {
     await axios
       .post(url, parameters)
       .then((response) => {
-        console.log("Solicitud POST exitosa", response.data);
         roomid = response.data.id; //get the roomid from the response
         navigate("/room/" + roomid);
       })

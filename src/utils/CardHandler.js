@@ -33,7 +33,6 @@ import BlindDate from "../assets/cards/30_BlindDate.png";
 import Ups from "../assets/cards/31_Ups.png";
 
 export function IdToAsset(id) {
-  const cardAssetsPath = "../assets/cards/";
 
   const cardAssets = {
     1: TheThing,
@@ -162,9 +161,6 @@ const cardTargets = {
 };
 
 export function CardHasTarget(id) {
-  //this function checks if a card has a target
-  //for the moment, only the flamethrower has a target
-  // console.log("la id es", id);
   return cardTargets[id];
 }
 
