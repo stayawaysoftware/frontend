@@ -55,6 +55,7 @@ const Game = () => {
   const [isPlayPhase, setIsPlayPhase] = useState(false);
   const [door_locked, setDoorLocked] = useState(null);
   const [panicCard, setPanicCard] = useState(null);
+  const [messageType, setMessageType] = useState(null);
 
   const { websocket } = useWebSocket();
   const [isLoading, setIsLoading] = useState(true);
@@ -148,6 +149,7 @@ const Game = () => {
   function onGameMessage(event) {
     const json = JSON.parse(event.data);
     console.log("Mensaje recibido en game: ", json);
+    setMessageType(json.type);
     if (json.type === "game_info") {
       setPlayers(json.game.players);
       setCurrentTurn(json.game.current_turn);
@@ -633,8 +635,10 @@ const Game = () => {
                 <Buttons
                   current_player={positionToId(current_turn)}
                   gameId={gameId}
+                  messageType={messageType}
                   target_player={card_target}
                   isDefended={isSomeoneBeingDefended}
+                  right_id={getRightId(current_turn)}
                   last_played_card={last_played_card}
                   lastChosenCard={last_chosen_card}
                   turnPhase={turn_phase}

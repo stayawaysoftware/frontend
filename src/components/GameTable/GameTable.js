@@ -136,17 +136,6 @@ const GameTable = ({
     setTargetId(id);
   };
 
-  const handleExchange = (id) => {
-    if (websocket) {
-      const messageData = JSON.stringify({
-        type: "exchange",
-        target_player: id,
-        chosen_card: clickedCard.id,
-      });
-      websocket.send(messageData);
-    }
-  };
-
   const getUserFunction = (id) => {
     if (
       targetsEnable &&
@@ -167,25 +156,8 @@ const GameTable = ({
       ) {
         return () => handlePlayCard(id);
       }
-    } else if (
-      turnPhase === "Exchange" &&
-      currentTurn === userid &&
-      the_thing_id !== userid &&
-      clickedCard &&
-      clickedCard.idtype === 2
-    ) {
-      if (id === the_thing_id) {
-        return () => handleExchange(id);
-      }
-    } else if (
-      turnPhase === "Exchange" &&
-      currentTurn === userid &&
-      clickedCard
-    ) {
-      return () => handleExchange(id);
-    }
-
     return null;
+    }
   };
 
   return (

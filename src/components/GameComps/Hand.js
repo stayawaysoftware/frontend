@@ -18,6 +18,7 @@ const Hand = ({
 
   const isDefended = target_player === userid;
   const isDefensePhase = isSomeoneBeingDefended && isDefended;
+  const isTargetedExchange = isExchangePhase && isDefended ;
   let canExchangeInfected = false;
   let infectedCards = 0;
 
@@ -89,7 +90,18 @@ const Hand = ({
           isDefensePhase,
           canExchangeInfected,
           isPlayPhase
-        ))
+        )) ||
+        (isExchangePhase &&
+          isDefended &&
+          !isSomeoneBeingDefended &&
+          isCardPlaylable(
+            idtype,
+            isExchangePhase,
+            role,
+            isDefensePhase,
+            canExchangeInfected,
+            isPlayPhase
+          )) 
     );
   };
 

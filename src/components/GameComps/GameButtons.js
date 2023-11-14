@@ -6,6 +6,7 @@ import ListItem from "@mui/material/ListItem";
 import { useWebSocket } from "../../contexts/WebsocketContext";
 import { UserContext } from "../../contexts/UserContext";
 import { isCardPlaylable } from "../../utils/CardHandler";
+import { click } from "@testing-library/user-event/dist/click";
 
 const Buttons = ({
   current_player,
@@ -13,6 +14,8 @@ const Buttons = ({
   isDefended,
   last_played_card,
   lastChosenCard,
+  messageType,
+  right_id,
   turnPhase,
   setIsSomeoneBeingDefended,
   exchangeRequester,
@@ -31,10 +34,8 @@ const Buttons = ({
   const isTurn = current_player === userid && !isDefended;
   const isCardClicked = clickedCard !== null && !targetsEnable;
   const isCardWithTargetClicked = clickedCard !== null && targetsEnable;
-  const exchangeEnabled =
-    turnPhase === "Exchange" || turnPhase === "Exchange_defense";
-  const exchangeEnabledDefense =
-    target_player === userid && !isDefended && exchangeEnabled && clickedCard;
+  const exchangeEnabled = turnPhase === "Exchange";
+  const exchangeEnabledDefense = !isDefended && exchangeEnabled && clickedCard;
   if (clickedCard) {
     console.log(
       "isCardPlaylable",
@@ -53,15 +54,9 @@ const Buttons = ({
       isCardPlaylable(clickedCard.idtype, false, "", false, false, false)) ||
     (isDefended && target_player === userid);
 
-    const playEnabledDisc =
-    (isTurn &&
-      isCardClicked &&
-      !isDefended &&
-      !exchangeEnabled) ||
-    (isTurn &&
-      isCardWithTargetClicked &&
-      !isDefended &&
-      !exchangeEnabled);
+  const playEnabledDisc =
+    (isTurn && isCardClicked && !isDefended && !exchangeEnabled) ||
+    (isTurn && isCardWithTargetClicked && !isDefended && !exchangeEnabled);
 
   const handlePlayCard = () => {
     if (websocket) {
@@ -112,39 +107,53 @@ const Buttons = ({
     onCardClicked(null);
   };
 
+  const handleExchange = () => {
+    console.log("handleExchange");
+    if (websocket && clickedCard) {
+      const messageData = JSON.stringify({
+        type: "exchange",
+        target_player: right_id,
+        chosen_card: clickedCard.id,
+      });
+      websocket.send(messageData);
+    }
+  };
+
   const handleExchangeDefense = () => {
+    console.log({ clickedCard, isDefended, lastChosenCard });
     if (websocket) {
-      if (clickedCard && !isDefended) {
-        let messageData;
-        console.log("hacer intercambio");
-        messageData = JSON.stringify({
-          type: "exchange_defense",
-          chosen_card: clickedCard.id,
-          last_chose: lastChosenCard.id,
-          exchange_requester_id: exchangeRequester,
-          is_defense: false,
-        });
-        console.log("SE ENVIA EXCHANGE ESTO: ", messageData);
-        websocket.send(messageData);
-        onCardClicked(null);
-      } else if (clickedCard && isDefended) {
-        let messageData;
-        messageData = JSON.stringify({
-          type: "exchange_defense",
-          chosen_card: clickedCard.id,
-          last_chose: lastChosenCard.id,
-          exchange_requester_id: exchangeRequester,
-          is_defense: true,
-        });
-        console.log("SE ENVIA DEFENSA EXCHANGE ESTO: ", messageData);
-        websocket.send(messageData);
-        setPlayedCard(clickedCard);
-        onCardClicked(null);
-      } else {
-        // habilitar intercambio
-        console.log("habilitar intercambio, cerrar exchange defense");
-        setIsSomeoneBeingDefended(false);
+      if (clickedCard) {
+        if (!isDefended) {
+          let messageData;
+          console.log("hacer intercambio");
+          messageData = JSON.stringify({
+            type: "exchange_defense",
+            chosen_card: clickedCard.id,
+            last_chose: lastChosenCard?.id,
+            exchange_requester_id: exchangeRequester,
+            is_defense: false,
+          });
+          console.log("SE ENVIA EXCHANGE ESTO: ", messageData);
+          websocket.send(messageData);
+          onCardClicked(null);
+        } else {
+          let messageData;
+          messageData = JSON.stringify({
+            type: "exchange_defense",
+            chosen_card: clickedCard.id,
+            last_chose: lastChosenCard?.id,
+            exchange_requester_id: exchangeRequester,
+            is_defense: true,
+          });
+          console.log("SE ENVIA DEFENSA EXCHANGE ESTO: ", messageData);
+          websocket.send(messageData);
+          setPlayedCard(clickedCard);
+          onCardClicked(null);
+        }
       }
+      // habilitar intercambio
+      console.log("habilitar intercambio, cerrar exchange defense");
+      setIsSomeoneBeingDefended(false);
     }
   };
 
@@ -182,7 +191,11 @@ const Buttons = ({
                 width: "19%",
               }}
               disabled={!exchangeEnabledDefense}
-              onClick={handleExchangeDefense}
+              onClick={
+                messageType === "game_info"
+                  ? handleExchange
+                  : handleExchangeDefense
+              }
               color="success"
             >
               Intercambiar carta

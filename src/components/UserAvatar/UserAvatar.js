@@ -8,7 +8,6 @@ import "./UserAvatar.css";
 import crown from "../../assets/crown.png";
 import sword from "../../assets/sword.png";
 import cuarentena from "../../assets/cuarentena.png";
-import LockIcon from "@mui/icons-material/Lock";
 import left_door from "../../assets/left_door.png";
 import right_door from "../../assets/right_door.png";
 import double_door from "../../assets/double_door.png";
