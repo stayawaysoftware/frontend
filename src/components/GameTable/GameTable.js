@@ -18,6 +18,7 @@ const GameTable = ({
   the_thing_id,
   door_locked,
   currentUserDoorLocked,
+  lastCardPlayed,
 }) => {
   const { gameId } = useParams();
   const {
@@ -171,6 +172,17 @@ const GameTable = ({
     setTargetId(id);
   };
 
+  const handleExchange = (id) => {
+    if (websocket) {
+      const messageData = JSON.stringify({
+        type: "exchange",
+        target_player: id,
+        chosen_card: clickedCard.id,
+      });
+      websocket.send(messageData);
+    }
+  };
+
   const getUserFunction = (id) => {
     if (
       targetsEnable &&
@@ -214,24 +226,8 @@ const GameTable = ({
     } else if (
       turnPhase === "Exchange" &&
       currentTurn === userid &&
-      the_thing_id !== userid &&
       clickedCard &&
-      clickedCard.idtype === 2
-    ) {
-      if (id === the_thing_id) {
-        if (
-          (id === left_id && currentUserDoorLocked === -1) ||
-          (id === right_id && currentUserDoorLocked === 1)
-        ) {
-          return null;
-        } else {
-          return () => handleExchange(id);
-        }
-      }
-    } else if (
-      turnPhase === "Exchange" &&
-      currentTurn === userid &&
-      clickedCard
+      (lastCardPlayed === 11 || lastCardPlayed === 29)
     ) {
       if (
         (id === left_id && currentUserDoorLocked === -1) ||
@@ -244,7 +240,6 @@ const GameTable = ({
     }
 
     return null;
-    }
   };
 
   return (

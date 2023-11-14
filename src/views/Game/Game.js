@@ -152,7 +152,7 @@ const Game = () => {
     if (turn_order) {
       return getLeftId(position);
     }
-    
+
     return getRightId(position);
   };
 
@@ -239,6 +239,7 @@ const Game = () => {
         console.log("es fase de intercambio");
       } else {
         setIsPlayPhase(true);
+        setIsExchangePhase(false);
       }
 
       if (json.game.status === "Finished") {
@@ -525,6 +526,7 @@ const Game = () => {
               }
               door_locked={door_locked_array}
               currentUserDoorLocked={door_locked}
+              lastCardPlayed={showPlayedCard}
             />
             <Box>
               <Grid
@@ -719,6 +721,9 @@ const Game = () => {
                   setIsSomeoneBeingDefended={setIsSomeoneBeingDefended}
                   exchangeRequester={exchange_requester}
                   isNotPanicCard={panicCard === null}
+                  lastCardPlayedForSeduction={showPlayedCard}
+                  currentUserDoorLocked={door_locked}
+                  turnOrder={turn_order}
                 />
               </div>
             </Box>
