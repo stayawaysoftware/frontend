@@ -56,6 +56,7 @@ const Game = () => {
   const [door_locked, setDoorLocked] = useState(null); // -1 left, 1 right, 2 both, false none
   const [door_locked_array, setDoorLockedArray] = useState([]);
   const [panicCard, setPanicCard] = useState(null);
+  const [messageType, setMessageType] = useState(null);
 
   const { websocket } = useWebSocket();
   const [isLoading, setIsLoading] = useState(true);
@@ -147,9 +148,18 @@ const Game = () => {
     return name;
   };
 
+  const nextTargetPlayer = (position) => {
+    if (turn_order) {
+      return getLeftId(position);
+    }
+    
+    return getRightId(position);
+  };
+
   function onGameMessage(event) {
     const json = JSON.parse(event.data);
     console.log("Mensaje recibido en game: ", json);
+    setMessageType(json.type);
     if (json.type === "game_info") {
       setPlayers(json.game.players);
       setCurrentTurn(json.game.current_turn);
@@ -699,8 +709,10 @@ const Game = () => {
                 <Buttons
                   current_player={positionToId(current_turn)}
                   gameId={gameId}
+                  messageType={messageType}
                   target_player={card_target}
                   isDefended={isSomeoneBeingDefended}
+                  next_target_id={nextTargetPlayer(current_turn)}
                   last_played_card={last_played_card}
                   lastChosenCard={last_chosen_card}
                   turnPhase={turn_phase}

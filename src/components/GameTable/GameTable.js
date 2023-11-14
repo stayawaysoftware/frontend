@@ -171,17 +171,6 @@ const GameTable = ({
     setTargetId(id);
   };
 
-  const handleExchange = (id) => {
-    if (websocket) {
-      const messageData = JSON.stringify({
-        type: "exchange",
-        target_player: id,
-        chosen_card: clickedCard.id,
-      });
-      websocket.send(messageData);
-    }
-  };
-
   const getUserFunction = (id) => {
     if (
       targetsEnable &&
@@ -255,6 +244,7 @@ const GameTable = ({
     }
 
     return null;
+    }
   };
 
   return (
