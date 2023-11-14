@@ -146,6 +146,14 @@ const Game = () => {
     return name;
   };
 
+  const nextTargetPlayer = (position) => {
+    if (turn_order) {
+      return getLeftId(position);
+    }
+    
+    return getRightId(position);
+  };
+
   function onGameMessage(event) {
     const json = JSON.parse(event.data);
     console.log("Mensaje recibido en game: ", json);
@@ -638,7 +646,7 @@ const Game = () => {
                   messageType={messageType}
                   target_player={card_target}
                   isDefended={isSomeoneBeingDefended}
-                  right_id={getRightId(current_turn)}
+                  next_target_id={nextTargetPlayer(current_turn)}
                   last_played_card={last_played_card}
                   lastChosenCard={last_chosen_card}
                   turnPhase={turn_phase}

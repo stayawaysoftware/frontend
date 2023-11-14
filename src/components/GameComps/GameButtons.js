@@ -15,7 +15,7 @@ const Buttons = ({
   last_played_card,
   lastChosenCard,
   messageType,
-  right_id,
+  next_target_id,
   turnPhase,
   setIsSomeoneBeingDefended,
   exchangeRequester,
@@ -112,7 +112,7 @@ const Buttons = ({
     if (websocket && clickedCard) {
       const messageData = JSON.stringify({
         type: "exchange",
-        target_player: right_id,
+        target_player: next_target_id,
         chosen_card: clickedCard.id,
       });
       websocket.send(messageData);
