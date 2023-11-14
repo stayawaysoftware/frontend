@@ -197,7 +197,9 @@ const GameTable = ({
         if (clickedCard.idtype === 5) {
           if (
             (id === left_id && currentUserDoorLocked === -1) ||
-            (id === right_id && currentUserDoorLocked === 1)
+            (id === right_id && currentUserDoorLocked === 1) ||
+            (id === left_id && currentUserDoorLocked === 2) ||
+            (id === right_id && currentUserDoorLocked === 2)
           ) {
             return () => handlePlayCard(id);
           }

@@ -23,6 +23,7 @@ const Buttons = ({
   lastCardPlayedForSeduction,
   currentUserDoorLocked,
   turnOrder,
+  isExchangeTarget,
 }) => {
   const {
     userid,
@@ -64,6 +65,8 @@ const Buttons = ({
       !isDefended &&
       !exchangeEnabled &&
       isNotPanicCard);
+
+  console.log("isExchangeTarget: ", isExchangeTarget);
 
   const handlePlayCard = () => {
     if (websocket) {
@@ -212,9 +215,7 @@ const Buttons = ({
               }}
               disabled={!exchangeEnabledDefense}
               onClick={
-                messageType === "game_info"
-                  ? handleExchange
-                  : handleExchangeDefense
+                isExchangeTarget ? handleExchangeDefense : handleExchange
               }
               color="success"
             >
