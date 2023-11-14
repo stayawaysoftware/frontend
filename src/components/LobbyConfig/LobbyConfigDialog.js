@@ -98,7 +98,6 @@ export default function CreateRoomDialog({ open, onClose, setError }) {
     await axios
       .post(url, parameters)
       .then((response) => {
-        console.log("Solicitud POST exitosa", response.data);
         roomid = response.data.id; //get the roomid from the response
         navigate("/room/" + roomid);
       })
@@ -124,7 +123,7 @@ export default function CreateRoomDialog({ open, onClose, setError }) {
             >
               <Box sx={{ display: "flex", alignItems: "flex-end" }}>
                 <TextField
-                  id="outlined-basic"
+                  id="roomName"
                   label="Nombre de la sala"
                   variant="standard"
                   color="success"
@@ -170,6 +169,7 @@ export default function CreateRoomDialog({ open, onClose, setError }) {
           disabled={!ValidForm(name)}
           color="success"
           variant="contained"
+          id="createRoom"
         >
           Crear Sala
         </Button>

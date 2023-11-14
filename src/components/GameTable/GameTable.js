@@ -1,5 +1,4 @@
 import { useEffect, useState, useContext, useCallback } from "react";
-import { useParams } from "react-router-dom";
 
 import { CntTarget, CardHasTarget } from "../../utils/CardHandler";
 import { UserAvatar } from "../UserAvatar";
@@ -15,8 +14,12 @@ const GameTable = ({
   turnDefense,
   isSomeoneBeingDefended,
   turnPhase,
+  the_thing_id,
+  door_locked,
+  currentUserDoorLocked,
+  lastCardPlayed,
 }) => {
-  const { gameId } = useParams();
+
   const {
     userid,
     targetsEnable,
@@ -78,6 +81,34 @@ const GameTable = ({
         let rotate = slice * i + start;
         let rotateReverse = rotate * -1;
 
+        let cnt_door_locked = 0;
+
+        for (let j = 1; j <= door_locked.length; j++) {
+          if (j === players[i].position) {
+            if (j === door_locked.length) {
+              if (door_locked[j - 1] === 1 && door_locked[0] === 1) {
+                cnt_door_locked = 2;
+              } else if (door_locked[j - 1] === 1 && door_locked[0] === 0) {
+                cnt_door_locked = 1;
+              } else if (door_locked[j - 1] === 0 && door_locked[0] === 1) {
+                cnt_door_locked = -1;
+              } else {
+                cnt_door_locked = 0;
+              }
+            } else {
+              if (door_locked[j - 1] === 1 && door_locked[j] === 1) {
+                cnt_door_locked = 2;
+              } else if (door_locked[j - 1] === 1 && door_locked[j] === 0) {
+                cnt_door_locked = 1;
+              } else if (door_locked[j - 1] === 0 && door_locked[j] === 1) {
+                cnt_door_locked = -1;
+              } else {
+                cnt_door_locked = 0;
+              }
+            }
+          }
+        }
+
         items.push({
           style: {
             radius: radius,
@@ -88,11 +119,13 @@ const GameTable = ({
           name: players[i].name,
           death: players[i].death,
           turn: players[i].position === currentTurn, // si es el turno del usuario
+          quarentine: players[i].quarantine,
+          cnt_door_locked: cnt_door_locked,
         });
       }
       setPlayers(items);
     },
-    [currentTurn]
+    [currentTurn, door_locked]
   );
 
   useEffect(() => {
@@ -109,17 +142,15 @@ const GameTable = ({
         }
       }
       for (let j = i - 1; j >= 0; --j) {
-        if (playersTable[j] === undefined) console.log("undefined " + j);
         sorted_players.push(playersTable[j]);
       }
       for (let j = playersTable.length - 1; j > i; --j) {
-        if (playersTable[j] === undefined) console.log("undefined " + j);
         sorted_players.push(playersTable[j]);
       }
       buildCircle(sorted_players);
     };
     sortPlayers();
-  }, [buildCircle, playersTable, userid]);
+  }, [buildCircle, playersTable, userid, door_locked]);
 
   const handlePlayCard = (id) => {
     if (websocket) {
@@ -130,6 +161,7 @@ const GameTable = ({
       });
       websocket.send(messageData);
     }
+
     setPlayedCard(clickedCard);
     onCardClicked(null);
     setTargetId(id);
@@ -157,21 +189,51 @@ const GameTable = ({
         clickedCard &&
         CardHasTarget(clickedCard.idtype) === CntTarget.ADJACENT
       ) {
-        if (id === left_id || id === right_id) {
-          return () => handlePlayCard(id);
+        if (clickedCard.idtype === 5) {
+          if (
+            (id === left_id && currentUserDoorLocked === -1) ||
+            (id === right_id && currentUserDoorLocked === 1) ||
+            (id === left_id && currentUserDoorLocked === 2) ||
+            (id === right_id && currentUserDoorLocked === 2)
+          ) {
+            return () => handlePlayCard(id);
+          }
+        } else {
+          if (
+            ((id === left_id && currentUserDoorLocked !== -1) ||
+              (id === right_id && currentUserDoorLocked !== 1)) &&
+            currentUserDoorLocked !== 2
+          ) {
+            return () => handlePlayCard(id);
+          }
         }
       } else if (
         clickedCard &&
         CardHasTarget(clickedCard.idtype) === CntTarget.ALL
       ) {
-        return () => handlePlayCard(id);
+        if (
+          (id === left_id && currentUserDoorLocked === -1) ||
+          (id === right_id && currentUserDoorLocked === 1)
+        ) {
+          return null;
+        } else {
+          return () => handlePlayCard(id);
+        }
       }
     } else if (
       turnPhase === "Exchange" &&
       currentTurn === userid &&
-      clickedCard
+      clickedCard &&
+      (lastCardPlayed === 11 || lastCardPlayed === 29)
     ) {
-      return () => handleExchange(id);
+      if (
+        (id === left_id && currentUserDoorLocked === -1) ||
+        (id === right_id && currentUserDoorLocked === 1)
+      ) {
+        return null;
+      } else {
+        return () => handleExchange(id);
+      }
     }
 
     return null;
@@ -181,19 +243,26 @@ const GameTable = ({
     <div className="circle">
       {players.length ? (
         <div className="circle-hold">
-          {players.map(({ id, name, death, turn, style }, index) => {
-            return (
-              <UserAvatar
-                key={id}
-                css={{ ...style }}
-                name={name}
-                death={death}
-                turn={currentTurn === id}
-                onClick={getUserFunction(id)}
-                turnDefense={turnDefense === id}
-              />
-            );
-          })}
+          {players.map(
+            (
+              { id, name, death, turn, quarentine, cnt_door_locked, style },
+              index
+            ) => {
+              return (
+                <UserAvatar
+                  key={id}
+                  css={{ ...style }}
+                  name={name}
+                  death={death}
+                  turn={currentTurn === id}
+                  onClick={getUserFunction(id)}
+                  turnDefense={turnDefense === id}
+                  quarentine={quarentine}
+                  door_locked={cnt_door_locked} // if -1 left door, if 1 right door, if 2 double door, if 0 or false no door
+                />
+              );
+            }
+          )}
         </div>
       ) : null}
     </div>

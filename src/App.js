@@ -53,9 +53,6 @@ function App() {
     parameters.append("id", userid);
     axios
       .post(url, parameters)
-      .then((response) => {
-        console.log("Solicitud POST exitosa", response.data);
-      })
       .catch((error) => {
         console.error("Error en la solicitud POST", error);
       });

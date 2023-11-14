@@ -7,3 +7,66 @@ img {
   background-color: transparent;
   width: 30px;
 }
+
+.image {
+  background: transparent;
+  background-color: transparent;
+  width: 40px;
+}
+
+.cuarentena {
+  background: transparent;
+  background-color: transparent;
+  width: 98px;
+  height: 98px;
+  transform: rotate(45deg);
+}
+
+.row {
+  content: "";
+  clear: both;
+  display: table;
+  display: flex;
+}
+
+.column {
+  float: left;
+  padding: 7px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.column2 {
+  float: left;
+  padding: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lock {
+  font-size: 20;
+}
+
+.soga1 {
+  background: transparent;
+  background-color: transparent;
+  width: 115px;
+  z-index: 3;
+  position: relative;
+  top: 76px;
+  left: 52px;
+  transform: rotate(45deg);
+}
+
+.soga2 {
+  background: transparent;
+  background-color: transparent;
+  width: 115px;
+  z-index: 2;
+  position: relative;
+  top: 70px;
+  right: 57px;
+  transform: rotate(135deg);
+}

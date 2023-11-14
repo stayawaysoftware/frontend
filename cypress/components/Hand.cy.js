@@ -27,91 +27,222 @@ const cardListLength5 = [
   { id: 5, idtype: 5 },
 ];
 
-const defense = [];
+const cardListFlamethrowerDefense = [
+  { id: 17, idtype: 17 },
+  { id: 3, idtype: 3 },
+  { id: 4, idtype: 4 },
+  { id: 5, idtype: 5 },
+];
+
+const handPropsBasic = {
+  cardList: cardListWithLaCosa,
+  defense: [],
+  target_player: 3,
+  isSomeoneBeingDefended: false,
+  role: "Human",
+  isPlayPhase: true,
+  cardTargetRole: "Human",
+  panicCard: null,
+};
+
+const empty_defense = [];
+const flamethrower_defense = [{ id: 17, idtype: 17 }];
+
 const target_player = 3;
 const isSomeoneBeingDefended = false;
 
 describe("<Hand />", () => {
   beforeEach("Mount component", () => {});
-  it("Renders with LaCosa asset", () => {
+  it("renders with 4 cards", () => {
+    // see: https://on.cypress.io/mounting-react
     cy.mount(
       <BrowserRouter>
         <UserContext.Provider value={userContextValue}>
+          <Hand {...handPropsBasic} />
+        </UserContext.Provider>
+      </BrowserRouter>
+    );
+    cy.get("#hand").should("exist");
+    cy.get("#hand").children().should("have.length", 4);
+  });
+  it("Renders with LaCosa and clicks cards in play phase", () => {
+    const userContextValueWithStub = {
+      username: "Tester",
+      roomid: 1,
+      userid: 1,
+      clickedCard: null,
+      targetsEnable: null,
+      onCardClicked: cy.stub().as("onCardClicked"),
+    };
+    cy.mount(
+      <BrowserRouter>
+        <UserContext.Provider value={userContextValueWithStub}>
           <Hand
             cardList={cardListWithLaCosa}
-            defense={defense}
-            target_player={target_player}
-            isSomeoneBeingDefended={isSomeoneBeingDefended}
+            defense={empty_defense}
+            target_player={3}
+            isSomeoneBeingDefended={false}
+            role={"Human"}
+            isPlayPhase={true}
+            cardTargetRole={"Human"}
+            panicCard={null}
           />
         </UserContext.Provider>
       </BrowserRouter>
     );
 
-    //there should be 4 cards
-    cy.get("img").should("have.length", 4);
+    cy.get("#hand").should("exist");
+    cy.get("#hand").children().should("have.length", 4);
 
-    //the src attribute should contain the word "TheThing"
-    cy.get("img").should("have.attr", "src").and("include", "TheThing");
+    cy.get("img").eq(0).click({ force: true });
+
+    cy.get("@onCardClicked").should("be.calledOnce");
+    //clicked card should be null
+    cy.get("@onCardClicked").should("be.calledWith", null);
+
+    cy.get("img").eq(2).click({ force: true });
+
+    cy.get("@onCardClicked").should("be.calledTwice");
+
+    //clicked card should be {id: 2, idtype: 2}
+    cy.get("@onCardClicked").should("be.calledWith", {
+      id: 3,
+      idtype: 3,
+    });
   });
 
   it("Renders with 5 cards", () => {
+    const userContextValueWithStub = {
+      username: "Tester",
+      roomid: 1,
+      userid: 1,
+      clickedCard: null,
+      targetsEnable: null,
+      onCardClicked: cy.stub().as("onCardClicked"),
+    };
     cy.mount(
       <BrowserRouter>
-        <UserContext.Provider value={userContextValue}>
+        <UserContext.Provider value={userContextValueWithStub}>
           <Hand
             cardList={cardListLength5}
-            defense={defense}
-            target_player={target_player}
-            isSomeoneBeingDefended={isSomeoneBeingDefended}
+            defense={empty_defense}
+            target_player={3}
+            isSomeoneBeingDefended={false}
+            role={"Human"}
+            isPlayPhase={true}
+            cardTargetRole={"Human"}
+            panicCard={null}
           />
         </UserContext.Provider>
       </BrowserRouter>
     );
 
-    //there should be 5 cards
-    cy.get("img").should("have.length", 5);
+    cy.get("#hand").should("exist");
+    cy.get("#hand").children().should("have.length", 5);
+
+    cy.get("img").eq(0).click({ force: true });
+
+    cy.get("@onCardClicked").should("be.calledOnce");
+    //clicked card should be null
+    cy.get("@onCardClicked").should("be.calledWith", null);
+
+    cy.get("img").eq(2).click({ force: true });
+
+    cy.get("@onCardClicked").should("be.calledTwice");
   });
 
-  it("Test onCardClicked", () => {
-    const userContextValue = {
+  it("Renders defense cards", () => {
+    const userContextValueWithStub = {
       username: "Tester",
-      // setUserName: jest.fn(),
       roomid: 1,
-      // setRoomId: jest.fn(),
       userid: 1,
-      // setUserId: jest.fn(),
       clickedCard: null,
-      // onCardClicked: jest.fn(),
-      onCardClicked: cy.stub().as("onCardClicked"),
       targetsEnable: null,
+      onCardClicked: cy.stub().as("onCardClicked"),
     };
 
     cy.mount(
       <BrowserRouter>
-        <UserContext.Provider value={userContextValue}>
+        <UserContext.Provider value={userContextValueWithStub}>
           <Hand
-            cardList={cardListWithLaCosa}
-            defense={defense}
-            target_player={target_player}
-            isSomeoneBeingDefended={isSomeoneBeingDefended}
+            cardList={cardListFlamethrowerDefense}
+            defense={[17]}
+            target_player={1}
+            isSomeoneBeingDefended={true}
+            role={"Human"}
+            isPlayPhase={true}
+            cardTargetRole={"Human"}
+            panicCard={null}
           />
         </UserContext.Provider>
       </BrowserRouter>
     );
 
-    //there should be 4 cards
-    cy.get("img").should("have.length", 4);
+    cy.get("#hand").should("exist");
 
-    //verify the thing
-    cy.get("img").should("have.attr", "src").and("include", "TheThing");
+    cy.get("#hand").children().should("have.length", 4);
 
-    //click on the thing
+    //NoBarbecues should be in hand (src)
+    cy.get("img").should("have.attr", "src").should("include", "NoBarbecues");
+
+    //first card should be clickable
     cy.get("img").eq(0).click({ force: true });
-    //check that clicked card is the thing
+    //clicked card should be {id: 17, idtype: 17}
 
     cy.get("@onCardClicked").should("be.calledWith", {
-      id: 1,
-      idtype: 1,
+      id: 17,
+      idtype: 17,
     });
+
+    cy.get("@onCardClicked").should("be.calledOnce");
+
+    //second card should not be clickable
+    cy.get("img").eq(1).click({ force: true });
+
+    cy.get("@onCardClicked").should("be.calledTwice");
+
+    //clicked card should be null
+    cy.get("@onCardClicked").should("be.calledWith", null);
+  });
+
+  it("LaCosa should not be exchangeable", () => {
+    const userContextValueWithStub = {
+      username: "Tester",
+      roomid: 1,
+      userid: 1,
+      clickedCard: null,
+      targetsEnable: null,
+      onCardClicked: cy.stub().as("onCardClicked"),
+      isExchangePhase: true,
+    };
+
+    cy.mount(
+      <BrowserRouter>
+        <UserContext.Provider value={userContextValueWithStub}>
+          <Hand
+            cardList={cardListWithLaCosa}
+            defense={[]}
+            target_player={1}
+            isSomeoneBeingDefended={false}
+            role={"Human"}
+            isPlayPhase={false}
+            cardTargetRole={"Human"}
+            panicCard={null}
+          />
+        </UserContext.Provider>
+      </BrowserRouter>
+    );
+
+    cy.get("#hand").should("exist");
+
+    cy.get("#hand").children().should("have.length", 4);
+
+    //first card should not be clickable
+    cy.get("img").eq(0).click({ force: true });
+
+    cy.get("@onCardClicked").should("be.calledOnce");
+
+    //clicked card should be null
+    cy.get("@onCardClicked").should("be.calledWith", null);
   });
 });

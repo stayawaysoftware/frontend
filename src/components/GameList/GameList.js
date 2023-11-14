@@ -107,6 +107,8 @@ export default function GameList({ setError }) {
                                 displayItem(gameData);
                               }
                             }}
+                            //add field to identify the room
+                            idtest={gameData.name}
                           >
                             <ListItemAvatar>
                               <Avatar>{GetInitials(gameData.name)}</Avatar>

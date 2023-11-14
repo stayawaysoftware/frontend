@@ -19,3 +19,8 @@ test-component:
 
 test-e2e:
 	docker run -it -v "$(CURDIR):/e2e" -w /e2e cypress/included:13.3.0 open
+
+tabs:
+	echo "Asegurarse que esta corriendo el back y el front"
+	echo "Instalar puppeteer: npm install puppeteer"
+	node scripts/open4Tabs.js $(ARGS)
