@@ -42,7 +42,7 @@ const Room = () => {
   useEffect(() => {
     // esto se ejecuta cuando se monta el componente y crea el websocket
     createWebSocket(roomId);
-  });
+  }, []);
 
   function onRoomMessage(event) {
     const json = JSON.parse(event.data);
@@ -105,7 +105,7 @@ const Room = () => {
       window.leaveRoom = null;
       window.startGame = null;
     };
-  });
+  }, []);
 
   return (
     <div
