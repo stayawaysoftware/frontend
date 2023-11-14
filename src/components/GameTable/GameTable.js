@@ -120,7 +120,7 @@ const GameTable = ({
           name: players[i].name,
           death: players[i].death,
           turn: players[i].position === currentTurn, // si es el turno del usuario
-          quarentine: players[i].quarentine,
+          quarentine: players[i].quarantine,
           cnt_door_locked: cnt_door_locked,
         });
       }
