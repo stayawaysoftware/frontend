@@ -57,6 +57,7 @@ const Game = () => {
   const [door_locked_array, setDoorLockedArray] = useState([]);
   const [panicCard, setPanicCard] = useState(null);
   const [messageType, setMessageType] = useState(null);
+  const [isExchangeTarget, setIsExchangeTarget] = useState(false);
 
   const { websocket } = useWebSocket();
   const [isLoading, setIsLoading] = useState(true);
@@ -68,7 +69,7 @@ const Game = () => {
         name: player.name,
         death: !player.alive,
         position: player.round_position,
-        quarentine: player.quarentine,
+        quarantine: player.quarantine,
       }))
     : [];
 
@@ -152,7 +153,7 @@ const Game = () => {
     if (turn_order) {
       return getLeftId(position);
     }
-    
+
     return getRightId(position);
   };
 
@@ -236,9 +237,9 @@ const Game = () => {
       if (json.game.turn_phase === "Exchange") {
         setIsExchangePhase(true);
         setIsPlayPhase(false);
-        console.log("es fase de intercambio");
       } else {
         setIsPlayPhase(true);
+        setIsExchangePhase(false);
       }
 
       if (json.game.status === "Finished") {
@@ -346,7 +347,9 @@ const Game = () => {
     } else if (json.type === "exchange") {
       setCardTarget(json.target_player);
       setLastChosenCard(json.last_chosen_card);
+      setIsExchangeTarget(true);
     } else if (json.type === "exchange_defense") {
+      setIsExchangeTarget(true);
       setCardTarget(json.target_player);
       setDefendedBy(json.defended_by);
       setIsSomeoneBeingDefended(true);
@@ -363,6 +366,7 @@ const Game = () => {
         ),
       ]);
 
+      setIsExchangeTarget(false);
       setClickedCard(null);
       setPlayedCard(null);
       setIsSomeoneBeingDefended(false);
@@ -525,6 +529,7 @@ const Game = () => {
               }
               door_locked={door_locked_array}
               currentUserDoorLocked={door_locked}
+              lastCardPlayed={showPlayedCard}
             />
             <Box>
               <Grid
@@ -719,6 +724,10 @@ const Game = () => {
                   setIsSomeoneBeingDefended={setIsSomeoneBeingDefended}
                   exchangeRequester={exchange_requester}
                   isNotPanicCard={panicCard === null}
+                  lastCardPlayedForSeduction={showPlayedCard}
+                  currentUserDoorLocked={door_locked}
+                  turnOrder={turn_order}
+                  isExchangeTarget={isExchangeTarget}
                 />
               </div>
             </Box>

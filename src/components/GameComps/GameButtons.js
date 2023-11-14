@@ -20,6 +20,10 @@ const Buttons = ({
   setIsSomeoneBeingDefended,
   exchangeRequester,
   isNotPanicCard,
+  lastCardPlayedForSeduction,
+  currentUserDoorLocked,
+  turnOrder,
+  isExchangeTarget,
 }) => {
   const {
     userid,
@@ -37,12 +41,6 @@ const Buttons = ({
   const isCardWithTargetClicked = clickedCard !== null && targetsEnable;
   const exchangeEnabled = turnPhase === "Exchange";
   const exchangeEnabledDefense = !isDefended && exchangeEnabled && clickedCard;
-  if (clickedCard) {
-    console.log(
-      "isCardPlaylable",
-      isCardPlaylable(clickedCard.idtype, false, "", false, false, false)
-    );
-  }
 
   const playEnabled =
     (isTurn &&
@@ -67,6 +65,8 @@ const Buttons = ({
       !isDefended &&
       !exchangeEnabled &&
       isNotPanicCard);
+
+  console.log("isExchangeTarget: ", isExchangeTarget);
 
   const handlePlayCard = () => {
     if (websocket) {
@@ -119,13 +119,26 @@ const Buttons = ({
 
   const handleExchange = () => {
     console.log("handleExchange");
-    if (websocket && clickedCard) {
-      const messageData = JSON.stringify({
-        type: "exchange",
-        target_player: next_target_id,
-        chosen_card: clickedCard.id,
-      });
-      websocket.send(messageData);
+    if (
+      (turnOrder === true && currentUserDoorLocked === -1) ||
+      (turnOrder === false && currentUserDoorLocked === 1)
+    ) {
+      if (websocket) {
+        console.log("cannot_exchange");
+        const messageData = JSON.stringify({
+          type: "cannot_exchange",
+        });
+        websocket.send(messageData);
+      }
+    } else {
+      if (websocket && clickedCard) {
+        const messageData = JSON.stringify({
+          type: "exchange",
+          target_player: next_target_id,
+          chosen_card: clickedCard.id,
+        });
+        websocket.send(messageData);
+      }
     }
   };
 
@@ -202,9 +215,7 @@ const Buttons = ({
               }}
               disabled={!exchangeEnabledDefense}
               onClick={
-                messageType === "game_info"
-                  ? handleExchange
-                  : handleExchangeDefense
+                isExchangeTarget ? handleExchangeDefense : handleExchange
               }
               color="success"
             >
