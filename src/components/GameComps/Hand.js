@@ -63,22 +63,24 @@ const Hand = ({
     } else {
       if (panicCard.id !== id) {
         onCardClicked(null);
+      } else {
+        onCardClicked({ id, idtype });
       }
     }
   };
 
   const isCardPlayableOnHover = ({ id, idtype, isDefenseCard }) => {
-    return ((
-      !isDefended &&
-      !isDefenseCard &&
-      isCardPlaylable(
-        idtype,
-        isExchangePhase,
-        role,
-        isDefensePhase,
-        canExchangeInfected,
-        isPlayPhase
-      )) ||
+    return (
+      (!isDefended &&
+        !isDefenseCard &&
+        isCardPlaylable(
+          idtype,
+          isExchangePhase,
+          role,
+          isDefensePhase,
+          canExchangeInfected,
+          isPlayPhase
+        )) ||
       (isSomeoneBeingDefended &&
         isDefended &&
         isDefenseCard &&
@@ -118,6 +120,8 @@ const Hand = ({
                 canExchangeInfected = true;
               }
             }
+          } else {
+            canExchangeInfected = false;
           }
 
           return (
@@ -128,11 +132,12 @@ const Hand = ({
                 ...baseCardStyle,
                 right: `${10 + index * 30}px`,
                 "&:hover": {
-                  ...(panicCard === null 
-                  ? isCardPlayableOnHover({ id, idtype, isDefenseCard }) && highlightedCardStyle 
-                  : panicCard.id === id 
-                  ? highlightedCardStyle
-                  : {}),
+                  ...(panicCard === null
+                    ? isCardPlayableOnHover({ id, idtype, isDefenseCard }) &&
+                      highlightedCardStyle
+                    : panicCard.id === id
+                    ? highlightedCardStyle
+                    : {}),
                 },
                 ...(isClicked && highlightedCardStyle),
               }}

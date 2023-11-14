@@ -53,7 +53,8 @@ const Game = () => {
   const [player_name, setPlayerName] = useState(null);
   const [winner, setWinner] = useState(null);
   const [isPlayPhase, setIsPlayPhase] = useState(false);
-  const [door_locked, setDoorLocked] = useState(null);
+  const [door_locked, setDoorLocked] = useState(null); // -1 left, 1 right, 2 both, false none
+  const [door_locked_array, setDoorLockedArray] = useState([]);
   const [panicCard, setPanicCard] = useState(null);
 
   const { websocket } = useWebSocket();
@@ -66,6 +67,7 @@ const Game = () => {
         name: player.name,
         death: !player.alive,
         position: player.round_position,
+        quarentine: player.quarentine,
       }))
     : [];
 
@@ -154,6 +156,59 @@ const Game = () => {
       setTurnPhase(json.game.turn_phase);
       setTurnOrder(json.game.turn_order);
       setIsLoading(false);
+      setDoorLockedArray(json.game.locked_doors);
+
+      // buscar la posicion del usuario en el arreglo de jugadores
+      let user_position = 0;
+      for (let i = 0; i < json.game.players.length; i++) {
+        if (json.game.players[i].id === userid) {
+          user_position = json.game.players[i].round_position;
+        }
+      }
+
+      for (let i = 1; i <= json.game.locked_doors.length; i++) {
+        if (i === user_position) {
+          if (i === json.game.locked_doors.length) {
+            if (
+              json.game.locked_doors[json.game.locked_doors.length - 1] === 1 &&
+              json.game.locked_doors[0] === 1
+            ) {
+              setDoorLocked(2);
+            } else if (
+              json.game.locked_doors[json.game.locked_doors.length - 1] === 1 &&
+              json.game.locked_doors[0] === 0
+            ) {
+              setDoorLocked(-1);
+            } else if (
+              json.game.locked_doors[json.game.locked_doors.length - 1] === 0 &&
+              json.game.locked_doors[0] === 1
+            ) {
+              setDoorLocked(1);
+            } else {
+              setDoorLocked(false);
+            }
+          } else {
+            if (
+              json.game.locked_doors[i - 1] === 1 &&
+              json.game.locked_doors[i] === 1
+            ) {
+              setDoorLocked(2);
+            } else if (
+              json.game.locked_doors[i - 1] === 1 &&
+              json.game.locked_doors[i] === 0
+            ) {
+              setDoorLocked(-1);
+            } else if (
+              json.game.locked_doors[i - 1] === 0 &&
+              json.game.locked_doors[i] === 1
+            ) {
+              setDoorLocked(1);
+            } else {
+              setDoorLocked(false);
+            }
+          }
+        }
+      }
 
       // un nuevo turno se da cuando la fase de turn es Draw
       if (json.game.turn_phase === "Draw") {
@@ -170,6 +225,7 @@ const Game = () => {
 
       if (json.game.turn_phase === "Exchange") {
         setIsExchangePhase(true);
+        setIsPlayPhase(false);
         console.log("es fase de intercambio");
       } else {
         setIsPlayPhase(true);
@@ -188,10 +244,17 @@ const Game = () => {
     } else if (json.type === "new_turn") {
       setCurrentTurn(json.current_turn);
     } else if (json.type === "draw") {
+      if (json.card_type === "PANIC") {
+        setPanicCard(json.new_card);
+        onCardClicked(json.new_card);
+      } else {
+        setPanicCard(null);
+      }
       setNewCard(json.new_card);
     } else if (json.type === "play") {
       setShowPlayedCard(json.played_card.idtype);
       setCardTarget(json.card_player);
+      setPanicCard(null);
 
       setActionList((actionList) => [
         ...actionList,
@@ -254,6 +317,7 @@ const Game = () => {
       setCardTarget(null);
       setDefendedBy([]);
       setIsPlayPhase(false);
+      setPanicCard(null);
       if (json.target_player === 0 || json.played_defense === 0) {
         setShowPlayedCard(json.last_played_card.idtype);
       } else {
@@ -449,6 +513,8 @@ const Game = () => {
               the_thing_id={
                 players.find((player) => player.role === "The Thing").id
               }
+              door_locked={door_locked_array}
+              currentUserDoorLocked={door_locked}
             />
             <Box>
               <Grid
@@ -640,6 +706,7 @@ const Game = () => {
                   turnPhase={turn_phase}
                   setIsSomeoneBeingDefended={setIsSomeoneBeingDefended}
                   exchangeRequester={exchange_requester}
+                  isNotPanicCard={panicCard === null}
                 />
               </div>
             </Box>
