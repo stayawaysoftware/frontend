@@ -120,6 +120,8 @@ const Hand = ({
                 canExchangeInfected = true;
               }
             }
+          } else {
+            canExchangeInfected = false;
           }
 
           return (

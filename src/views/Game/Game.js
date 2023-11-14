@@ -225,6 +225,7 @@ const Game = () => {
 
       if (json.game.turn_phase === "Exchange") {
         setIsExchangePhase(true);
+        setIsPlayPhase(false);
         console.log("es fase de intercambio");
       } else {
         setIsPlayPhase(true);
