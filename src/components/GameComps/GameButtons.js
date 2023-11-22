@@ -38,8 +38,9 @@ const Buttons = ({
   const isTurn = current_player === userid && !isDefended;
   const isCardClicked = clickedCard !== null && !targetsEnable;
   const isCardWithTargetClicked = clickedCard !== null && targetsEnable;
-  const exchangeEnabled = turnPhase === "Exchange";
-  const exchangeEnabledDefense = !isDefended && exchangeEnabled && clickedCard;
+  const exchangeEnabled = turnPhase === "Exchange" && current_player === userid;
+  const exchangeEnabledDefense =
+    !isDefended && turnPhase === "Exchange" && clickedCard;
 
   const playEnabled =
     (isTurn &&
@@ -92,22 +93,47 @@ const Buttons = ({
 
   const handleDefense = () => {
     if (websocket) {
-      if (clickedCard) {
-        const messageData = JSON.stringify({
-          type: "defense",
-          target_player: current_player,
-          last_played_card: last_played_card.id,
-          played_defense: clickedCard.id,
-        });
-        websocket.send(messageData);
+      if (turnPhase === "Exchange") {
+        if (clickedCard) {
+          let messageData;
+          messageData = JSON.stringify({
+            type: "exchange_defense",
+            chosen_card: clickedCard.id,
+            last_chose: lastChosenCard?.id,
+            exchange_requester_id: exchangeRequester,
+            is_defense: true,
+          });
+          websocket.send(messageData);
+        }
+        setIsSomeoneBeingDefended(false);
       } else {
-        const messageData = JSON.stringify({
-          type: "defense",
-          target_player: current_player,
-          played_defense: 0,
-          last_played_card: last_played_card.id,
-        });
-        websocket.send(messageData);
+        if (clickedCard) {
+          const messageData = JSON.stringify({
+            type: "defense",
+            target_player: current_player,
+            last_played_card: last_played_card.id,
+            played_defense: clickedCard.id,
+          });
+          websocket.send(messageData);
+        } else {
+          if (last_played_card === null) {
+            const messageData = JSON.stringify({
+              type: "defense",
+              target_player: current_player,
+              played_defense: 0,
+              last_played_card: 0,
+            });
+            websocket.send(messageData);
+          } else {
+            const messageData = JSON.stringify({
+              type: "defense",
+              target_player: current_player,
+              played_defense: 0,
+              last_played_card: last_played_card.id,
+            });
+            websocket.send(messageData);
+          }
+        }
       }
     }
     setPlayedCard(clickedCard);
@@ -140,30 +166,16 @@ const Buttons = ({
   const handleExchangeDefense = () => {
     if (websocket) {
       if (clickedCard) {
-        if (!isDefended) {
-          let messageData;
-          messageData = JSON.stringify({
-            type: "exchange_defense",
-            chosen_card: clickedCard.id,
-            last_chose: lastChosenCard?.id,
-            exchange_requester_id: exchangeRequester,
-            is_defense: false,
-          });
-          websocket.send(messageData);
-          onCardClicked(null);
-        } else {
-          let messageData;
-          messageData = JSON.stringify({
-            type: "exchange_defense",
-            chosen_card: clickedCard.id,
-            last_chose: lastChosenCard?.id,
-            exchange_requester_id: exchangeRequester,
-            is_defense: true,
-          });
-          websocket.send(messageData);
-          setPlayedCard(clickedCard);
-          onCardClicked(null);
-        }
+        let messageData;
+        messageData = JSON.stringify({
+          type: "exchange_defense",
+          chosen_card: clickedCard.id,
+          last_chose: lastChosenCard?.id,
+          exchange_requester_id: exchangeRequester,
+          is_defense: false,
+        });
+        websocket.send(messageData);
+        onCardClicked(null);
       }
       // habilitar intercambio
       setIsSomeoneBeingDefended(false);
@@ -181,13 +193,7 @@ const Buttons = ({
                 width: "19%",
               }}
               disabled={!playEnabled}
-              onClick={
-                exchangeEnabled
-                  ? handleExchangeDefense
-                  : isDefended
-                  ? handleDefense
-                  : handlePlayCard
-              }
+              onClick={isDefended ? handleDefense : handlePlayCard}
               color="success"
             >
               {isDefended
